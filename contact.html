@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Design Studio – Contact Us</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="shortcut icon" href="https://i.ibb.co/bgdGqb03/f82b3a67a9fa.png" type="image/x-icon" />
+</head>
+<body>
+<div id="site-wrapper">
+
+  <header>
+    <div class="nav-inner">
+      <a href="index.html" class="logo">
+        <img src="https://i.ibb.co/bgdGqb03/f82b3a67a9fa.png" alt="Aura Design Studio Logo" />
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav id="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="contact.html" class="active">Contact Us</a></li>
+          <li><a href="contact.html" class="btn-nav">Get In Touch</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="contact-page">
+
+    <section>
+      <div class="contact-hero-layout">
+        <div class="contact-hero-text fade-in">
+          <div class="page-label">Contact Us</div>
+          <h1>Contact <span>Us</span></h1>
+          <div class="heading-divider"></div>
+          <p>We'd love to hear from you! Get in touch with us for any inquiries, projects, or collaboration.</p>
+          <div class="contact-info-list">
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.43-1.43a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+              <div class="contact-info-item-body"><h4>Phone</h4><a href="tel:+96891234567">+968 9123 4567</a></div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div class="contact-info-item-body"><h4>Email</h4><a href="mailto:info@auradesignstudio.com">info@auradesignstudio.com</a></div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div class="contact-info-item-body"><h4>Address</h4><p>Muscat, Sultanate of Oman</p></div>
+            </div>
+            <div class="contact-info-item">
+              <div class="contact-info-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div class="contact-info-item-body"><h4>Working Hours</h4><p>Saturday – Thursday<br>9:00 AM – 6:00 PM</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-hero-image fade-in-2">
+          <img src="images/left.png" alt="Aura Design Studio Interior" />
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-main">
+      <div class="container">
+        <div class="contact-main-layout">
+          <div class="form-panel fade-in">
+            <div class="form-panel-head">
+              <div class="form-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <h2>Send Us a Message</h2>
+              <div class="heading-divider"></div>
+            </div>
+            <div class="contact-form" id="contactForm">
+              <input type="text" class="form-input" placeholder="Your Name" required />
+              <input type="email" class="form-input" placeholder="Your Email" required />
+              <input type="tel" class="form-input" placeholder="Phone Number" />
+              <input type="text" class="form-input" placeholder="Subject" required />
+              <textarea class="form-input" placeholder="Your Message" rows="5" required></textarea>
+              <button class="btn-submit" type="button" onclick="handleSubmit(this)">
+                Send Message
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+              <div id="successMsg" style="display:none;text-align:center;color:var(--gold);font-family:var(--font-display);font-size:18px;padding:12px 0;">
+                ✓ Message sent successfully! We'll be in touch soon.
+              </div>
+            </div>
+          </div>
+
+          <div class="collab-panel fade-in-2">
+            <div class="collab-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+            <h2>Let's Work Together</h2>
+            <div class="collab-divider"></div>
+            <p>Whether you have a small idea or a big project, we are here to help you create beautiful spaces that fit your lifestyle.</p>
+            <div class="house-illustration">
+              <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="155" width="180" height="2" fill="#C4A96B" opacity="0.3" rx="1"/>
+                <rect x="40" y="90" width="120" height="65" fill="none" stroke="#9C7A3C" stroke-width="1.5" rx="2"/>
+                <polygon points="30,90 100,35 170,90" fill="none" stroke="#9C7A3C" stroke-width="1.5"/>
+                <rect x="83" y="120" width="34" height="35" fill="none" stroke="#9C7A3C" stroke-width="1.5" rx="1"/>
+                <circle cx="113" cy="138" r="2.5" fill="#C4A96B"/>
+                <rect x="52" y="105" width="28" height="24" fill="none" stroke="#9C7A3C" stroke-width="1.5" rx="1"/>
+                <line x1="66" y1="105" x2="66" y2="129" stroke="#9C7A3C" stroke-width="0.75"/>
+                <line x1="52" y1="117" x2="80" y2="117" stroke="#9C7A3C" stroke-width="0.75"/>
+                <rect x="120" y="105" width="28" height="24" fill="none" stroke="#9C7A3C" stroke-width="1.5" rx="1"/>
+                <line x1="134" y1="105" x2="134" y2="129" stroke="#9C7A3C" stroke-width="0.75"/>
+                <line x1="120" y1="117" x2="148" y2="117" stroke="#9C7A3C" stroke-width="0.75"/>
+                <circle cx="100" cy="20" r="3" fill="#C4A96B" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0s"/></circle>
+                <circle cx="155" cy="50" r="2" fill="#C4A96B" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="0.7s"/></circle>
+              </svg>
+            </div>
+            <a href="tel:+96891234567" class="btn-gold" style="margin-top:8px;">Call Us Now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="social-section">
+      <div class="container">
+        <div class="social-inner">
+          <div class="social-label">Follow Us</div>
+          <div class="social-links">
+            <a href="#" class="social-link"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+            <a href="#" class="social-link"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+            <a href="#" class="social-link"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="https://i.ibb.co/bgdGqb03/f82b3a67a9fa.png" alt="Aura Logo" />
+        <div><div class="logo-name">Aura</div><div class="logo-sub">Design Studio</div></div>
+      </div>
+      <div class="footer-copy">© 2026 Aura Design Studio | All Rights Reserved</div>
+      <div class="footer-contact">
+        <a href="tel:+96891234567"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.07 11.5a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.43-1.43a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>+968 9123 4567</a>
+        <a href="mailto:info@auradesignstudio.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>info@auradesignstudio.com</a>
+        <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Muscat, Oman</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('main-nav');
+  hamburger.addEventListener('click', () => nav.classList.toggle('open'));
+  function handleSubmit(btn) {
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    setTimeout(() => {
+      document.getElementById('successMsg').style.display = 'block';
+      btn.style.display = 'none';
+    }, 1200);
+  }
+</script>
+</body>
+</html>

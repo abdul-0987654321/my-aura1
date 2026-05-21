@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About – Productiz</title>
+<link rel="shortcut icon" href="https://i.ibb.co/kVTNhYVJ/253481a36603.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f8f9fa;--bg2:#ecf0f5;--ink:#0f1419;--ink2:#4a5568;--ink3:#8892a8;--accent:#ff4757;--accent2:#ffa502;--border:#e0e6ed;--radius:14px;--shadow:0 4px 12px rgba(15,20,25,.08);--shadow2:0 8px 32px rgba(15,20,25,.14);}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+
+nav{position:sticky;top:0;z-index:100;background:rgba(248,249,250,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:72px;animation:slideDown .5s ease;}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+
+.nav-logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:1.6rem;color:var(--ink);letter-spacing:-1px;display:flex;align-items:center;gap:10px;text-decoration:none;transition:.3s;}
+.nav-logo:hover{color:var(--accent);}
+.nav-logo .dot{width:10px;height:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--ink2);text-decoration:none;font-size:.95rem;font-weight:600;transition:.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:.3s;}
+.nav-links a:hover{color:var(--accent);}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+
+.wa-btn-nav{background:linear-gradient(135deg,var(--accent),#ff6b7a);color:#fff;padding:10px 22px;border-radius:50px;font-size:.88rem;font-weight:700;border:none;display:flex;align-items:center;gap:8px;text-decoration:none;transition:.3s;}
+.wa-btn-nav:hover{transform:translateY(-3px);}
+
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.4rem;}
+.mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:16px 5%;flex-direction:column;gap:4px;z-index:99;}
+.mobile-menu a{color:var(--ink2);text-decoration:none;padding:10px 12px;border-radius:8px;font-weight:500;font-size:.9rem;}
+.mobile-menu a:hover{background:var(--bg2);color:var(--accent);}
+.mobile-menu.open{display:flex;}
+
+.hero{background:linear-gradient(135deg,var(--ink),#1a2332);padding:90px 5%;text-align:center;position:relative;overflow:hidden;animation:fadeIn .8s ease;}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);}
+.hero-content{position:relative;max-width:900px;margin:0 auto;}
+.hero h1{font-family:'Outfit',sans-serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:900;color:#fff;margin-bottom:18px;line-height:1.1;letter-spacing:-1px;animation:slideUp .6s ease;}
+.hero h1 em{color:var(--accent);font-style:normal;}
+.hero p{color:rgba(255,255,255,.75);font-size:1.05rem;line-height:1.8;max-width:700px;margin:0 auto;animation:slideUp .6s ease .1s backwards;}
+
+section{padding:90px 5%;}
+.sec-max{max-width:1300px;margin:0 auto;}
+.sec-tag{font-size:.72rem;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:800;margin-bottom:10px;display:block;}
+
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center;animation:fadeIn .8s ease;}
+.story-img{aspect-ratio:4/3;background:linear-gradient(135deg,#fff8f0,#fdf0e4);border:1px solid var(--border);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;box-shadow:var(--shadow2);}
+.story-img img { width:600px;}
+.story-img:hover{transform:scale(1.05) rotate(2deg);box-shadow:var(--shadow2);}
+
+.story-tag{position:absolute;bottom:20px;right:20px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.78rem;font-weight:700;color:var(--ink);box-shadow:var(--shadow);}
+
+.story-text h2{font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);margin-bottom:20px;line-height:1.1;}
+.story-text p{color:var(--ink2);font-size:.95rem;line-height:1.85;margin-bottom:16px;}
+
+.founder-sect{background:linear-gradient(180deg,var(--bg2),var(--bg));}
+.founder-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:40px;display:grid;grid-template-columns:240px 1fr;gap:40px;align-items:start;max-width:900px;margin:0 auto;box-shadow:var(--shadow2);animation:slideUp .8s ease;}
+
+.founder-photo{aspect-ratio:1;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;box-shadow:var(--shadow2);}
+.founder-photo img{width: 280px; border-radius: 30px;}
+
+.founder-badge{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:20px;white-space:nowrap;}
+
+.founder-name{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;color:var(--ink);margin-bottom:4px;}
+.founder-title{color:var(--accent);font-size:.85rem;font-weight:700;margin-bottom:16px;}
+.founder-bio p{color:var(--ink2);font-size:.9rem;line-height:1.8;margin-bottom:12px;}
+.founder-quote{border-left:3px solid var(--accent);padding-left:16px;margin-top:20px;}
+.founder-quote p{color:var(--ink);font-size:.95rem;line-height:1.7;font-style:italic;font-family:'Outfit',sans-serif;}
+
+.wa-founder{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--accent),#ff6b7a);color:#fff;padding:10px 20px;border-radius:50px;font-size:.85rem;font-weight:700;text-decoration:none;margin-top:20px;transition:.3s;}
+.wa-founder:hover{transform:translateY(-3px);}
+
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;animation:fadeIn .8s ease .2s backwards;}
+.val-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px;transition:.35s;position:relative;overflow:hidden;}
+.val-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200px;height:200px;background:radial-gradient(circle,rgba(255,71,87,.1),transparent);border-radius:50%;transition:.6s;}
+.val-card:hover::before{top:50%;right:0;}
+.val-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-6px);}
+.val-icon{font-size:2.4rem;margin-bottom:16px;}
+.val-card h3{font-size:1.1rem;font-weight:800;margin-bottom:10px;color:var(--ink);}
+.val-card p{color:var(--ink2);font-size:.85rem;line-height:1.65;}
+
+.stats-sect{background:linear-gradient(135deg,var(--ink),#1a2332);padding:70px 5%;position:relative;overflow:hidden;}
+.stats-sect::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);}
+
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+.stat-box{text-align:center;padding:28px;background:rgba(255,255,255,.05);border-radius:14px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);transition:.3s;animation:slideUp .6s ease;}
+.stat-box:hover{background:rgba(255,255,255,.1);transform:translateY(-6px);}
+
+.stat-num{font-family:'Outfit',sans-serif;font-size:2.8rem;font-weight:900;color:var(--accent);margin-bottom:8px;line-height:1;}
+.stat-label{color:rgba(255,255,255,.7);font-size:.82rem;font-weight:600;}
+
+.cta-sect{text-align:center;padding:90px 5%;background:linear-gradient(180deg,var(--bg),var(--bg2));}
+.cta-sect h2{font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--ink);margin-bottom:16px;animation:slideUp .6s ease;}
+.cta-sect p{color:var(--ink2);font-size:.95rem;margin-bottom:28px;max-width:600px;margin-left:auto;margin-right:auto;animation:slideUp .6s ease .1s backwards;}
+
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;animation:slideUp .6s ease .2s backwards;}
+.btn-dark{background:var(--ink);color:#fff;padding:14px 32px;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;transition:.3s;border:none;cursor:pointer;}
+.btn-dark:hover{background:var(--accent);transform:translateY(-3px);}
+.btn-wa{background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;padding:14px 32px;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;display:flex;align-items:center;gap:8px;transition:.3s;border:none;cursor:pointer;}
+.btn-wa:hover{transform:translateY(-3px);}
+
+.wa-float{position:fixed;bottom:32px;right:32px;z-index:200;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;box-shadow:0 6px 28px rgba(37,211,102,.4);text-decoration:none;animation:floatBounce 3s ease-in-out infinite;}
+@keyframes floatBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.wa-float:hover{transform:scale(1.15);}
+
+footer{background:linear-gradient(135deg,var(--ink),#1a2332);color:rgba(255,255,255,.8);padding:70px 5% 30px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:50px;margin-bottom:50px;max-width:1300px;margin-left:auto;margin-right:auto;}
+.footer-brand p{font-size:.85rem;line-height:1.8;margin-top:14px;opacity:.75;max-width:300px;}
+.footer-logo{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px;}
+.footer-col h4{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:#fff;margin-bottom:20px;font-weight:800;}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:12px;}
+.footer-col a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.85rem;transition:.3s;}
+.footer-col a:hover{color:var(--accent2);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;text-align:center;font-size:.75rem;opacity:.6;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:900px){
+  .story-grid{grid-template-columns:1fr;gap:30px;}
+  .story-img{display:none;}
+  .founder-card{grid-template-columns:1fr;gap:24px;}
+  .values-grid{grid-template-columns:repeat(2,1fr);}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+  .hamburger{display:block;}
+}
+@media(max-width:540px){
+  .values-grid,.stats-grid{grid-template-columns:1fr;}
+  section{padding:50px 5%;}
+  .footer-grid{grid-template-columns:1fr;}
+  .cta-btns{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Productiz <span class="dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a class="active">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a class="wa-btn-nav" href="https://wa.me/923014365045" target="_blank">💬 WhatsApp</a>
+    <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop</a>
+  <a class="active">ℹ️ About</a>
+  <a href="contact.html">📞 Contact</a>
+</div>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>Built for <em>Explorers</em><br>& Tech Lovers</h1>
+    <p>Productiz is Pakistan's premier destination for premium imported tech gear and travel accessories — curated with obsessive attention to quality.</p>
+  </div>
+</div>
+
+<section>
+<div class="sec-max">
+  <div class="story-grid">
+    <div class="story-img"><img src="https://i.ibb.co/DPTFSNdW/8ee533d3b2c4.png" alt=""><div class="story-tag">Est. 2017 · Rawalpindi, Pakistan</div></div>
+    <div class="story-text">
+      <span class="sec-tag">Our Story</span>
+      <h2>How Productiz Was Born</h2>
+      <p>Productiz started with a simple frustration: finding genuinely premium tech accessories in Pakistan was hard. Cheap copies, unreliable sellers, and no single trusted source — it was a mess.</p>
+      <p>In 2017, we decided to fix that. We built direct relationships with manufacturers and distributors worldwide to bring authentic, high-quality products to Pakistan at fair prices — all with the simplicity of ordering on WhatsApp and paying cash on delivery.</p>
+      <p>Today, with 300+ carefully curated products and thousands of happy customers, Productiz is the go-to name for anyone who takes their gear seriously.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="founder-sect">
+<div class="sec-max">
+  <div style="text-align:center;margin-bottom:48px;animation:fadeIn .8s ease;">
+    <span class="sec-tag">The Person Behind It</span>
+    <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;color:var(--ink);">Meet the Founder</h2>
+  </div>
+  <div class="founder-card">
+    <div><div class="founder-photo"><img src="https://i.ibb.co/7x0qhCv1/2a8bd65b09cc.png" alt=""><span class="founder-badge">Founder & CEO</span></div></div>
+    <div>
+      <div class="founder-name">Muhammad Mohsin</div>
+      <div class="founder-title">Founder & CEO, Productiz</div>
+      <div class="founder-bio">
+        <p>A passionate technologist and avid traveler, Haris built Productiz from the ground up after years of struggling to find authentic, premium gear in local markets.</p>
+        <p>He personally vets every product in the Productiz catalogue, ensuring that only items meeting strict quality standards make the cut.</p>
+      </div>
+      <div class="founder-quote"><p>"I want every Productiz customer to unbox their order and feel that satisfaction of premium quality."</p></div>
+      <a class="wa-founder" href="https://wa.me/923014365045?text=Hello Mohsin! I'd like to get in touch with Productiz." target="_blank">💬 Message Mohsin</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="sec-max">
+  <div style="text-align:center;margin-bottom:52px;">
+    <span class="sec-tag">What Drives Us</span>
+    <h2 style="font-family:'Outfit',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);font-weight:900;color:var(--ink);">Our Core Values</h2>
+  </div>
+  <div class="values-grid">
+    <div class="val-card"><div class="val-icon">🎯</div><h3>Uncompromising Quality</h3><p>Every product is personally tested and handpicked. We turn away far more than we accept.</p></div>
+    <div class="val-card"><div class="val-icon">🤝</div><h3>Radical Transparency</h3><p>No hidden charges, no misleading photos, no fake reviews. What you see is what you get.</p></div>
+    <div class="val-card"><div class="val-icon">💬</div><h3>Human Support</h3><p>Real people, real responses. WhatsApp us and get a helpful answer within minutes.</p></div>
+  </div>
+</div>
+</section>
+
+<div class="stats-sect">
+  <div class="stats-grid">
+    <div class="stat-box"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Products Listed</div></div>
+    <div class="stat-box"><div class="stat-num">2K+</div><div class="stat-label">Happy Customers</div></div>
+    <div class="stat-box"><div class="stat-num">6+</div><div class="stat-label">Years in Business</div></div>
+    <div class="stat-box"><div class="stat-num">4.9★</div><div class="stat-label">Average Rating</div></div>
+  </div>
+</div>
+
+<section class="cta-sect">
+  <h2>Ready to Upgrade Your Gear?</h2>
+  <p>Browse premium products and order directly on WhatsApp. Cash on delivery available nationwide.</p>
+  <div class="cta-btns">
+    <a class="btn-dark" href="shop.html">Browse Collection →</a>
+    <a class="btn-wa" href="https://wa.me/923014365045?text=Hello Productiz! I want to explore your products." target="_blank">💬 WhatsApp Us</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">Productiz ●</div>
+      <p>Pakistan's #1 destination for premium imported tech and travel gear. Quality guaranteed, delivered to your door.</p>
+    </div>
+    <div class="footer-col"><h4>Shop</h4><ul><li><a href="shop.html">All Products</a></li><li><a href="shop.html?cat=tech">Tech Gadgets</a></li><li><a href="shop.html?cat=tour">Travel Gear</a></li><li><a href="shop.html?cat=acc">Accessories</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Support</h4><ul><li><a href="https://wa.me/923014365045" target="_blank">WhatsApp Us</a></li><li><a href="shipping.html">Shipping Info</a></li><li><a href="returns.html">Returns</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 Productiz. All rights reserved. | Rawalpindi, Pakistan | +92 313 7666766
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/923014365045" target="_blank">💬</a>
+
+<script src="data.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  IH.init();
+  document.getElementById('statTotal').textContent = IH.getCounts().total + '+';
+});
+</script>
+</body>
+</html>

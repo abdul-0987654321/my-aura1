@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shipping Info – Productiz</title>
+<link rel="shortcut icon" href="https://i.ibb.co/kVTNhYVJ/253481a36603.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f8f9fa;--bg2:#ecf0f5;--ink:#0f1419;--ink2:#4a5568;--ink3:#8892a8;--accent:#ff4757;--accent2:#ffa502;--border:#e0e6ed;--radius:14px;--shadow:0 4px 12px rgba(15,20,25,.08);--shadow2:0 8px 32px rgba(15,20,25,.14);}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+nav{position:sticky;top:0;z-index:100;background:rgba(248,249,250,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:72px;}
+.nav-logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:1.6rem;color:var(--ink);letter-spacing:-1px;display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo:hover{color:var(--accent);}
+.nav-logo .dot{width:10px;height:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{color:var(--ink2);text-decoration:none;font-size:.95rem;font-weight:600;transition:.3s;}
+.nav-links a:hover{color:var(--accent);}
+.wa-btn-nav{background:linear-gradient(135deg,var(--accent),#ff6b7a);color:#fff;padding:10px 22px;border-radius:50px;font-size:.88rem;font-weight:700;border:none;display:flex;align-items:center;gap:8px;text-decoration:none;transition:.3s;}
+.wa-btn-nav:hover{transform:translateY(-3px);}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.4rem;}
+.mobile-menu{display:none;position:fixed;top:72px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:16px 5%;flex-direction:column;gap:4px;z-index:99;}
+.mobile-menu a{color:var(--ink2);text-decoration:none;padding:10px 12px;border-radius:8px;font-weight:500;}
+.mobile-menu.open{display:flex;}
+
+.page-hero{background:linear-gradient(135deg,var(--ink),#1a2332);padding:70px 5%;text-align:center;position:relative;overflow:hidden;}
+.page-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);}
+.page-hero-inner{position:relative;max-width:700px;margin:0 auto;}
+.page-hero h1{font-family:'Outfit',sans-serif;font-size:clamp(2rem,5vw,3rem);font-weight:900;color:#fff;margin-bottom:12px;letter-spacing:-1px;}
+.page-hero h1 em{color:var(--accent);font-style:normal;}
+.page-hero p{color:rgba(255,255,255,.7);font-size:.95rem;line-height:1.7;}
+
+.breadcrumb{padding:14px 5%;font-size:.8rem;color:var(--ink3);background:#fff;border-bottom:1px solid var(--border);}
+.breadcrumb a{color:var(--accent);text-decoration:none;font-weight:600;}
+
+.content-wrap{max-width:1000px;margin:0 auto;padding:60px 5%;}
+
+.sec-tag{font-size:.7rem;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:800;margin-bottom:8px;display:block;}
+
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:50px;}
+.info-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:28px;text-align:center;transition:.3s;}
+.info-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-5px);}
+.info-card .ic-icon{font-size:2.4rem;margin-bottom:14px;}
+.info-card h3{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:800;color:var(--ink);margin-bottom:8px;}
+.info-card p{color:var(--ink2);font-size:.84rem;line-height:1.6;}
+.info-card .ic-val{font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:900;color:var(--accent);margin-bottom:6px;}
+
+.content-section{margin-bottom:44px;}
+.content-section h2{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid var(--border);}
+
+.table-wrap{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:20px;}
+table{width:100%;border-collapse:collapse;}
+thead{background:linear-gradient(135deg,var(--ink),#1a2332);}
+thead th{color:#fff;padding:14px 20px;font-size:.82rem;font-weight:700;text-align:left;letter-spacing:.5px;}
+tbody tr{border-bottom:1px solid var(--border2);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:rgba(255,71,87,.03);}
+tbody td{padding:14px 20px;font-size:.88rem;color:var(--ink2);}
+tbody td:first-child{font-weight:700;color:var(--ink);}
+.badge-green{background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;}
+.badge-orange{background:#fef3c7;color:#b45309;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;}
+
+.info-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.info-list li{display:flex;align-items:flex-start;gap:12px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px;}
+.info-list li .li-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.info-list li .li-text{font-size:.88rem;color:var(--ink2);line-height:1.6;}
+.info-list li .li-text strong{color:var(--ink);display:block;margin-bottom:3px;font-size:.9rem;}
+
+.wa-cta{background:linear-gradient(135deg,rgba(255,71,87,.08),rgba(255,165,2,.08));border:1px solid rgba(255,71,87,.15);border-radius:14px;padding:32px;text-align:center;margin-top:40px;}
+.wa-cta h3{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;color:var(--ink);margin-bottom:10px;}
+.wa-cta p{color:var(--ink2);font-size:.88rem;margin-bottom:20px;}
+.wa-cta a{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;padding:12px 28px;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;transition:.3s;}
+.wa-cta a:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(37,211,102,.35);}
+
+.wa-float{position:fixed;bottom:32px;right:32px;z-index:200;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;box-shadow:0 6px 28px rgba(37,211,102,.4);text-decoration:none;animation:floatBounce 3s ease-in-out infinite;}
+@keyframes floatBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+footer{background:linear-gradient(135deg,var(--ink),#1a2332);color:rgba(255,255,255,.8);padding:40px 5%;text-align:center;}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin-bottom:16px;}
+.footer-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.84rem;transition:.3s;}
+.footer-links a:hover{color:var(--accent2);}
+.footer-copy{font-size:.75rem;opacity:.5;}
+
+.related-pages{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:50px;}
+.rel-page{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:var(--ink);transition:.3s;display:flex;align-items:center;gap:12px;}
+.rel-page:hover{border-color:var(--accent);box-shadow:var(--shadow);transform:translateY(-3px);}
+.rel-page .rp-icon{font-size:1.6rem;flex-shrink:0;}
+.rel-page .rp-text h4{font-size:.88rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.rel-page .rp-text p{font-size:.76rem;color:var(--ink3);}
+
+@media(max-width:768px){.info-cards{grid-template-columns:1fr;}.nav-links{display:none;}.hamburger{display:block;}.related-pages{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Productiz <span class="dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:14px;">
+    <a class="wa-btn-nav" href="https://wa.me/923014365045" target="_blank">💬 WhatsApp</a>
+    <button class="hamburger" onclick="document.getElementById('mob').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mob">
+  <a href="index.html">🏠 Home</a><a href="shop.html">🛍️ Shop</a><a href="about.html">ℹ️ About</a><a href="contact.html">📞 Contact</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <h1>🚚 Shipping <em>Info</em></h1>
+    <p>Fast, reliable delivery across Pakistan — from our store to your doorstep.</p>
+  </div>
+</div>
+<div class="breadcrumb"><a href="index.html">Home</a> / <a href="contact.html">Support</a> / Shipping Info</div>
+
+<div class="content-wrap">
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="ic-icon">⚡</div>
+      <div class="ic-val">Next Day</div>
+      <h3>Rawalpindi / Islamabad</h3>
+      <p>Orders placed before 5 PM are dispatched same day and delivered next business day.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">🚚</div>
+      <div class="ic-val">3–5 Days</div>
+      <h3>Other Cities</h3>
+      <p>All major cities including Lahore, Karachi, Peshawar, Multan, and more.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-icon">💰</div>
+      <div class="ic-val">COD</div>
+      <h3>Cash on Delivery</h3>
+      <p>Pay when your order arrives — no advance payment needed, ever.</p>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <span class="sec-tag">Delivery Timelines</span>
+    <h2>Shipping by Location</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Location</th><th>Delivery Time</th><th>Shipping Cost</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Rawalpindi / Islamabad</td><td>Next Business Day</td><td>Free on orders Rs. 3,000+</td><td><span class="badge-green">Fastest</span></td></tr>
+          <tr><td>Lahore</td><td>2–3 Business Days</td><td>Rs. 150–200</td><td><span class="badge-green">Available</span></td></tr>
+          <tr><td>Karachi</td><td>3–5 Business Days</td><td>Rs. 200–300</td><td><span class="badge-green">Available</span></td></tr>
+          <tr><td>Peshawar</td><td>2–4 Business Days</td><td>Rs. 150–250</td><td><span class="badge-green">Available</span></td></tr>
+          <tr><td>Multan / Faisalabad</td><td>3–4 Business Days</td><td>Rs. 200–250</td><td><span class="badge-green">Available</span></td></tr>
+          <tr><td>Other Cities / Remote Areas</td><td>5–7 Business Days</td><td>Rs. 250–400</td><td><span class="badge-orange">Ask Us</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <span class="sec-tag">How It Works</span>
+    <h2>Order to Delivery Process</h2>
+    <ul class="info-list">
+      <li><span class="li-icon">💬</span><div class="li-text"><strong>Step 1 — Place Your Order on WhatsApp</strong>Message us the product name and your delivery address. We confirm stock and price instantly.</div></li>
+      <li><span class="li-icon">📦</span><div class="li-text"><strong>Step 2 — Order Dispatched</strong>We pack and dispatch your order the same day (if ordered before 5 PM) or the next morning.</div></li>
+      <li><span class="li-icon">🔗</span><div class="li-text"><strong>Step 3 — Tracking Shared</strong>You'll receive a tracking number via WhatsApp so you can track your order in real-time.</div></li>
+      <li><span class="li-icon">🚪</span><div class="li-text"><strong>Step 4 — Delivered to Your Door</strong>Our courier partner delivers to your address. You pay cash on delivery — simple!</div></li>
+    </ul>
+  </div>
+
+  <div class="content-section">
+    <span class="sec-tag">Important Notes</span>
+    <h2>Things to Know</h2>
+    <ul class="info-list">
+      <li><span class="li-icon">📅</span><div class="li-text"><strong>Business Days</strong>Orders are processed Monday to Thursday and Saturday–Sunday. Friday is a day off — orders placed on Friday will be dispatched Saturday.</div></li>
+      <li><span class="li-icon">📍</span><div class="li-text"><strong>Correct Address</strong>Please provide your complete address with house number, street, area, and city. Incorrect addresses may cause delays.</div></li>
+      <li><span class="li-icon">📞</span><div class="li-text"><strong>Contact Number</strong>Keep your phone handy — our courier may call before delivery to confirm your location.</div></li>
+      <li><span class="li-icon">🎁</span><div class="li-text"><strong>Packaging</strong>All products are carefully packed to ensure they arrive in perfect condition. Fragile items receive extra protective packaging.</div></li>
+    </ul>
+  </div>
+
+  <div class="wa-cta">
+    <h3>Questions About Your Shipment?</h3>
+    <p>WhatsApp us anytime — we'll track your order and give you a real-time update within minutes.</p>
+    <a href="https://wa.me/923014365045?text=Hello Productiz! I have a question about shipping." target="_blank">💬 Ask on WhatsApp</a>
+  </div>
+
+  <div class="related-pages">
+    <a class="rel-page" href="returns.html"><span class="rp-icon">🔄</span><div class="rp-text"><h4>Returns & Refunds</h4><p>30-day hassle-free policy</p></div></a>
+    <a class="rel-page" href="privacy.html"><span class="rp-icon">🔒</span><div class="rp-text"><h4>Privacy Policy</h4><p>How we protect your data</p></div></a>
+    <a class="rel-page" href="terms.html"><span class="rp-icon">📋</span><div class="rp-text"><h4>Terms & Conditions</h4><p>Our store policies</p></div></a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a><a href="shop.html">Shop</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="https://wa.me/923014365045" target="_blank">WhatsApp</a>
+  </div>
+  <div class="footer-copy">© 2026 Productiz. All rights reserved. | Cash on Delivery Available | Pakistan</div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/923014365045" target="_blank">💬</a>
+</body>
+</html>

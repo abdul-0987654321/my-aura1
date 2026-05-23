@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Product – Scentonish</title>
+<link rel="shortcut icon" href="https://i.ibb.co/YF8hjb6F/image.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#faf8f5;--bg2:#f0ebe5;--bg3:#ffffff;
+  --ink:#2a1f1a;--ink2:#5a4a42;--ink3:#8b7b72;
+  --accent:#a8413a;--border:#e8ddd5;--border2:#f0ebe5;
+  --radius:12px;--shadow:0 4px 16px rgba(42,31,26,.08);--shadow2:0 12px 40px rgba(42,31,26,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(250,248,245,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:68px;}
+.nav-logo{font-family:'Outfit',sans-serif;font-weight:900;font-size:1.5rem;color:var(--ink);display:flex;align-items:center;gap:8px;text-decoration:none;}
+.nav-logo .dot{width:8px;height:8px;background:var(--accent);border-radius:50%;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{color:var(--ink2);text-decoration:none;font-size:.9rem;font-weight:500;transition:.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.wa-btn-nav{background:linear-gradient(135deg,var(--accent),#c85a4a);color:#fff;padding:9px 20px;border-radius:50px;font-size:.85rem;font-weight:700;border:none;display:flex;align-items:center;gap:7px;text-decoration:none;transition:.2s;}
+.wa-btn-nav:hover{background:#8a3530;}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.3rem;}
+.mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:16px 5%;flex-direction:column;gap:4px;z-index:99;}
+.mobile-menu a{color:var(--ink2);text-decoration:none;padding:10px 12px;border-radius:8px;font-weight:500;font-size:.9rem;}
+.mobile-menu a:hover{background:var(--bg2);color:var(--accent);}
+.mobile-menu.open{display:flex;}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{padding:14px 5%;font-size:.78rem;color:var(--ink3);border-bottom:1px solid var(--border);background:#fff;}
+.breadcrumb a{color:var(--accent);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ── LOADER ── */
+.loader{display:flex;align-items:center;justify-content:center;min-height:60vh;color:var(--ink3);gap:12px;font-size:.9rem;}
+.spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── PRODUCT WRAP ── */
+.product-wrap{max-width:1200px;margin:0 auto;padding:40px 5%;}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;margin-bottom:60px;}
+
+/* ── GALLERY ── */
+.main-image{width:100%;aspect-ratio:1;background:linear-gradient(135deg,#fdf3ed,#f5ede5);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:12px;overflow:hidden;position:relative;cursor:zoom-in;transition:.2s;}
+.main-image:hover{border-color:var(--accent);box-shadow:var(--shadow2);}
+.main-image img{width:100%;height:100%;object-fit:contain;padding:16px;transition:.4s;}
+.main-image:hover img{transform:scale(1.1);}
+.main-image .emoji-display{font-size:5rem;transition:.3s;}
+.main-image:hover .emoji-display{transform:scale(1.08);}
+
+.thumbs{display:flex;gap:10px;flex-wrap:wrap;}
+.thumb{width:72px;height:72px;background:var(--bg2);border:1.5px solid var(--border);border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;overflow:hidden;transition:.2s;flex-shrink:0;}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6px;}
+.thumb.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(168,65,58,.15);}
+.thumb:hover{border-color:var(--ink3);}
+
+/* ── ZOOM DRAWER ── */
+.img-zoom-overlay{position:fixed;inset:0;background:rgba(42,31,26,.5);backdrop-filter:blur(4px);z-index:300;opacity:0;visibility:hidden;transition:.25s;}
+.img-zoom-overlay.open{opacity:1;visibility:visible;}
+.img-zoom-drawer{position:fixed;top:0;right:0;bottom:0;width:min(90vw,560px);background:#fff;border-left:1px solid var(--border);z-index:310;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.img-zoom-drawer.open{transform:translateX(0);}
+.zoom-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+.zoom-title{font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;color:var(--ink);}
+.zoom-close{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--ink3);transition:.2s;padding:4px;}
+.zoom-close:hover{color:var(--accent);}
+.zoom-content{flex:1;overflow-y:auto;padding:24px;display:flex;align-items:center;justify-content:center;}
+.zoom-img-container{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+.zoom-img-container img{max-width:100%;max-height:100%;object-fit:contain;border-radius:var(--radius);}
+.zoom-img-container .emoji-display-zoom{font-size:100px;}
+.zoom-controls{display:flex;gap:10px;justify-content:center;padding:14px 20px;border-top:1px solid var(--border);}
+.zoom-btn{background:var(--bg2);border:1px solid var(--border);color:var(--ink2);padding:9px 18px;border-radius:8px;font-weight:600;font-size:.82rem;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;}
+.zoom-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ── PRODUCT INFO RIGHT ── */
+.product-info-right{display:flex;flex-direction:column;}
+.prod-badge-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.pbadge{font-size:.65rem;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.5px;}
+.pbadge-hot{background:#fee2e2;color:#a8413a;}
+.pbadge-new{background:#dcfce7;color:#16a34a;}
+.pbadge-best{background:#fef9c3;color:#b45309;}
+
+.prod-title{font-family:'Outfit',sans-serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:20px;}
+
+.price-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px;}
+.price-box-inner{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;}
+.main-price{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;color:var(--ink);}
+
+.stock-row{display:flex;align-items:center;gap:7px;font-size:.82rem;}
+.stock-dot{width:8px;height:8px;border-radius:50%;}
+.stock-dot.green{background:#16a34a;}
+.stock-dot.red{background:#a8413a;}
+.in-stock{color:#16a34a;font-weight:600;}
+.out-stock{color:#a8413a;font-weight:600;}
+.stock-low-txt{color:var(--accent);font-weight:700;}
+
+.wa-order-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#c85a4a);color:#fff;border:none;border-radius:50px;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;transition:.2s;text-decoration:none;font-family:'Inter',sans-serif;}
+.wa-order-btn:hover{background:#8a3530;transform:translateY(-2px);box-shadow:0 6px 20px rgba(168,65,58,.25);}
+
+.wa-inquiry-btn{width:100%;padding:12px;background:transparent;color:var(--ink2);border:1.5px solid var(--border);border-radius:50px;font-size:.9rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s;text-decoration:none;font-family:'Inter',sans-serif;}
+.wa-inquiry-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+.seller-box{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:18px;}
+.seller-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.seller-av{width:44px;height:44px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.95rem;font-family:'Outfit',sans-serif;}
+.seller-name{font-weight:700;font-size:.9rem;color:var(--ink);}
+.seller-sub{font-size:.75rem;color:var(--ink3);}
+.guarantees{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;border-top:1px solid var(--border2);}
+.g-badge{font-size:.72rem;background:var(--bg2);color:var(--ink2);padding:4px 10px;border-radius:20px;font-weight:600;}
+
+/* ── TABS ── */
+.tabs-section{margin-bottom:56px;}
+.tabs-hd{display:flex;gap:0;border-bottom:1.5px solid var(--border);flex-wrap:wrap;}
+.tab-btn{padding:12px 22px;background:transparent;border:none;color:var(--ink3);font-size:.88rem;font-weight:600;cursor:pointer;position:relative;font-family:'Inter',sans-serif;transition:.2s;}
+.tab-btn.active{color:var(--accent);}
+.tab-btn.active::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:2px;background:var(--accent);}
+.tab-content{display:none;padding-top:24px;}
+.tab-content.active{display:block;}
+.desc-text{color:var(--ink2);line-height:1.9;font-size:.92rem;max-width:700px;}
+
+.specs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.spec-item{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:14px;transition:.2s;}
+.spec-item:hover{border-color:var(--accent);}
+.spec-label{font-size:.7rem;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-weight:700;}
+.spec-val{font-size:.9rem;font-weight:600;color:var(--ink);}
+
+/* ── VIDEOS ── */
+.videos-section{margin-bottom:56px;}
+.videos-section-hd{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--border);}
+.videos-section-hd h3{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:700;color:var(--ink);}
+.vid-count-badge{background:var(--bg2);color:var(--accent);font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid var(--border);}
+.videos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.video-item{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:#000;transition:.25s;}
+.video-item:hover{box-shadow:var(--shadow2);transform:translateY(-3px);}
+.video-item.vid-solo{grid-column:1/-1;}
+.video-ratio{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;}
+.video-ratio iframe,.video-ratio video{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}
+.video-link-card{display:flex;align-items:center;gap:14px;padding:18px;background:var(--ink);color:#fff;text-decoration:none;min-height:90px;transition:.2s;}
+.video-link-card:hover{background:var(--accent);}
+.video-link-icon{font-size:2rem;flex-shrink:0;}
+.video-link-text{flex:1;min-width:0;}
+.video-link-title{font-size:.85rem;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;}
+.video-link-sub{font-size:.72rem;opacity:.6;}
+
+/* ── RELATED ── */
+.related-sect{background:var(--bg2);padding:64px 5%;}
+.sec-max{max-width:1200px;margin:0 auto;}
+.sec-hd{margin-bottom:32px;}
+.sec-tag-sm{font-size:.68rem;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px;}
+.sec-hd h2{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:700;color:var(--ink);}
+.rel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.rel-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:.25s;text-decoration:none;}
+.rel-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-3px);}
+.rel-img{aspect-ratio:1;background:linear-gradient(135deg,#fdf3ed,#f5ede5);display:flex;align-items:center;justify-content:center;font-size:2.5rem;overflow:hidden;}
+.rel-img img{width:100%;height:100%;object-fit:contain;padding:8px;transition:.3s;}
+.rel-card:hover .rel-img img{transform:scale(1.08);}
+.rel-info{padding:12px;}
+.rel-info h4{font-size:.84rem;font-weight:600;margin-bottom:8px;color:var(--ink);line-height:1.3;}
+.rel-footer{display:flex;align-items:center;justify-content:space-between;}
+.rel-price{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700;color:var(--ink);}
+.rel-wa{background:var(--accent);color:#fff;padding:5px 10px;border-radius:6px;font-size:.72rem;font-weight:700;text-decoration:none;transition:.2s;}
+.rel-wa:hover{background:#8a3530;}
+
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:28px;right:28px;z-index:200;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 20px rgba(37,211,102,.45);text-decoration:none;animation:pulse 2.5s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.45);}50%{box-shadow:0 4px 36px rgba(37,211,102,.7);}}
+
+/* ── NOT FOUND ── */
+.not-found{text-align:center;padding:100px 20px;}
+.not-found h2{font-family:'Outfit',sans-serif;font-size:2rem;font-weight:700;color:var(--ink);margin-bottom:12px;}
+.not-found p{color:var(--ink2);margin-bottom:24px;}
+.not-found a{background:var(--ink);color:#fff;padding:12px 28px;border-radius:50px;text-decoration:none;font-weight:700;font-size:.9rem;transition:.2s;}
+.not-found a:hover{background:var(--accent);}
+
+/* ── FOOTER ── */
+footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,255,.7);padding:40px 5%;text-align:center;}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:16px;}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;}
+.footer-links a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.82rem;transition:.2s;}
+.footer-links a:hover{color:#d4a574;}
+.footer-copy{font-size:.75rem;opacity:.5;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .product-grid{grid-template-columns:1fr;gap:28px;}
+  .specs-grid{grid-template-columns:1fr;}
+  .rel-grid{grid-template-columns:repeat(2,1fr);}
+  .nav-links{display:none;}
+  .hamburger{display:block;}
+  .videos-grid{grid-template-columns:1fr;}
+  .video-item.vid-solo{grid-column:auto;}
+  .img-zoom-drawer{width:min(95vw,520px);}
+}
+@media(max-width:540px){
+  .rel-grid{grid-template-columns:1fr;}
+  .product-wrap{padding:24px 5%;}
+  .tabs-hd{overflow-x:auto;}
+  .img-zoom-drawer{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Scentonish <span class="dot"></span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html" class="active">Shop</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
+    <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 Home</a>
+  <a href="shop.html">🛍️ Shop</a>
+  <a href="about.html">ℹ️ About</a>
+  <a href="contact.html">📞 Contact</a>
+</div>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="bc-prod">Product</span>
+</div>
+
+<!-- ZOOM DRAWER -->
+<div class="img-zoom-overlay" id="zoomOverlay" onclick="closeZoomDrawer()"></div>
+<div class="img-zoom-drawer" id="zoomDrawer">
+  <div class="zoom-header">
+    <span class="zoom-title" id="zoomTitle">Product Image</span>
+    <button class="zoom-close" onclick="closeZoomDrawer()">✕</button>
+  </div>
+  <div class="zoom-content" id="zoomContent">
+    <div class="zoom-img-container" id="zoomImgContainer"></div>
+  </div>
+  <div class="zoom-controls">
+    <button class="zoom-btn" onclick="rotateZoomImage()">🔄 Rotate</button>
+  </div>
+</div>
+
+<div id="loader" class="loader"><div class="spinner"></div> Loading product…</div>
+
+<div id="notFound" class="product-wrap" style="display:none;">
+  <div class="not-found">
+    <h2>Product Not Found</h2>
+    <p>This product does not exist or may have been removed.</p>
+    <a href="shop.html">← Back to Shop</a>
+  </div>
+</div>
+
+<div id="productWrap" style="display:none;">
+  <div class="product-wrap">
+    <div class="product-grid">
+      <!-- LEFT: Gallery -->
+      <div>
+        <div class="main-image" id="mainImg" onclick="openZoomDrawer()"></div>
+        <div class="thumbs" id="thumbs"></div>
+      </div>
+
+      <!-- RIGHT: Info -->
+      <div class="product-info-right">
+        <div class="prod-badge-row" id="badgeRow"></div>
+        <h1 class="prod-title" id="prodTitle">—</h1>
+
+        <div class="price-box">
+          <div class="price-box-inner">
+            <span class="main-price" id="mainPrice">—</span>
+          </div>
+          <div class="stock-row">
+            <span class="stock-dot green" id="stockDot"></span>
+            <span id="stockText" class="in-stock">In Stock</span>
+          </div>
+        </div>
+
+        <a class="wa-order-btn" id="waOrderBtn" href="#" target="_blank">💬 Order on WhatsApp</a>
+        <a class="wa-inquiry-btn" id="waInquiryBtn" href="#" target="_blank">💬 Ask a Question</a>
+
+        <div class="seller-box">
+          <div class="seller-hd">
+            <div class="seller-av">S</div>
+            <div>
+              <div class="seller-name">Scentonish</div>
+              <div class="seller-sub">Premium Fragrances · Pakistan</div>
+            </div>
+          </div>
+          <div class="guarantees">
+            <span class="g-badge">✓ Authentic</span>
+            <span class="g-badge">🚚 Cash on Delivery</span>
+            <span class="g-badge">💬 Fast Response</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-section">
+      <div class="tabs-hd">
+        <button class="tab-btn active" onclick="switchTab('desc',this)">Description</button>
+        <button class="tab-btn" id="specsTabBtn" onclick="switchTab('specs',this)">Specifications</button>
+      </div>
+      <div class="tab-content active" id="desc">
+        <p class="desc-text" id="descText"></p>
+      </div>
+      <div class="tab-content" id="specs">
+        <div class="specs-grid" id="specsGrid"></div>
+      </div>
+    </div>
+
+    <!-- VIDEOS -->
+    <div class="videos-section" id="videosSection" style="display:none;">
+      <div class="videos-section-hd">
+        <h3>🎬 Product Videos</h3>
+        <span class="vid-count-badge" id="vidCountBadge">1 Video</span>
+      </div>
+      <div class="videos-grid" id="videosGrid"></div>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  <section class="related-sect" id="relSect" style="display:none;">
+    <div class="sec-max">
+      <div class="sec-hd">
+        <span class="sec-tag-sm">You May Also Like</span>
+        <h2>Related Fragrances</h2>
+      </div>
+      <div class="rel-grid" id="relGrid"></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shop</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="https://wa.me/923457566768" target="_blank">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Scentonish. All rights reserved. | Premium Fragrances | Cash on Delivery Available</div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/923457566768?text=Hello! I want to shop at Scentonish." target="_blank">💬</a>
+
+<script src="data.js"></script>
+<script>
+let currentZoomImageSrc = '';
+let currentZoomEmoji = '';
+let zoomRotation = 0;
+
+function pkr(n){return 'Rs. '+Number(n||0).toLocaleString('en-PK');}
+function waMsg(name,price){return encodeURIComponent('Hello Scentonish! I\'d like to order:\n\n🛍️ *'+name+'*\n💰 Price: '+pkr(price)+'\n\nPlease confirm availability. Thank you!');}
+function waAsk(name){return encodeURIComponent('Hello Scentonish! I have a question about:\n\n🌹 *'+name+'*\n\nCould you please help?');}
+
+function setMainImage(src, emoji){
+  const mi = document.getElementById('mainImg');
+  if(src){
+    mi.innerHTML='<img src="'+src+'" alt="Product" onerror="this.parentElement.innerHTML=\'<span class=\\\'emoji-display\\\'>\'+(emoji||\'🌹\')+\'<\/span>\'"/>';
+  } else {
+    mi.innerHTML='<span class="emoji-display">'+(emoji||'🌹')+'</span>';
+  }
+  currentZoomImageSrc=src; currentZoomEmoji=emoji;
+}
+
+function openZoomDrawer(){
+  const container=document.getElementById('zoomImgContainer');
+  zoomRotation=0;
+  if(currentZoomImageSrc){
+    container.innerHTML='<img src="'+currentZoomImageSrc+'" id="zoomImg" alt="Zoomed" style="transform:rotate(0deg);border-radius:var(--radius);"/>';
+  } else {
+    container.innerHTML='<span class="emoji-display-zoom">'+(currentZoomEmoji||'🌹')+'</span>';
+  }
+  document.getElementById('zoomOverlay').classList.add('open');
+  document.getElementById('zoomDrawer').classList.add('open');
+}
+
+function closeZoomDrawer(){
+  document.getElementById('zoomOverlay').classList.remove('open');
+  document.getElementById('zoomDrawer').classList.remove('open');
+}
+
+function rotateZoomImage(){
+  zoomRotation=(zoomRotation+90)%360;
+  const img=document.getElementById('zoomImg');
+  if(img) img.style.transform='rotate('+zoomRotation+'deg)';
+}
+
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeZoomDrawer();});
+
+function switchTab(name,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  if(el) el.classList.add('active');
+}
+
+function getYouTubeId(url){
+  const m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  return m?m[1]:null;
+}
+function isDirectVideo(url){return /\.(mp4|webm|mov|ogg)(\?.*)?$/i.test(url);}
+
+function renderVideos(videos){
+  const section=document.getElementById('videosSection');
+  const grid=document.getElementById('videosGrid');
+  const badge=document.getElementById('vidCountBadge');
+  const valid=(videos||[]).filter(v=>v&&v.trim());
+  if(!valid.length){section.style.display='none';return;}
+  section.style.display='block';
+  badge.textContent=valid.length+(valid.length===1?' Video':' Videos');
+  grid.innerHTML=valid.map((url,i)=>{
+    const solo=valid.length===1?' vid-solo':'';
+    const ytId=getYouTubeId(url);
+    if(ytId){
+      return '<div class="video-item'+solo+'"><div class="video-ratio"><iframe src="https://www.youtube.com/embed/'+ytId+'?rel=0&modestbranding=1" title="Video '+(i+1)+'" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen loading="lazy"></iframe></div></div>';
+    } else if(isDirectVideo(url)){
+      const ext=(url.match(/\.(\w+)(\?|$)/)||[])[1]||'mp4';
+      return '<div class="video-item'+solo+'"><div class="video-ratio"><video controls preload="metadata"><source src="'+url+'" type="video/'+ext+'">Your browser does not support video.</video></div></div>';
+    } else {
+      return '<div class="video-item'+solo+'" style="background:transparent;"><a class="video-link-card" href="'+url+'" target="_blank"><span class="video-link-icon">▶️</span><div class="video-link-text"><span class="video-link-title">'+url+'</span><span class="video-link-sub">Click to watch ↗</span></div></a></div>';
+    }
+  }).join('');
+}
+
+function renderProduct(p){
+  document.getElementById('loader').style.display='none';
+  document.getElementById('productWrap').style.display='block';
+  document.title=p.name+' – Scentonish';
+  document.getElementById('bc-prod').textContent=p.name;
+  document.getElementById('zoomTitle').textContent=p.name;
+  document.getElementById('prodTitle').textContent=p.name;
+  document.getElementById('mainPrice').textContent=pkr(p.price);
+
+  const br=document.getElementById('badgeRow');
+  if(p.badge){
+    const bc=p.badge==='NEW'?'pbadge-new':p.badge==='HOT'?'pbadge-hot':'pbadge-best';
+    br.innerHTML='<span class="pbadge '+bc+'">'+p.badge+'</span>';
+  }
+
+  const gallery=Array.isArray(p.gallery)?p.gallery.filter(Boolean):[];
+  setMainImage(p.img||(gallery[0]||''),p.emoji);
+
+  const tc=document.getElementById('thumbs');
+  const allImgs=[];const seen={};
+  [p.img||''].concat(gallery).forEach(s=>{if(s&&!seen[s]){seen[s]=1;allImgs.push(s);}});
+  if(allImgs.length>0){
+    tc.innerHTML=allImgs.map((src,i)=>'<div class="thumb '+(i===0?'active':'')+'" onclick="selectThumb(this,\''+src+'\',\''+(p.emoji||'')+'\')"><img src="'+src+'" alt="img'+i+'" onerror="this.style.display=\'none\'"/></div>').join('');
+  } else {
+    tc.innerHTML='<div class="thumb active">'+(p.emoji||'🌹')+'</div>';
+  }
+
+  document.getElementById('waOrderBtn').href='https://wa.me/923457566768?text='+waMsg(p.name,p.price);
+  document.getElementById('waInquiryBtn').href='https://wa.me/923457566768?text='+waAsk(p.name);
+
+  const dot=document.getElementById('stockDot');
+  const st=document.getElementById('stockText');
+  if(!p.stock||p.stock<=0){
+    dot.classList.replace('green','red');
+    st.textContent='Out of Stock'; st.className='out-stock';
+  } else if(p.stock<=5){
+    st.textContent='⚠️ Only '+p.stock+' left!'; st.className='stock-low-txt';
+  } else {
+    st.textContent='In Stock · '+p.stock+' units'; st.className='in-stock';
+  }
+
+  document.getElementById('descText').textContent=p.description||'No description available.';
+
+  const sg=document.getElementById('specsGrid');
+  const stb=document.getElementById('specsTabBtn');
+  let entries=[];
+  if(p.specs&&typeof p.specs==='object') entries=Object.entries(p.specs);
+  if(entries.length>0){
+    sg.innerHTML=entries.map(([k,v])=>'<div class="spec-item"><div class="spec-label">'+k+'</div><div class="spec-val">'+(v||'—')+'</div></div>').join('');
+    stb.textContent='Specifications ('+entries.length+')';
+  }
+
+  renderVideos(p.videos);
+
+  const related=IH.getProducts().filter(rp=>rp.id!==p.id&&rp.type===p.type).slice(0,4);
+  if(related.length>0){
+    document.getElementById('relSect').style.display='block';
+    document.getElementById('relGrid').innerHTML=related.map(rp=>{
+      const imgEl=rp.img?'<img src="'+rp.img+'" alt="'+rp.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'"/><span style="display:none;font-size:2.5rem;">'+(rp.emoji||'🌹')+'</span>':'<span>'+(rp.emoji||'🌹')+'</span>';
+      return '<a class="rel-card" href="product.html?id='+rp.id+'"><div class="rel-img">'+imgEl+'</div><div class="rel-info"><h4>'+rp.name+'</h4><div class="rel-footer"><span class="rel-price">'+pkr(rp.price)+'</span><a class="rel-wa" href="https://wa.me/923457566768?text='+waMsg(rp.name,rp.price)+'" target="_blank" onclick="event.stopPropagation()">💬 Order</a></div></div></a>';
+    }).join('');
+  }
+}
+
+function selectThumb(el,src,emoji){
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  setMainImage(src,emoji);
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  IH.init();
+  const id=new URLSearchParams(window.location.search).get('id');
+  if(!id){document.getElementById('loader').style.display='none';document.getElementById('notFound').style.display='block';return;}
+  const p=IH.getProducts().find(p=>p.id===id);
+  if(!p){document.getElementById('loader').style.display='none';document.getElementById('notFound').style.display='block';return;}
+  renderProduct(p);
+});
+</script>
+</body>
+</html>

@@ -714,7 +714,18 @@
     .sidebar-overlay.open {
       display: block;
     }
-
+@media(max-width:540px){
+  .wa-btn-nav {
+    padding: 8px 12px;
+    font-size: .78rem;
+  }
+  .nav-logo {
+    font-size: 1.2rem;
+  }
+  nav {
+    padding: 0 3%;
+  }
+}
     @media(max-width:900px) {
       .shop-wrap {
         grid-template-columns: 1fr;
@@ -1055,22 +1066,27 @@
       });
     }
 
-    function productMatchesSpecs(p) {
-      const specCheckboxes = document.querySelectorAll('[data-spec-key]:checked');
-      if (!specCheckboxes.length) return true;
-      const selectedSpecs = {};
-      specCheckboxes.forEach(cb => {
-        const key = cb.dataset.specKey, val = cb.dataset.specVal;
-        if (!selectedSpecs[key]) selectedSpecs[key] = [];
-        selectedSpecs[key].push(val);
-      });
-      return Object.entries(selectedSpecs).every(([key, vals]) => {
-        if (!p.specs || !p.specs[key]) return false;
-        const pVal = normalizeSpecValue(p.specs[key]);
-        return vals.some(v => pVal.toLowerCase().includes(v.toLowerCase()));
-      });
-    }
+   function productMatchesSpecs(p) {
+  const specCheckboxes = document.querySelectorAll('[data-spec-key]:checked');
+  if (!specCheckboxes.length) return true;
 
+  const selectedSpecs = {};
+  specCheckboxes.forEach(cb => {
+    const key = cb.dataset.specKey.toLowerCase().trim();
+    const val = cb.dataset.specVal;
+    if (!selectedSpecs[key]) selectedSpecs[key] = [];
+    selectedSpecs[key].push(val.toLowerCase());
+  });
+
+  return Object.entries(selectedSpecs).every(([key, vals]) => {
+    if (!p.specs) return false;
+    // Case-insensitive key match
+    const matchedKey = Object.keys(p.specs).find(k => k.toLowerCase().trim() === key);
+    if (!matchedKey) return false;
+    const pVal = normalizeSpecValue(p.specs[matchedKey]).toLowerCase();
+    return vals.some(v => pVal.includes(v));
+  });
+}
     function updateSideCounts() {
       const all = IH.getProducts();
       document.getElementById('mcnt').textContent = all.filter(p => p.type === 'men').length;
@@ -1078,47 +1094,58 @@
       document.getElementById('ucnt').textContent = all.filter(p => p.type === 'unisex').length;
     }
 
-    function applyFilters() {
-      const q = (document.getElementById('searchInput').value || '').toLowerCase();
-      const showMen = document.getElementById('fmen').checked;
-      const showWomen = document.getElementById('fwomen').checked;
-      const showUnisex = document.getElementById('funisex').checked;
-      const maxP = Number(document.getElementById('priceSlider').value || 10000);
-      const fnew = document.getElementById('fnew').checked;
-      const fhot = document.getElementById('fhot').checked;
-      const fbest = document.getElementById('fbest').checked;
-      const sort = document.getElementById('sortSelect').value;
-      const badgeActive = fnew || fhot || fbest;
+function applyFilters() {
+  const q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  const showMen = document.getElementById('fmen').checked;
+  const showWomen = document.getElementById('fwomen').checked;
+  const showUnisex = document.getElementById('funisex').checked;
+  const maxP = Number(document.getElementById('priceSlider').value || 10000);
+  const fnew = document.getElementById('fnew').checked;
+  const fhot = document.getElementById('fhot').checked;
+  const fbest = document.getElementById('fbest').checked;
+  const sort = document.getElementById('sortSelect').value;
+  const badgeActive = fnew || fhot || fbest;
 
-      // Fresh copy from IH every time
-      const allProducts = IH.getProducts();
+  const allProducts = IH.getProducts();
 
-      filtered = allProducts.filter(p => {
-        if (p.type === 'men' && !showMen) return false;
-        if (p.type === 'women' && !showWomen) return false;
-        if (p.type === 'unisex' && !showUnisex) return false;
-        if (currentTab !== 'all' && p.type !== currentTab) return false;
-        if (p.price > maxP) return false;
-        if (q && !p.name.toLowerCase().includes(q)) return false;
-        if (badgeActive) {
-          if (fnew && p.badge === 'NEW') return true;
-          if (fhot && p.badge === 'HOT') return true;
-          if (fbest && p.badge === 'BEST') return true;
-          return false;
-        }
-        if (!productMatchesSpecs(p)) return false;
-        return true;
-      });
+  filtered = allProducts.filter(p => {
+    // Type checkbox filter
+    if (p.type === 'men' && !showMen) return false;
+    if (p.type === 'women' && !showWomen) return false;
+    if (p.type === 'unisex' && !showUnisex) return false;
 
-      if (sort === 'price_asc') filtered.sort((a, b) => a.price - b.price);
-      else if (sort === 'price_desc') filtered.sort((a, b) => b.price - a.price);
-      else if (sort === 'newest') filtered.sort((a, b) => a.badge === 'NEW' ? -1 : 1);
+    // Tab filter
+    if (currentTab !== 'all' && p.type !== currentTab) return false;
 
-      document.getElementById('resultCount').textContent = filtered.length + ' product' + (filtered.length !== 1 ? 's' : '');
-      currentPage = 1;
-      renderPage();
+    // Price filter
+    if (p.price > maxP) return false;
+
+    // Search filter
+    if (q && !p.name.toLowerCase().includes(q)) return false;
+
+    // Badge filter — FIXED: yeh baaki filters ke saath kaam karta hai
+    if (badgeActive) {
+      if (fnew && p.badge === 'NEW') return true;
+      if (fhot && p.badge === 'HOT') return true;
+      if (fbest && p.badge === 'BEST') return true;
+      return false;
     }
 
+    // Specs filter
+    if (!productMatchesSpecs(p)) return false;
+
+    return true;
+  });
+
+  if (sort === 'price_asc') filtered.sort((a, b) => a.price - b.price);
+  else if (sort === 'price_desc') filtered.sort((a, b) => b.price - a.price);
+  else if (sort === 'newest') filtered.sort((a, b) => (a.badge === 'NEW' ? -1 : 1));
+
+  document.getElementById('resultCount').textContent =
+    filtered.length + ' product' + (filtered.length !== 1 ? 's' : '');
+  currentPage = 1;
+  renderPage();
+}
     function renderPage() {
       const g = document.getElementById('productsGrid');
       const slice = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Scentonish – Premium Fragrances Pakistan</title>
 <link rel="shortcut icon" href="https://i.ibb.co/YF8hjb6F/image.png" type="image/x-icon">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#faf8f5;--bg2:#f0ebe5;--bg3:#ffffff;
@@ -17,7 +17,13 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6;}
+body{
+background:var(--bg);
+color:var(--ink);
+font-family:'Plus Jakarta Sans',sans-serif;
+overflow-x:hidden;
+line-height:1.7;
+}
 
 /* ════════════════════════════════════════ NAV ════════════════════════════════════════ */
 nav{position:sticky;top:0;z-index:100;background:rgba(250,248,245,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:72px;box-shadow:var(--shadow3);animation:slideDown .5s ease;}
@@ -131,14 +137,79 @@ section{padding:90px 5%;}
 .products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
 .product-card{background:#fff;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:.35s;cursor:pointer;animation:fadeIn .6s ease;}
 
-.product-card:hover{border-color:var(--accent);box-shadow:var(--shadow2);transform:translateY(-8px);}
+.product-card:hover{
+border-color:var(--accent);
+box-shadow:0 18px 40px rgba(0,0,0,.08);
+transform:translateY(-10px) scale(1.02);
+}
 
-.product-img{aspect-ratio:1;background:linear-gradient(135deg,#fdf3ed,#f5ede5);display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;overflow:hidden;transition:.4s;}
 
-.product-card:hover .product-img{transform:scale(1.12);}
 
-.product-img img{width:100%;height:100%;object-fit:contain;padding:10px;transition:.4s;}
-.product-card:hover .product-img img{transform:scale(1.1);}
+.hover-preview{
+position:absolute;
+top:0;
+left:100%;
+width:100%;
+height:100%;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+visibility:hidden;
+transition:.35s ease;
+border-left:1px solid var(--border);
+z-index:5;
+}
+
+.hover-preview img{
+width:100%;
+height:100%;
+object-fit:contain;
+padding:10px;
+}
+
+.product-card:hover .hover-preview{
+opacity:1;
+visibility:visible;
+left:0;
+}
+.product-card:hover{
+background:linear-gradient(135deg,#fff7f2,#f8efe7);
+}
+
+.product-card:hover .product-img img{
+transform:none;
+}
+
+.product-img{
+width:100%;
+height:260px;
+background:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+overflow:hidden;
+padding:10px;
+position:relative;
+border-bottom:1px solid var(--border);
+}
+
+/* image stays controlled */
+.product-img img{
+width:100%;
+height:100%;
+object-fit:contain;
+transition:.3s ease;
+}
+
+/* hover effect ONLY soft zoom inside box */
+.product-card:hover .product-img img{
+transform:scale(1.05);
+}
+
+
+
 
 .product-badge{position:absolute;top:12px;left:12px;font-size:.65rem;font-weight:800;padding:4px 10px;border-radius:20px;animation:slideInRight .5s ease;}
 
@@ -189,7 +260,8 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 .footer-bottom{text-align:center;padding:30px 0;border-top:1px solid rgba(255,255,255,.1);font-size:.78rem;opacity:.6;}
 
 /* ════════════════════════════════════════ WA FLOAT ════════════════════════════════════════ */
-.wa-float{position:fixed;bottom:32px;right:32px;z-index:200;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;text-decoration:none;transition:.3s;animation:floatBounce 3s ease-in-out infinite;box-shadow:0 6px 28px rgba(37,211,102,.4);}
+.wa-float{ backdrop-filter:blur(10px);
+border:3px solid rgba(255,255,255,.2);position:fixed;bottom:32px;right:32px;z-index:200;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.7rem;text-decoration:none;transition:.3s;animation:floatBounce 3s ease-in-out infinite;box-shadow:0 6px 28px rgba(37,211,102,.4);}
 
 @keyframes floatBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
 
@@ -198,6 +270,9 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 /* ════════════════════════════════════════ RESPONSIVE ════════════════════════════════════════ */
 @media(max-width:1024px){.products-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:900px){
+  .reviews-grid{
+grid-template-columns:1fr;
+}
   .hero{grid-template-columns:1fr;gap:30px;padding:50px 5%;}
   .hero-right{display:none;}
   .cats-grid,.why-grid{grid-template-columns:repeat(2,1fr);}
@@ -215,11 +290,179 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   .footer-divider{grid-template-columns:1fr;}
   .footer-info{flex-direction:column;gap:12px;}
 }
+/* navbar */
+.glass-nav{
+position:sticky;
+top:0;
+z-index:1000;
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(18px);
+border-bottom:1px solid rgba(255,255,255,.4);
+}
+
+.nav-links a{
+position:relative;
+overflow:hidden;
+}
+
+.nav-links a::after{
+content:'';
+position:absolute;
+left:0;
+bottom:-6px;
+width:0;
+height:2px;
+background:linear-gradient(90deg,var(--accent),var(--accent2));
+transition:.35s ease;
+border-radius:20px;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after{
+width:100%;
+}
+
+.cart-btn{
+position:relative;
+width:46px;
+height:46px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#fff;
+border:1px solid var(--border);
+text-decoration:none;
+font-size:1.1rem;
+transition:.3s;
+box-shadow:var(--shadow3);
+}
+
+.cart-btn:hover{
+transform:translateY(-4px);
+border-color:var(--accent);
+color:var(--accent);
+}
+
+.cart-badge{
+position:absolute;
+top:-5px;
+right:-5px;
+background:var(--accent);
+color:#fff;
+font-size:.68rem;
+font-weight:700;
+width:20px;
+height:20px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+/* navbar animation */
+.mobile-menu{
+opacity:0;
+visibility:hidden;
+transform:translateY(-10px);
+transition:.35s ease;
+display:flex;
+}
+
+.mobile-menu.open{
+opacity:1;
+visibility:visible;
+transform:translateY(0);
+}
+/* reviews */
+.reviews-section{
+background:#fff;
+}
+
+.reviews-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:24px;
+}
+
+.review-card{
+background:linear-gradient(135deg,#fff,#faf8f5);
+border:1px solid var(--border);
+padding:30px;
+border-radius:18px;
+transition:.35s;
+}
+
+.review-card:hover{
+transform:translateY(-6px);
+box-shadow:var(--shadow2);
+border-color:var(--accent);
+}
+
+.stars{
+font-size:1.1rem;
+margin-bottom:14px;
+color:#f59e0b;
+}
+
+.review-card p{
+color:var(--ink2);
+margin-bottom:16px;
+line-height:1.8;
+}
+
+.review-card h4{
+font-size:.9rem;
+color:var(--accent);
+}
+/* addto cart */
+.product-actions{
+display:flex;
+gap:8px;
+align-items:center;
+}
+
+.cart-add-btn{
+background:#fff;
+border:1px solid var(--border);
+padding:6px 12px;
+border-radius:8px;
+font-size:.78rem;
+font-weight:700;
+cursor:pointer;
+transition:.3s;
+}
+
+.cart-add-btn:hover{
+background:var(--accent);
+border-color:var(--accent);
+color:#fff;
+transform:translateY(-2px);
+}
+.toast{
+position:fixed;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+background:#2a1f1a;
+color:#fff;
+padding:12px 20px;
+border-radius:50px;
+font-weight:700;
+opacity:0;
+pointer-events:none;
+transition:.3s;
+z-index:9999;
+}
+
+.toast.show{
+opacity:1;
+transform:translateX(-50%) translateY(-10px);
+}
 </style>
 </head>
 <body>
 
-<nav>
+<nav class="glass-nav">
   <a class="nav-logo" href="index.html">Scentonish <span class="dot"></span></a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
@@ -227,10 +470,12 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
-  <div class="nav-right">
-    <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
-    <button class="hamburger" onclick="toggleMenu()">☰</button>
-  </div>
+  <!-- Nav right mein yeh replace karo: -->
+<div class="nav-right">
+  <div id="cartIconContainer"></div>
+  <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</div>
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
@@ -277,42 +522,13 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   </div>
 </div>
 
-<section>
-<div class="sec-max">
-  <div class="sec-header center">
-    <span class="sec-tag">Collections</span>
-    <h2>Shop by Fragrance Type</h2>
-    <p>Discover your perfect scent among our carefully curated collections for men, women, and unisex fragrances.</p>
-  </div>
-  <div class="cats-grid">
-    <a class="cat-card" href="shop.html?cat=men">
-      <span class="cat-icon">👨</span>
-      <h3>Men's Fragrances</h3>
-      <p>Bold woody, spicy oud, and fresh citrus scents designed for the modern man.</p>
-      <span class="cat-count" id="menCount">— Perfumes</span>
-    </a>
-    <a class="cat-card" href="shop.html?cat=women">
-      <span class="cat-icon">👩</span>
-      <h3>Women's Fragrances</h3>
-      <p>Elegant florals, romantic blooms, and sensual orientals for every woman.</p>
-      <span class="cat-count" id="womenCount">— Perfumes</span>
-    </a>
-    <a class="cat-card" href="shop.html?cat=unisex">
-      <span class="cat-icon">✨</span>
-      <h3>Unisex Collections</h3>
-      <p>Versatile fragrances that transcend gender—perfect for anyone who loves great scent.</p>
-      <span class="cat-count" id="unisexCount">— Perfumes</span>
-    </a>
-  </div>
-</div>
-</section>
 
 <section class="products-sect">
 <div class="sec-max">
   <div class="sec-header">
-    <span class="sec-tag">Top Picks</span>
-    <h2>Best Sellers</h2>
-    <p>Our most-loved fragrances—tested by fragrance enthusiasts and Scentonish approved.</p>
+    <span class="sec-tag">Luxury Collection</span>
+<h2>Discover Signature Fragrances</h2>
+<p>Premium perfumes crafted for lasting impressions — bold, elegant, and unforgettable scents for every personality.</p>
   </div>
   <div class="product-tabs">
     <button class="tab-btn active" onclick="switchTab('men',this)">👨 Men's Fragrances</button>
@@ -324,21 +540,39 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   </div>
 </div>
 </section>
-
-<section>
+<section class="reviews-section">
 <div class="sec-max">
-  <div class="sec-header center">
-    <span class="sec-tag">Why Choose Us</span>
-    <h2>Why Scentonish?</h2>
-  </div>
-  <div class="why-grid">
-    <div class="why-card"><div class="why-icon">⚡</div><h3>Fast Delivery</h3><p>Rawalpindi: Next day. Other cities: 3–5 days. Express options available nationwide.</p></div>
-    <div class="why-card"><div class="why-icon">🛡️</div><h3>100% Authentic</h3><p>Every fragrance sourced from trusted international distributors. Guaranteed genuine.</p></div>
-    <div class="why-card"><div class="why-icon">💬</div><h3>WhatsApp Support</h3><p>Order, track, and get fragrance advice directly on WhatsApp. Cash on Delivery available.</p></div>
-  </div>
+
+<div class="sec-header center">
+<span class="sec-tag">Testimonials</span>
+<h2>What Customers Say</h2>
+<p>Trusted by fragrance lovers across Pakistan.</p>
+</div>
+
+<div class="reviews-grid">
+
+<div class="review-card">
+<div class="stars">★★★★★</div>
+<p>"Amazing fragrance quality. Lasting bohat achi hai."</p>
+<h4>— Ali, Lahore</h4>
+</div>
+
+<div class="review-card">
+<div class="stars">★★★★★</div>
+<p>"Packaging premium thi aur delivery fast."</p>
+<h4>— Hira, Islamabad</h4>
+</div>
+
+<div class="review-card">
+<div class="stars">★★★★★</div>
+<p>"Best perfume store experience online."</p>
+<h4>— Salman, Karachi</h4>
+</div>
+
+</div>
 </div>
 </section>
-
+<div id="toast" class="toast"></div>
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -389,19 +623,19 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 <a class="wa-float" href="https://wa.me/923457566768?text=Hello! I'm interested in Scentonish fragrances." target="_blank">💬</a>
 
 <script src="data.js"></script>
+<script src="cart.js"></script>
 <script>
 let currentTab = 'men';
 
 function toggleMenu() {
-  document.getElementById('mobileMenu').classList.toggle('open');
+  const menu = document.getElementById('mobileMenu');
+  menu.classList.toggle('open');
 }
 
 function updateCounts() {
   const counts = IH.getCounts();
-  document.getElementById('totalCount').textContent = counts.total + '+';
-  document.getElementById('menCount').textContent = counts.men + ' Perfumes';
-  document.getElementById('womenCount').textContent = counts.women + ' Perfumes';
-  document.getElementById('unisexCount').textContent = counts.unisex + ' Perfumes';
+  const total = document.getElementById('totalCount');
+  if (total) total.textContent = counts.total + '+';
 }
 
 function goToProduct(id) {
@@ -418,7 +652,8 @@ function renderProducts(tab) {
   g.innerHTML = all.map((p, i) => {
     const bc = p.badge === 'NEW' ? 'badge-new' : p.badge === 'HOT' ? 'badge-hot' : 'badge-best';
     const imgEl = p.img
-      ? `<img src="${p.img}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:3.2rem">${p.emoji||'🌹'}</span>`
+      ? `<img src="${p.img}" alt="${p.name}">
+         <div class="hover-preview"><img src="${p.hoverImg || p.img}" alt="${p.name}"></div>`
       : `<span>${p.emoji || '🌹'}</span>`;
     return `<div class="product-card" onclick="goToProduct('${p.id}')" style="animation-delay:${i*50}ms">
       <div class="product-img">
@@ -429,7 +664,13 @@ function renderProducts(tab) {
         <h4>${p.name}</h4>
         <div class="product-footer">
           <span class="price">${IH.pkr(p.price)}</span>
-          <button class="view-btn" onclick="event.stopPropagation();goToProduct('${p.id}')">View →</button>
+          <div class="product-actions">
+            
+            <button class="view-btn"
+              onclick="event.stopPropagation();goToProduct('${p.id}')">
+              View →
+            </button>
+          </div>
         </div>
       </div>
     </div>`;
@@ -446,6 +687,10 @@ function switchTab(tab, el) {
 window.addEventListener('ih_products_updated', () => { updateCounts(); renderProducts(currentTab); });
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Cart icon inject karo nav mein
+  const container = document.getElementById('cartIconContainer');
+  if (container) container.innerHTML = CART.getCartIconHTML();
+
   IH.init();
   updateCounts();
   renderProducts('men');

@@ -362,7 +362,7 @@ select.form-control{cursor:pointer;}
   .side-nav{transform:translateX(-100%);width:240px;}
   .side-nav.open{transform:translateX(0);}
   .side-close-btn{display:block;}
-  .main{margin-left:0;}
+  .main{margin-left:0; padding-top: 52px;}
   .top-bar{top:52px;}
   .content{padding:12px;}
   .stat-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
@@ -726,6 +726,12 @@ select.form-control{cursor:pointer;}
               <button class="spec-add-btn" onclick="addSpecRow('add')">+ Add Specification</button>
             </div>
           </div>
+          <!-- VOLUME PRICING SECTION -->
+<div class="specs-section" style="margin-top:12px;">
+  <div class="specs-section-title">🧴 Volume Pricing (Optional)</div>
+  <div id="add-volumes-list"></div>
+  <button class="spec-add-btn" onclick="addVolumeRow('add')">+ Add Volume/Size</button>
+</div>
           <div class="form-row">
             <div class="form-group"><label>Rating (1–5)</label><input type="number" class="form-control" id="add-rating" min="1" max="5" step="0.1" placeholder="4.5"/></div>
             <div class="form-group"><label>Review Count</label><input type="number" class="form-control" id="add-reviews" placeholder="0"/></div>
@@ -921,6 +927,11 @@ select.form-control{cursor:pointer;}
         <button class="spec-add-btn" onclick="addSpecRow('edit')">+ Add Specification</button>
       </div>
     </div>
+    <div class="specs-section" style="margin-top:12px;">
+  <div class="specs-section-title">🧴 Volume Pricing (Optional)</div>
+  <div id="edit-volumes-list"></div>
+  <button class="spec-add-btn" onclick="addVolumeRow('edit')">+ Add Volume/Size</button>
+</div>
     <div class="form-row">
       <div class="form-group"><label>Rating</label><input type="number" class="form-control" id="edit-rating" min="1" max="5" step="0.1"/></div>
       <div class="form-group"><label>Reviews</label><input type="number" class="form-control" id="edit-reviews"/></div>
@@ -1000,7 +1011,9 @@ function lgUnlockDashboard() {
   IH.init();
   epInit('add'); epInit('edit');
   renderSpecsList('add'); renderVideos('add'); renderGallery('add');
+  renderVolumes('add');
   renderVideos('edit'); renderGallery('edit');
+  renderVolumes('edit');
   onCategoryChange('add');
   initRevealHide();
   refresh();
@@ -1019,7 +1032,6 @@ function lgLogout() {
   lgClearErr();
 }
 
-// Auto-login if session exists
 window.addEventListener('DOMContentLoaded', ()=>{
   if(sessionStorage.getItem(SESSION_KEY)==='1') {
     document.getElementById('loginScreen').style.display='none';
@@ -1063,17 +1075,15 @@ function dzOver(e,mode,zone){e.preventDefault();e.stopPropagation();const el=doc
 function dzLeave(mode,zone){const el=document.getElementById(`${mode}-${zone==='main'?'main':'gallery'}-dz`);if(el)el.classList.remove('drag-over');}
 function dzDrop(e,mode,zone){e.preventDefault();e.stopPropagation();dzLeave(mode,zone);const files=[...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'));if(!files.length){toast('❌ Sirf image files allowed hain','error');return;}if(zone==='main'){dzReadFile(files[0],(src,name)=>{dzSetMain(mode,src,name,'File');});}else{files.forEach(f=>{if(addGalleryItems.length>=GALLERY_LIMIT&&mode==='add'){toast(`Max ${GALLERY_LIMIT} images`,'error');return;}if(editGalleryItems.length>=GALLERY_LIMIT&&mode==='edit'){toast(`Max ${GALLERY_LIMIT} images`,'error');return;}dzReadFile(f,(src)=>{if(mode==='add')addGalleryItems.push(src);else editGalleryItems.push(src);renderGallery(mode);});});toast('✅ Gallery mein add ho gaya!');}}
 function dzFile(e,mode,zone){const files=[...e.target.files].filter(f=>f.type.startsWith('image/'));if(!files.length)return;if(zone==='main'){dzReadFile(files[0],(src,name)=>{dzSetMain(mode,src,name,'File');});}else{files.forEach(f=>{if(addGalleryItems.length>=GALLERY_LIMIT&&mode==='add'){toast(`Max ${GALLERY_LIMIT} images`,'error');return;}if(editGalleryItems.length>=GALLERY_LIMIT&&mode==='edit'){toast(`Max ${GALLERY_LIMIT} images`,'error');return;}dzReadFile(f,(src)=>{if(mode==='add')addGalleryItems.push(src);else editGalleryItems.push(src);renderGallery(mode);});});toast('✅ Gallery updated!');}e.target.value='';}
-// REPLACE KARO:
+
 function dzReadFile(file, cb) {
   if (file.size > 5 * 1024 * 1024) { toast('❌ File 5MB se bara hai', 'error'); return; }
   const reader = new FileReader();
   reader.onload = async (e) => {
     const base64 = e.target.result;
-    // Pehle preview dikhao
     cb(base64, file.name);
-    // Background mein File object se upload karo (base64 nahi)
     toast('⏳ ImgBB pe upload ho rahi hai...', 'success');
-    const url = await IH.uploadToImgBB(file); // ← file object bhejna better
+    const url = await IH.uploadToImgBB(file);
     if (url) {
       const activeMode = document.getElementById('editModal').classList.contains('open') ? 'edit' : 'add';
       document.getElementById(activeMode + '-img').value = url;
@@ -1087,6 +1097,7 @@ function dzReadFile(file, cb) {
   };
   reader.readAsDataURL(file);
 }
+
 function dzSetMain(mode,src,name,srcType){document.getElementById(`${mode}-main-img`).src=src;document.getElementById(`${mode}-main-preview`).style.display='block';document.getElementById(`${mode}-main-dz`).style.display='none';document.getElementById(`${mode}-main-src-tag`).textContent=srcType;document.getElementById(`${mode}-main-src-name`).textContent=name||'';document.getElementById(`${mode}-img`).value=src;dzMainSrc[mode]=src;}
 function dzUrlLive(mode,zone,url){if(zone==='main'&&url.trim()){const img=document.getElementById(`${mode}-main-img`);img.src=url;img.onerror=()=>{img.src='';};document.getElementById(`${mode}-main-preview`).style.display='block';document.getElementById(`${mode}-main-src-tag`).textContent='URL';document.getElementById(`${mode}-main-src-name`).textContent='';document.getElementById(`${mode}-main-dz`).style.display='none';}}
 function dzUrlCommit(mode,zone){if(zone==='main'){const url=document.getElementById(`${mode}-img`).value.trim();if(!url){toast('❌ URL enter karo','error');return;}dzSetMain(mode,url,url.split('/').pop().substring(0,30),'URL');toast('✅ URL set!');}}
@@ -1138,26 +1149,20 @@ const REVEAL_IDS = ['ov-revenue','ov-profit','ov-today','h-rev','pl-rev','pl-cos
 const REVEAL_SUBS = { 'ov-revenue':'ov-orders','ov-profit':'ov-margin','ov-today':'ov-todayp','pl-rev':'pl-units','pl-profit':'pl-margin','pl-avg':'pl-orders' };
 const EYE_MAP = { 'ov-revenue':'eye-ov-revenue','ov-profit':'eye-ov-profit','ov-today':'eye-ov-today','h-rev':'eye-h-rev','pl-rev':'eye-pl-rev','pl-cost':'eye-pl-cost','pl-profit':'eye-pl-profit','pl-avg':'eye-pl-avg' };
 
-// Store real values separately
-const _realValues = {};   // id → real display string
-const _subValues  = {};   // subId → real display string
+const _realValues = {};
+const _subValues  = {};
 const MASK_VAL = '● ● ● ●';
 const MASK_SUB = '• • •';
 
-// Call after every render to store real values and mask hidden ones
 function applyRevealMasks() {
   REVEAL_IDS.forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     const isHidden = el.classList.contains('hidden');
-    // Store whatever is currently in textContent as real value (if not masked)
     if(el.textContent !== MASK_VAL && el.textContent !== '') {
       _realValues[id] = el.textContent;
     }
-    // Apply mask if hidden
     if(isHidden) el.textContent = MASK_VAL;
-
-    // Sub element
     const subId = REVEAL_SUBS[id];
     if(subId) {
       const sub = document.getElementById(subId);
@@ -1191,9 +1196,7 @@ function toggleReveal(valId, subId) {
   const eye = eyeId ? document.getElementById(eyeId) : null;
 
   if(isHidden) {
-    // — REVEAL —
     el.classList.remove('hidden');
-    // Restore real text, then animate counter
     const savedVal = _counterState[valId];
     if(savedVal !== undefined) {
       el.textContent = pkr(savedVal);
@@ -1207,19 +1210,12 @@ function toggleReveal(valId, subId) {
       sub.textContent = _subValues[subKey] || '';
     }
     if(eye) { eye.textContent='🙈'; eye.classList.remove('cnt-pop'); void eye.offsetWidth; eye.classList.add('cnt-pop'); }
-
     spawnSparkles(el);
-
-    // Ripple
     const card = el.closest('.stat-card');
     if(card){ card.classList.remove('reveal-ripple'); void card.offsetWidth; card.classList.add('reveal-ripple'); setTimeout(()=>card.classList.remove('reveal-ripple'),600); }
-
-    // Auto-hide after 8s
     clearTimeout(el._hideTimer);
     el._hideTimer = setTimeout(()=>{ hideVal(valId); }, 8000);
-
   } else {
-    // — HIDE —
     clearTimeout(el._hideTimer);
     hideVal(valId);
   }
@@ -1228,11 +1224,9 @@ function toggleReveal(valId, subId) {
 function hideVal(valId) {
   const el = document.getElementById(valId);
   if(!el) return;
-  // Save current real text before masking
   if(el.textContent !== MASK_VAL) _realValues[valId] = el.textContent;
   el.classList.add('hidden');
   el.textContent = MASK_VAL;
-
   const subKey = REVEAL_SUBS[valId];
   if(subKey) {
     const sub = document.getElementById(subKey);
@@ -1249,49 +1243,27 @@ function hideVal(valId) {
 // ══════════════════════════════════════════
 // 💰 ANIMATED COUNTER ENGINE
 // ══════════════════════════════════════════
-// Tracks last animated values to avoid re-animating same number
 const _counterState = {};
 
-/* animateCounter(el, targetVal, opts)
-   el        — DOM element
-   targetVal — final numeric value
-   opts.pkr  — true = format as PKR string
-   opts.suffix — string appended after number
-   opts.dur  — duration ms (default 900)
-   opts.color— CSS color class to flash on finish
-*/
 function animateCounter(el, targetVal, opts={}) {
   if(!el) return;
   const key = el.id || el.dataset.cid || (el.dataset.cid = Math.random().toString(36).slice(2));
   const prev = _counterState[key] ?? 0;
-  _counterState[key] = targetVal; // always store latest
-
-  // If element is hidden, just store value — don't animate yet
+  _counterState[key] = targetVal;
   if(el.classList.contains('hidden')) return;
-
-  if(prev === targetVal) return; // no change, skip
-
+  if(prev === targetVal) return;
   const dur   = opts.dur  ?? 900;
   const start = performance.now();
   const from  = prev;
   const diff  = targetVal - from;
-
   function ease(t){ return 1 - Math.pow(1-t, 3); }
-
   function tick(now){
-    // Stop if element got hidden mid-animation
     if(el.classList.contains('hidden')) return;
-
     const elapsed = now - start;
     const progress = Math.min(elapsed / dur, 1);
     const current = from + diff * ease(progress);
-
-    if(opts.pkr){
-      el.textContent = 'Rs ' + Math.round(current).toLocaleString('en-PK');
-    } else {
-      el.textContent = opts.suffix ? Math.round(current) + opts.suffix : Math.round(current);
-    }
-
+    if(opts.pkr){ el.textContent = 'Rs ' + Math.round(current).toLocaleString('en-PK'); }
+    else { el.textContent = opts.suffix ? Math.round(current) + opts.suffix : Math.round(current); }
     if(progress < 1){
       requestAnimationFrame(tick);
     } else {
@@ -1308,7 +1280,6 @@ function animateCounter(el, targetVal, opts={}) {
   requestAnimationFrame(tick);
 }
 
-/* Quick set with pop — for small integers like order counts */
 function setWithPop(el, val){
   if(!el) return;
   const key = el.id || (el.dataset.cid = Math.random().toString(36).slice(2));
@@ -1320,7 +1291,6 @@ function setWithPop(el, val){
   el.classList.add('cnt-pop');
 }
 
-/* Spawn sparkle particles around an element */
 function spawnSparkles(el){
   const rect = el.getBoundingClientRect();
   const cx = rect.left + rect.width/2;
@@ -1334,19 +1304,12 @@ function spawnSparkles(el){
     const rad   = angle * Math.PI/180;
     const dx    = Math.cos(rad)*dist;
     const dy    = Math.sin(rad)*dist;
-    sp.style.cssText = `
-      left:${cx + window.scrollX}px;
-      top:${cy  + window.scrollY}px;
-      --dx:${dx}px;--dy:${dy}px;
-      background:${['#c8441a','#f59e0b','#22c55e','#60a5fa','#e8a020'][i%5]};
-      animation-delay:${i*40}ms;
-    `;
+    sp.style.cssText = `left:${cx + window.scrollX}px;top:${cy + window.scrollY}px;--dx:${dx}px;--dy:${dy}px;background:${['#c8441a','#f59e0b','#22c55e','#60a5fa','#e8a020'][i%5]};animation-delay:${i*40}ms;`;
     document.body.appendChild(sp);
     setTimeout(()=>sp.remove(), 800);
   }
 }
 
-/* animatePkrInline — for sale preview boxes already in DOM */
 function animatePkrInline(id, val){
   const el = document.getElementById(id);
   if(!el) return;
@@ -1359,27 +1322,20 @@ function animatePkrInline(id, val){
 function renderOverview(){
   if(typeof IH==='undefined')return;
   const counts=IH.getCounts(),stats=IH.getStats(),sales=IH.getSales();
-
   setWithPop(document.getElementById('ov-total'), counts.total);
   document.getElementById('ov-cats').textContent=`Men:${counts.men} | Women:${counts.women} | Unisex:${counts.unisex}`;
-
   animateCounter(document.getElementById('ov-revenue'), stats.totalRevenue, {pkr:true});
   document.getElementById('ov-orders').textContent=stats.totalOrders+' orders · '+stats.totalUnits+' units';
-  // Re-apply hidden if currently hidden
-  ['ov-revenue','ov-orders','ov-profit','ov-margin','ov-today','ov-todayp'].forEach(id=>{ const el=document.getElementById(id); if(el&&!el.classList.contains('hidden')&&REVEAL_IDS.includes(id)){/* already visible, fine */} });
-
   animateCounter(document.getElementById('ov-profit'), stats.totalProfit, {pkr:true});
   const margin=stats.totalRevenue?Math.round((stats.totalProfit/stats.totalRevenue)*100):0;
   document.getElementById('ov-margin').textContent=margin+'% margin';
-
   animateCounter(document.getElementById('ov-today'), stats.todayRevenue, {pkr:true});
   document.getElementById('ov-todayp').textContent=`Profit: ${pkr(stats.todayProfit)} · ${stats.todayOrders} orders`;
-
-  const maxC=Math.max(counts.tech,counts.tour,counts.acc,1);
+  const maxC=Math.max(counts.men,counts.women,counts.unisex,1);
   document.getElementById('catChart').innerHTML=[['👨 Men',counts.men,'#3b82f6'],['👩 Women',counts.women,'#22c55e'],['✨ Unisex',counts.unisex,'#f59e0b']].map(([l,v,c])=>`<div class="bar-row"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((v/maxC)*100)}%;background:${c}"><span>${v}</span></div></div></div>`).join('');
-  const byCat={tech:0,tour:0,acc:0};sales.forEach(s=>{if(byCat[s.type]!==undefined)byCat[s.type]+=(s.total||0);});
+  const byCat={men:0,women:0,unisex:0};sales.forEach(s=>{if(byCat[s.type]!==undefined)byCat[s.type]+=(s.total||0);});
   const maxR=Math.max(...Object.values(byCat),1);
-  document.getElementById('revChart').innerHTML=[['👨 Men',byCat.tech,'#3b82f6'],['👩 Women',byCat.tour,'#22c55e'],['✨ Unisex',byCat.acc,'#f59e0b']].map(([l,v,c])=>`<div class="bar-row"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((v/maxR)*100)}%;background:${c}"><span>${v>0?pkr(v):'—'}</span></div></div></div>`).join('');
+  document.getElementById('revChart').innerHTML=[['👨 Men',byCat.men,'#3b82f6'],['👩 Women',byCat.women,'#22c55e'],['✨ Unisex',byCat.unisex,'#f59e0b']].map(([l,v,c])=>`<div class="bar-row"><div class="bar-label">${l}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((v/maxR)*100)}%;background:${c}"><span>${v>0?pkr(v):'—'}</span></div></div></div>`).join('');
   const recent=[...sales].reverse().slice(0,8);
   document.getElementById('recentSalesBody').innerHTML=recent.length?recent.map(s=>`<tr><td class="td-emoji">${s.emoji||'📦'}</td><td class="td-name">${s.productName}</td><td>${s.qty}</td><td class="td-price">${pkr(s.salePrice)}</td><td class="td-profit ${s.profit>=0?'profit-pos':'profit-neg'}">${pkr(s.profit)}</td><td class="date-badge">${formatDate(s.date)}</td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--ink3);padding:24px">No sales yet.</td></tr>';
 }
@@ -1421,46 +1377,96 @@ function submitAddProduct(){
   const description=document.getElementById('add-description').value.trim();
   const specs=getSpecsObject('add');
   const videos=getVideosArray('add');
+  const volumes=getVolumesArray('add');
   if(!name||!price||!emoji||!type){toast('❌ Fill required fields','error');return;}
-  IH.addProduct({name,emoji,type,price,cost,stock,badge,rating,reviews,img,gallery:[...addGalleryItems],videos,description,specs,details:[],reviews_list:[]});
+  IH.addProduct({name,emoji,type,price,cost,stock,badge,rating,reviews,img,
+    gallery:[...addGalleryItems],videos,volumes,description,specs,details:[],reviews_list:[]});
   toast('✅ Product added: '+name);
   ['add-name','add-emoji','add-price','add-cost','add-stock','add-rating','add-reviews','add-img','add-description'].forEach(id=>{document.getElementById(id).value='';});
-  document.getElementById('add-badge').value='';document.getElementById('add-type').value='tech';
-  addGalleryItems=[];addSpecItems=[];addVideoItems=[];
-  dzClear('add','main');renderGallery('add');renderSpecsList('add');renderVideos('add');
+  document.getElementById('add-badge').value='';document.getElementById('add-type').value='men';
+  addGalleryItems=[];addSpecItems=[];addVideoItems=[];addVolumeItems=[];
+  dzClear('add','main');renderGallery('add');renderSpecsList('add');renderVideos('add');renderVolumes('add');
   showPage('products',null);
 }
 
 // ══════════════════════════════════════════
-// EDIT PRODUCT
+// EDIT PRODUCT  ← YAHAN FIX HAI
 // ══════════════════════════════════════════
 function openEdit(id){
-  const p=IH.getProducts().find(x=>x.id===id);if(!p)return;
+  const p=IH.getProducts().find(x=>x.id===id);
+  if(!p) return;
+
   document.getElementById('edit-id').value=id;
   ['name','emoji','type','price','cost','stock','badge','rating','reviews','img','description'].forEach(f=>{
     const el=document.getElementById('edit-'+f);if(el)el.value=p[f]||'';
   });
-  if(p.img){dzSetMain('edit',p.img,p.img.split('/').pop().substring(0,30),'URL');}else{dzClear('edit','main');}
-  editGalleryItems=Array.isArray(p.gallery)?[...p.gallery.filter(Boolean)]:[];renderGallery('edit');
-  editVideoItems=Array.isArray(p.videos)?[...p.videos.filter(Boolean)]:[];renderVideos('edit');
-  editSpecItems=p.specs?Object.entries(p.specs).map(([key,val])=>({key,val})):[];renderSpecsList('edit');
-  epInit('edit');document.getElementById('editModal').classList.add('open');
+
+  if(p.img){
+    dzSetMain('edit',p.img,p.img.split('/').pop().substring(0,30),'URL');
+  } else {
+    dzClear('edit','main');
+  }
+
+  editGalleryItems=Array.isArray(p.gallery)?[...p.gallery.filter(Boolean)]:[];
+  renderGallery('edit');
+
+  editVideoItems=Array.isArray(p.videos)?[...p.videos.filter(Boolean)]:[];
+  renderVideos('edit');
+
+  editSpecItems=p.specs?Object.entries(p.specs).map(([key,val])=>({key,val})):[];
+  renderSpecsList('edit');
+
+  epInit('edit');
+
+  // Pehle modal open karo
+  document.getElementById('editModal').classList.add('open');
+
+  // PHIR volumes set aur render karo — DOM ready hoga tab
+  editVolumeItems = Array.isArray(p.volumes)
+    ? p.volumes.map(v => ({label: v.label||'', price: v.price||''}))
+    : [];
+  renderVolumes('edit');
 }
+
 function saveEdit(){
   const id=document.getElementById('edit-id').value;
+  const volumes=getVolumesArray('edit');
+   console.log('=== SAVE EDIT CALLED ===');
+  console.log('Product ID:', id);
+  console.log('Volumes array:', JSON.stringify(volumes));
+  console.log('editVolumeItems:', JSON.stringify(editVolumeItems));
   const existing=IH.getProducts().find(p=>p.id===id)||{};
   IH.updateProduct(id,{
-    name:document.getElementById('edit-name').value,emoji:document.getElementById('edit-emoji').value,
-    type:document.getElementById('edit-type').value,price:Number(document.getElementById('edit-price').value),
-    cost:Number(document.getElementById('edit-cost').value)||0,stock:Number(document.getElementById('edit-stock').value)||0,
-    badge:document.getElementById('edit-badge').value,rating:Number(document.getElementById('edit-rating').value)||4.5,
-    reviews:Number(document.getElementById('edit-reviews').value)||0,img:document.getElementById('edit-img').value.trim(),
-    gallery:[...editGalleryItems],videos:getVideosArray('edit'),description:document.getElementById('edit-description').value.trim(),
-    specs:getSpecsObject('edit'),details:Array.isArray(existing.details)?existing.details:[],reviews_list:Array.isArray(existing.reviews_list)?existing.reviews_list:[],
+    volumes,
+    name:document.getElementById('edit-name').value,
+    emoji:document.getElementById('edit-emoji').value,
+    type:document.getElementById('edit-type').value,
+    price:Number(document.getElementById('edit-price').value),
+    cost:Number(document.getElementById('edit-cost').value)||0,
+    stock:Number(document.getElementById('edit-stock').value)||0,
+    badge:document.getElementById('edit-badge').value,
+    rating:Number(document.getElementById('edit-rating').value)||4.5,
+    reviews:Number(document.getElementById('edit-reviews').value)||0,
+    img:document.getElementById('edit-img').value.trim(),
+    gallery:[...editGalleryItems],
+    videos:getVideosArray('edit'),
+    description:document.getElementById('edit-description').value.trim(),
+    specs:getSpecsObject('edit'),
+    details:Array.isArray(existing.details)?existing.details:[],
+    reviews_list:Array.isArray(existing.reviews_list)?existing.reviews_list:[],
   });
-  closeModal('editModal');toast('✅ Product updated!');renderProductsTable();
+  closeModal('editModal');
+  toast('✅ Product updated!');
+  renderProductsTable();
 }
-function deleteProduct(id){const p=IH.getProducts().find(x=>x.id===id);if(!confirm(`Delete "${p?.name}"?`))return;IH.removeProduct(id);toast('🗑️ Removed');refresh();}
+
+function deleteProduct(id){
+  const p=IH.getProducts().find(x=>x.id===id);
+  if(!confirm(`Delete "${p?.name}"?`)) return;
+  IH.removeProduct(id);
+  toast('🗑️ Removed');
+  refresh();
+}
 
 // ══════════════════════════════════════════
 // SALES
@@ -1479,16 +1485,14 @@ function updateSalePreview(){
   document.getElementById('prev-name').textContent=p.name;
   document.getElementById('prev-stock').textContent=`Stock: ${p.stock||0} units`;
   preview.style.display='block';
-  // Animate sale price & profit per unit
-  animateCounter(document.getElementById('prev-price'),  salePrice,      {pkr:true, dur:500});
-  animateCounter(document.getElementById('prev-profit'), profitPerUnit,  {pkr:true, dur:500});
+  animateCounter(document.getElementById('prev-price'), salePrice, {pkr:true, dur:500});
+  animateCounter(document.getElementById('prev-profit'), profitPerUnit, {pkr:true, dur:500});
   const total=salePrice*qty, totalProfit=profitPerUnit*qty;
   totalPrev.style.display='block';
-  animateCounter(document.getElementById('sale-total-disp'),  total,        {pkr:true, dur:600});
-  // Profit line update (text)
+  animateCounter(document.getElementById('sale-total-disp'), total, {pkr:true, dur:600});
   setTimeout(()=>{
-    const pEl = document.getElementById('sale-profit-disp');
-    if(pEl) pEl.textContent = `Profit: ${pkr(totalProfit)} (${total?Math.round((totalProfit/total)*100):0}%)`;
+    const pEl=document.getElementById('sale-profit-disp');
+    if(pEl) pEl.textContent=`Profit: ${pkr(totalProfit)} (${total?Math.round((totalProfit/total)*100):0}%)`;
   }, 620);
 }
 function submitSale(){const id=document.getElementById('sale-product').value;const qty=Number(document.getElementById('sale-qty').value)||1;const override=document.getElementById('sale-price-override').value;if(!id){toast('❌ Select a product','error');return;}const p=IH.getProducts().find(x=>x.id===id);if(p&&p.stock<qty&&!confirm(`Stock is only ${p.stock}, selling ${qty}. Continue?`))return;const sale=IH.recordSale(id,qty,override?Number(override):null);toast(`✅ Sale! Revenue: ${pkr(sale.total)} | Profit: ${pkr(sale.profit)}`);document.getElementById('sale-product').value='';document.getElementById('sale-qty').value=1;document.getElementById('sale-price-override').value='';document.getElementById('salePreview').style.display='none';document.getElementById('saleTotalPreview').style.display='none';showPage('history',null);}
@@ -1515,10 +1519,10 @@ function deleteSaleEntry(id){if(!confirm('Delete this sale?'))return;IH.deleteSa
 function renderProfitLoss(){
   if(typeof IH==='undefined')return;
   const stats=IH.getStats(),sales=IH.getSales();
-  animateCounter(document.getElementById('pl-rev'),    stats.totalRevenue, {pkr:true});
+  animateCounter(document.getElementById('pl-rev'), stats.totalRevenue, {pkr:true});
   document.getElementById('pl-units').textContent=stats.totalUnits+' units · '+stats.totalOrders+' orders';
-  animateCounter(document.getElementById('pl-cost'),   stats.totalCost,    {pkr:true});
-  animateCounter(document.getElementById('pl-profit'), stats.totalProfit,  {pkr:true});
+  animateCounter(document.getElementById('pl-cost'), stats.totalCost, {pkr:true});
+  animateCounter(document.getElementById('pl-profit'), stats.totalProfit, {pkr:true});
   const margin=stats.totalRevenue?Math.round((stats.totalProfit/stats.totalRevenue)*100):0;
   document.getElementById('pl-margin').textContent=margin+'% margin';
   animateCounter(document.getElementById('pl-avg'), stats.totalOrders?Math.round(stats.totalRevenue/stats.totalOrders):0, {pkr:true});
@@ -1551,10 +1555,76 @@ function renderProfitLoss(){
 // ══════════════════════════════════════════
 // RESET & REFRESH
 // ══════════════════════════════════════════
-function confirmReset(){if(!confirm('⚠️ Delete ALL products and sales?'))return;if(!confirm('Final warning — reset everything?'))return;localStorage.removeItem('ih_products');localStorage.removeItem('ih_sales');IH.init();toast('🔄 Data reset');refresh();}
+function confirmReset(){
+  if(!confirm('⚠️ Delete ALL products and sales?'))return;
+  if(!confirm('Final warning — reset everything?'))return;
+  localStorage.removeItem('ih_products');
+  localStorage.removeItem('ih_sales');
+  IH.init();
+  toast('🔄 Data reset');
+  addVolumeItems=[];editVolumeItems=[];
+  renderVolumes('add');renderVolumes('edit');
+  refresh();
+}
 function refresh(){if(typeof IH==='undefined')return;renderOverview();renderProductsTable();populateSaleDropdown();renderHistory();renderProfitLoss();}
 window.addEventListener('ih_products_updated',refresh);
 window.addEventListener('ih_sales_updated',refresh);
+
+// ══════════════════════════════════════════
+// VOLUME PRICING
+// ══════════════════════════════════════════
+let addVolumeItems = [];
+let editVolumeItems = [];
+
+function addVolumeRow(mode) {
+  const items = mode === 'add' ? addVolumeItems : editVolumeItems;
+  items.push({ label: '', price: '' });
+  renderVolumes(mode);
+  setTimeout(() => {
+    const inputs = document.querySelectorAll(`#${mode}-volumes-list .vol-label`);
+    if(inputs.length) inputs[inputs.length-1].focus();
+  }, 50);
+}
+
+function removeVolumeRow(mode, i) {
+  if(mode === 'add') addVolumeItems.splice(i, 1);
+  else editVolumeItems.splice(i, 1);
+  renderVolumes(mode);
+}
+
+function updateVolume(mode, i, field, val) {
+  if(mode === 'add') addVolumeItems[i][field] = val;
+  else editVolumeItems[i][field] = val;
+}
+
+function renderVolumes(mode) {
+  const items = mode === 'add' ? addVolumeItems : editVolumeItems;
+  const container = document.getElementById(mode + '-volumes-list');
+  if(!container) return;
+  if(!items.length) {
+    container.innerHTML = '<div class="specs-empty">No volumes yet. e.g. "50ml" → 5500</div>';
+    return;
+  }
+  container.innerHTML = items.map((item, i) => `
+    <div class="spec-row">
+      <input type="text" class="vol-label" placeholder="e.g. 50ml" value="${escHtml(item.label)}"
+        oninput="updateVolume('${mode}',${i},'label',this.value)"/>
+      <span class="spec-sep">Rs.</span>
+      <input type="number" placeholder="Price" value="${escHtml(String(item.price))}"
+        oninput="updateVolume('${mode}',${i},'price',this.value)"/>
+      <button class="spec-del-btn" onclick="removeVolumeRow('${mode}',${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function getVolumesArray(mode) {
+  const items = mode === 'add' ? addVolumeItems : editVolumeItems;
+  return items.filter(v => v.label.trim() && v.price).map(v => ({
+    label: v.label.trim(),
+    price: Number(v.price)
+  }));
+}
 </script>
+
 </body>
 </html>

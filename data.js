@@ -47,10 +47,20 @@ const IH = (() => {
       details:      safeParseArray(p.details),
       reviews_list: safeParseArray(p.reviews_list),
       specs:        safeParseObject(p.specs),
+volumes: (() => {
+  if (Array.isArray(p.volumes) && p.volumes.length > 0) return p.volumes;
+  if (typeof p.volumes === 'string' && p.volumes.trim() && p.volumes !== '[]') {
+    try {
+      const parsed = JSON.parse(p.volumes);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch(e) { return []; }
+  }
+  return [];
+})(),
     };
   }
 
-  function serializeProduct(p) {
+ function serializeProduct(p) {
     function cleanImg(src) {
       if (!src) return '';
       if (String(src).startsWith('data:')) return '';
@@ -68,6 +78,7 @@ const IH = (() => {
       details:      JSON.stringify(Array.isArray(p.details)      ? p.details      : []),
       reviews_list: JSON.stringify(Array.isArray(p.reviews_list) ? p.reviews_list : []),
       specs:        JSON.stringify((p.specs && typeof p.specs === 'object') ? p.specs : {}),
+      volumes:      JSON.stringify(Array.isArray(p.volumes)      ? p.volumes      : []),
     };
   }
 
@@ -152,7 +163,7 @@ const IH = (() => {
   // Step 3: Agar naya data aaya to silently update
   // ════════════════════════════════════════
   async function init() {
-
+console.log('Cache se products:', _products.length); // yahan check karo
     // STEP 1: Cache se turant dikhao — page instant load hoga
     loadFromCache();
 
@@ -179,9 +190,10 @@ const IH = (() => {
       if (Array.isArray(pRes) && pRes.length > 0) {
         const newProducts = pRes.map(normalizeProduct);
         // Sirf tab update karo jab data actually change hua ho
-        const newStr = JSON.stringify(newProducts.map(p => p.id + p.price + p.stock));
-        const oldStr = JSON.stringify(_products.map(p => p.id + p.price + p.stock));
-        if (newStr !== oldStr) {
+        // NAYI code — sirf length aur IDs compare karo:
+const newIds = newProducts.map(p => p.id).sort().join(',');
+const oldIds = _products.map(p => p.id).sort().join(',');
+if (true) {
           _products = newProducts;
           changed = true;
         }
@@ -255,7 +267,7 @@ const IH = (() => {
     }
     return null;
   }
-
+// window.dispatchEvent(new Event('ih_products_updated'));
   async function removeProduct(id) {
     _products = _products.filter(function(p) { return p.id !== id; });
     saveToCache();

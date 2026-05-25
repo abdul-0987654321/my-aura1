@@ -145,6 +145,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <li><a href="contact.html">Contact</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:14px;">
+    <div id="cartIconContainer"></div>
     <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
     <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
   </div>
@@ -251,10 +252,11 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 <a class="wa-float" href="https://wa.me/923457566768" target="_blank">💬</a>
 
 <script src="data.js"></script>
+<script src="cart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  IH.init();
-  document.getElementById('statTotal').textContent = IH.getCounts().total + '+';
+  const c = document.getElementById('cartIconContainer');
+  if(c) c.innerHTML = CART.getCartIconHTML();
 });
 </script>
 </body>

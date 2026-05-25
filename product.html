@@ -215,7 +215,9 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+
   <div class="nav-right">
+  <div id="cartIconContainer"></div>
     <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
     <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
   </div>
@@ -279,8 +281,13 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
             <span class="stock-dot green" id="stockDot"></span>
             <span id="stockText" class="in-stock">In Stock</span>
           </div>
+          <div id="volumeSelector" style="display:none;margin-top:14px;"></div>
         </div>
-
+<button class="wa-order-btn" id="addCartBtn" 
+  style="background:linear-gradient(135deg,#2a1f1a,#3d3530);margin-top:10px;"
+  onclick="addToCartProduct()">
+  🛒 Add to Cart
+</button>
         <a class="wa-order-btn" id="waOrderBtn" href="#" target="_blank">💬 Order on WhatsApp</a>
         <a class="wa-inquiry-btn" id="waInquiryBtn" href="#" target="_blank">💬 Ask a Question</a>
 
@@ -351,12 +358,29 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 </footer>
 
 <a class="wa-float" href="https://wa.me/923457566768?text=Hello! I want to shop at Scentonish." target="_blank">💬</a>
-
 <script src="data.js"></script>
+<script src="cart.js"></script>
 <script>
 let currentZoomImageSrc = '';
 let currentZoomEmoji = '';
 let zoomRotation = 0;
+
+function addToCartProduct(){
+  const p = window._currentProduct;
+  if(!p) return;
+  CART.addItem({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    img: p.img || '',
+    emoji: p.emoji || '🌹'
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const c = document.getElementById('cartIconContainer');
+  if(c) c.innerHTML = CART.getCartIconHTML();
+});
 
 function pkr(n){return 'Rs. '+Number(n||0).toLocaleString('en-PK');}
 function waMsg(name,price){return encodeURIComponent('Hello Scentonish! I\'d like to order:\n\n🛍️ *'+name+'*\n💰 Price: '+pkr(price)+'\n\nPlease confirm availability. Thank you!');}
@@ -432,6 +456,39 @@ function renderVideos(videos){
   }).join('');
 }
 
+function onVolumeChange(e, btn, price, label) {
+  const allBtns = document.querySelectorAll('.vol-btn');
+  const clickedSelected = btn.classList.contains('vol-active');
+
+  // Sab reset karo
+  allBtns.forEach(b => {
+    b.classList.remove('vol-active');
+    b.style.borderColor = 'var(--border)';
+    b.style.background = '#fff';
+    b.style.color = 'var(--ink2)';
+  });
+  document.querySelectorAll('input[name="vol_select"]').forEach(r => r.checked = false);
+
+  const p = window._currentProduct;
+
+  if(clickedSelected) {
+    // Deselect — original price wapas
+    document.getElementById('mainPrice').textContent = pkr(p._basePrice);
+    document.getElementById('waOrderBtn').href = 'https://wa.me/923457566768?text=' + waMsg(p.name, p._basePrice);
+    window._currentProduct = { ...p, price: p._basePrice };
+  } else {
+    // Select karo
+    btn.classList.add('vol-active');
+    btn.style.borderColor = 'var(--accent)';
+    btn.style.background = 'rgba(168,65,58,.08)';
+    btn.style.color = 'var(--accent)';
+    e.checked = true;
+
+    document.getElementById('mainPrice').textContent = pkr(price);
+    window._currentProduct = { ...p, price: price };
+    document.getElementById('waOrderBtn').href = 'https://wa.me/923457566768?text=' + waMsg(p.name + ' (' + label + ')', price);
+  }
+}
 function renderProduct(p){
   document.getElementById('loader').style.display='none';
   document.getElementById('productWrap').style.display='block';
@@ -439,7 +496,17 @@ function renderProduct(p){
   document.getElementById('bc-prod').textContent=p.name;
   document.getElementById('zoomTitle').textContent=p.name;
   document.getElementById('prodTitle').textContent=p.name;
-  document.getElementById('mainPrice').textContent=pkr(p.price);
+
+  // Agar volumes hain to price "Select size" dikhao, warna normal price
+  if(p.volumes && p.volumes.length > 0){
+document.getElementById('mainPrice').textContent = pkr(p.price);
+  document.getElementById('mainPrice').style.fontSize = '';
+  document.getElementById('mainPrice').style.color = '';
+  } else {
+    document.getElementById('mainPrice').textContent = pkr(p.price);
+    document.getElementById('mainPrice').style.fontSize = '';
+    document.getElementById('mainPrice').style.color = '';
+  }
 
   const br=document.getElementById('badgeRow');
   if(p.badge){
@@ -447,11 +514,52 @@ function renderProduct(p){
     br.innerHTML='<span class="pbadge '+bc+'">'+p.badge+'</span>';
   }
 
-  const gallery=Array.isArray(p.gallery)?p.gallery.filter(Boolean):[];
-  setMainImage(p.img||(gallery[0]||''),p.emoji);
+  window._currentProduct = p;
+window._currentProduct._basePrice = p.price;
+  // Volume selector
+  const volBox = document.getElementById('volumeSelector');
+  if(p.volumes && p.volumes.length > 0){
+    volBox.style.display = 'block';
+    volBox.innerHTML = `
+      <div style="font-size:.72rem;font-weight:700;color:var(--ink3);text-transform:uppercase;
+        letter-spacing:.8px;margin-bottom:10px;">🧴 Size / Volume</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;">
+        ${p.volumes.map((v) => `
+          <label style="cursor:pointer;">
+            <input type="radio" name="vol_select" value="${v.price}"
+              data-label="${v.label}"
+              style="display:none;"/>
+            <div class="vol-btn"
+              onclick="onVolumeChange(this.previousElementSibling, this, ${v.price}, '${v.label}')"
+              style="padding:10px 18px;border:2px solid var(--border);
+              border-radius:50px;font-size:.85rem;font-weight:700;
+              background:#fff;color:var(--ink2);transition:.2s;cursor:pointer;">
+              ${v.label}<br>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:.78rem;">
+                Rs. ${Number(v.price).toLocaleString('en-PK')}
+              </span>
+            </div>
+          </label>
+        `).join('')}
+      </div>
+    `;
+  } else {
+    volBox.style.display = 'none';
+  }
+
+  // Gallery
+  let gallery = [];
+  if(Array.isArray(p.gallery)){
+    gallery = p.gallery.filter(Boolean);
+  } else if(typeof p.gallery === 'string' && p.gallery.trim()){
+    try { const parsed = JSON.parse(p.gallery); gallery = Array.isArray(parsed) ? parsed.filter(Boolean) : []; }
+    catch(e){ gallery = []; }
+  }
+
+  setMainImage(p.img||(gallery[0]||''), p.emoji);
 
   const tc=document.getElementById('thumbs');
-  const allImgs=[];const seen={};
+  const allImgs=[]; const seen={};
   [p.img||''].concat(gallery).forEach(s=>{if(s&&!seen[s]){seen[s]=1;allImgs.push(s);}});
   if(allImgs.length>0){
     tc.innerHTML=allImgs.map((src,i)=>'<div class="thumb '+(i===0?'active':'')+'" onclick="selectThumb(this,\''+src+'\',\''+(p.emoji||'')+'\')"><img src="'+src+'" alt="img'+i+'" onerror="this.style.display=\'none\'"/></div>').join('');
@@ -459,7 +567,7 @@ function renderProduct(p){
     tc.innerHTML='<div class="thumb active">'+(p.emoji||'🌹')+'</div>';
   }
 
-  document.getElementById('waOrderBtn').href='https://wa.me/923457566768?text='+waMsg(p.name,p.price);
+  document.getElementById('waOrderBtn').href='https://wa.me/923457566768?text='+waMsg(p.name, p.price);
   document.getElementById('waInquiryBtn').href='https://wa.me/923457566768?text='+waAsk(p.name);
 
   const dot=document.getElementById('stockDot');
@@ -502,13 +610,31 @@ function selectThumb(el,src,emoji){
   setMainImage(src,emoji);
 }
 
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function(){
+  const id = new URLSearchParams(window.location.search).get('id');
+  if(!id){
+    document.getElementById('loader').style.display='none';
+    document.getElementById('notFound').style.display='block';
+    return;
+  }
+
+  function tryRender(){
+    const p = IH.getProducts().find(p => p.id === id);
+    if(p){ renderProduct(p); }
+    else { document.getElementById('loader').style.display='flex'; }
+  }
+
+  window.addEventListener('ih_products_updated', function(){
+    const p = IH.getProducts().find(p => p.id === id);
+    if(p){ renderProduct(p); }
+    else {
+      document.getElementById('loader').style.display='none';
+      document.getElementById('notFound').style.display='block';
+    }
+  });
+
   IH.init();
-  const id=new URLSearchParams(window.location.search).get('id');
-  if(!id){document.getElementById('loader').style.display='none';document.getElementById('notFound').style.display='block';return;}
-  const p=IH.getProducts().find(p=>p.id===id);
-  if(!p){document.getElementById('loader').style.display='none';document.getElementById('notFound').style.display='block';return;}
-  renderProduct(p);
+  tryRender();
 });
 </script>
 </body>

@@ -270,9 +270,7 @@ border:3px solid rgba(255,255,255,.2);position:fixed;bottom:32px;right:32px;z-in
 /* ════════════════════════════════════════ RESPONSIVE ════════════════════════════════════════ */
 @media(max-width:1024px){.products-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:900px){
-  .reviews-grid{
-grid-template-columns:1fr;
-}
+  
   .hero{grid-template-columns:1fr;gap:30px;padding:50px 5%;}
   .hero-right{display:none;}
   .cats-grid,.why-grid{grid-template-columns:repeat(2,1fr);}
@@ -375,7 +373,7 @@ transform:translateY(0);
 }
 /* reviews */
 .reviews-section{
-background:#fff;
+  background:#fff;
 }
 
 .reviews-grid{
@@ -384,6 +382,16 @@ grid-template-columns:repeat(3,1fr);
 gap:24px;
 }
 
+@media(max-width:600px){
+.reviews-grid{
+grid-template-columns:1fr !important;
+gap:16px;
+}
+}
+@media(max-width:900px){
+  .reviews-grid{
+    grid-template-columns: 1fr !important;
+  }}
 .review-card{
 background:linear-gradient(135deg,#fff,#faf8f5);
 border:1px solid var(--border);

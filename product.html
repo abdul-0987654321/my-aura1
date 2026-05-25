@@ -198,6 +198,18 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   .img-zoom-drawer{width:min(95vw,520px);}
 }
 @media(max-width:540px){
+  .wa-btn-nav {
+    padding: 8px 12px;
+    font-size: .78rem;
+  }
+  .nav-logo {
+    font-size: 1.2rem;
+  }
+  nav {
+    padding: 0 3%;
+  }
+}
+@media(max-width:540px){
   .rel-grid{grid-template-columns:1fr;}
   .product-wrap{padding:24px 5%;}
   .tabs-hd{overflow-x:auto;}
@@ -618,23 +630,17 @@ document.addEventListener('DOMContentLoaded', function(){
     return;
   }
 
-  function tryRender(){
-    const p = IH.getProducts().find(p => p.id === id);
-    if(p){ renderProduct(p); }
-    else { document.getElementById('loader').style.display='flex'; }
-  }
-
   window.addEventListener('ih_products_updated', function(){
     const p = IH.getProducts().find(p => p.id === id);
-    if(p){ renderProduct(p); }
-    else {
+    if(p){
+      renderProduct(p);
+    } else {
       document.getElementById('loader').style.display='none';
       document.getElementById('notFound').style.display='block';
     }
   });
 
   IH.init();
-  tryRender();
 });
 </script>
 </body>

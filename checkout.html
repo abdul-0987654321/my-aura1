@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Scentonish</title>
+<link rel="shortcut icon" href="https://i.ibb.co/YF8hjb6F/image.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- EMAILJS (MUST BE ABOVE) -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  emailjs.init("droKhBxNBwXxArOGc");
+</script>
+
+<style>
+  body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background: linear-gradient(135deg,#f8f5f2,#efe6df);
+  color:#2a1f1a;
+  margin:0;
+}
+
+/* NAV */
+nav{
+  background: rgba(255,255,255,.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid #eee;
+  padding: 18px 6%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+nav a{
+  text-decoration:none;
+  color:#2a1f1a;
+  font-weight:600;
+  font-size:14px;
+  transition:.3s;
+}
+
+nav a:hover{
+  color:#a8413a;
+}
+
+/* LAYOUT */
+.container{
+  max-width:1100px;
+  margin:50px auto;
+  padding:0 6%;
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:30px;
+}
+
+/* FORM CARD */
+form{
+  background:#fff;
+  padding:32px;
+  border-radius:22px;
+  border:1px solid #eee;
+  box-shadow:0 10px 40px rgba(0,0,0,.06);
+  transition:.3s;
+}
+
+form:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 50px rgba(0,0,0,.08);
+}
+
+h2{
+  font-size:1.4rem;
+  margin-bottom:18px;
+  font-weight:800;
+  color:#1f1a17;
+}
+
+/* INPUTS */
+input,textarea,select{
+  width:97%;
+  padding:14px 16px;
+  margin-bottom:14px;
+  border:1px solid #eee;
+  border-radius:14px;
+  outline:none;
+  font-size:.92rem;
+  transition:.25s;
+  background:#fafafa;
+}
+
+input:focus,textarea:focus,select:focus{
+  border-color:#a8413a;
+  box-shadow:0 0 0 4px rgba(168,65,58,.12);
+  background:#fff;
+}
+
+/* SUMMARY */
+.summary{
+  background:#fff;
+  padding:28px;
+  border-radius:22px;
+  border:1px solid #eee;
+  box-shadow:0 10px 40px rgba(0,0,0,.06);
+  position:sticky;
+  top:100px;
+  height:fit-content;
+}
+
+#itemsBox{
+  max-height:260px;
+  overflow:auto;
+  padding-right:6px;
+}
+
+/* ITEMS */
+#itemsBox div{
+  font-size:.85rem;
+  padding:10px 0;
+  border-bottom:1px dashed #eee;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+/* TOTAL */
+.row{
+  display:flex;
+  justify-content:space-between;
+  margin-top:14px;
+  font-size:1rem;
+  font-weight:700;
+}
+
+/* BUTTON */
+.place-order{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background: linear-gradient(135deg,#a8413a,#c85a4a);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  transition:.3s;
+  margin-top:12px;
+  font-size:15px;
+  letter-spacing:.3px;
+}
+
+.place-order:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 30px rgba(168,65,58,.3);
+}
+
+/* EMPTY STATE */
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#888;
+  font-size:.9rem;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .container{
+    grid-template-columns:1fr;
+  }
+
+  .summary{
+    position:relative;
+    top:auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="index.html">← Back</a>
+  <strong>Checkout</strong>
+  <a href="cart.html">Cart</a>
+</nav>
+
+<div class="container">
+
+<form id="checkoutForm">
+
+<h2>Shipping Details</h2>
+
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="text" id="phone" placeholder="Phone Number" required>
+<input type="text" id="address" placeholder="Full Address" required>
+<input type="email" id="email" placeholder="Email Address" required>
+
+<select id="city" required>
+  <option value="">Select City</option>
+  <option>Rawalpindi</option>
+  <option>Islamabad</option>
+  <option>Lahore</option>
+  <option>Karachi</option>
+  <option>Other</option>
+</select>
+
+<textarea id="notes" placeholder="Order Notes"></textarea>
+
+<h2>Payment</h2>
+
+<select id="payment">
+  <option value="COD">Cash on Delivery</option>
+</select>
+
+<button type="submit" class="place-order">Place Order</button>
+
+</form>
+
+<div class="summary">
+<h2>Order Summary</h2>
+<div id="itemsBox"></div>
+
+<hr>
+
+<div class="row">
+<span>Total</span>
+<strong id="total">Rs. 0</strong>
+</div>
+</div>
+
+</div>
+
+<script>
+function getCart(){
+return JSON.parse(localStorage.getItem('scentonish_cart')) || [];
+}
+
+function clearCart(){
+localStorage.removeItem('scentonish_cart');
+}
+
+function render(){
+  
+  const cart = getCart();
+  const box = document.getElementById('itemsBox');
+  const totalEl = document.getElementById('total');
+
+  let total = 0;
+
+  if(cart.length === 0){
+    box.innerHTML = "Cart is empty";
+    totalEl.textContent = "Rs 0";
+    return;
+  }
+
+  box.innerHTML = cart.map(p=>{
+    let qty = p.qty || 1;
+    total += p.price * qty;
+
+    return `
+      <div>
+        ${p.name} × ${qty} — Rs ${(p.price * qty).toLocaleString()}
+      </div>
+    `;
+  }).join('');
+
+  totalEl.textContent = "Rs " + total.toLocaleString();
+}
+
+document.getElementById('checkoutForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+
+  const orderId = "SN-" + Date.now();
+  const cart = getCart();
+
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+
+  showLoading(); // 🔥 POPUP START
+
+  let totalAmount = 0;
+
+  const itemsText = cart.map(p=>{
+    let qty = p.qty || 1;
+    totalAmount += p.price * qty;
+    return `${p.name} x ${qty} = Rs ${p.price * qty}`;
+  }).join("\n");
+
+  const order = {
+    order_id: orderId,
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    email: document.getElementById('email').value,
+    address: document.getElementById('address').value,
+    city: document.getElementById('city').value,
+    total: "Rs " + totalAmount.toLocaleString(),
+    items: itemsText
+  };
+
+  try {
+
+    await emailjs.send("service_ji8s51m", "template_jn0goge", order);
+    await emailjs.send("service_ji8s51m", "template_mig6zb4", order);
+
+    clearCart();
+    localStorage.setItem("lastOrderId", orderId);
+
+    hideLoading(); // 🔥 STOP POPUP
+
+    // success popup (no browser alert ugly)
+    alert("✅ Order Placed Successfully!");
+
+    window.location.href = "thankyou.html";
+
+  } catch (error) {
+
+    hideLoading();
+
+    console.error(error);
+    alert("❌ Order failed. Try again.");
+
+  }
+
+});
+render();
+function showLoading(){
+  document.getElementById("loadingPopup").style.display = "flex";
+}
+
+function hideLoading(){
+  document.getElementById("loadingPopup").style.display = "none";
+}
+</script>
+<div id="loadingPopup" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(6px);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+">
+  <div style="
+    background:#fff;
+    padding:30px 40px;
+    border-radius:16px;
+    text-align:center;
+    font-weight:700;
+    font-family:sans-serif;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+  ">
+    ⏳ Processing your order...<br>
+    <small style="color:#777;font-weight:500;">Please wait</small>
+  </div>
+</div>
+</body>
+</html>

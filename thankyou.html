@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You - Scentonish</title>
+<link rel="shortcut icon" href="https://i.ibb.co/YF8hjb6F/image.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background: linear-gradient(135deg,#f9f6f3,#efe6df);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  color:#2a1f1a;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  padding:50px 35px;
+  border-radius:24px;
+  text-align:center;
+  max-width:420px;
+  width:90%;
+  box-shadow:0 15px 50px rgba(0,0,0,.08);
+  animation:pop .5s ease;
+}
+
+@keyframes pop{
+  from{transform:scale(.8);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+/* CHECK ICON */
+.check{
+  width:90px;
+  height:90px;
+  margin:0 auto 20px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#a8413a,#c85a4a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#fff;
+  font-size:40px;
+  animation:bounce 1.2s infinite;
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+}
+
+/* TEXT */
+h1{
+  font-size:1.6rem;
+  margin-bottom:10px;
+}
+
+p{
+  font-size:.95rem;
+  color:#666;
+  line-height:1.6;
+}
+
+/* BUTTONS */
+.btn{
+  display:block;
+  margin-top:20px;
+  padding:14px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:700;
+  transition:.3s;
+}
+
+.primary{
+  background:linear-gradient(135deg,#a8413a,#c85a4a);
+  color:#fff;
+}
+
+.primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 25px rgba(168,65,58,.3);
+}
+
+.secondary{
+  background:#f3f3f3;
+  color:#2a1f1a;
+}
+
+.secondary:hover{
+  background:#e9e9e9;
+}
+
+.small{
+  font-size:.8rem;
+  margin-top:12px;
+  color:#999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <div class="check">✓</div>
+<div style="margin-top:15px;font-weight:700;color:#a8413a;font-size:18px;">
+  Order ID: <span id="orderId"></span>
+</div>
+  <h1>Thank You! 🎉</h1>
+
+  <p>
+    Your order has been placed successfully.<br>
+    We’ve received your request and will contact you soon on WhatsApp.
+  </p>
+
+  <a href="index.html" class="btn primary">Continue Shopping</a>
+  <a href="shop.html" class="btn secondary">Go to Shop</a>
+
+  <div class="small">
+    Scentonish Team will confirm your order shortly 💬
+  </div>
+
+</div>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const id = localStorage.getItem("lastOrderId");
+
+  console.log("ORDER ID:", id);
+
+  document.getElementById("orderId").textContent = id || "SN-ERROR";
+});
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
     rel="stylesheet" />
   <style>
-    :root {
+    /* :root {
       --bg: #faf8f5;
       --bg2: #f0ebe5;
       --bg3: #ffffff;
@@ -23,7 +23,23 @@
       --radius: 12px;
       --shadow: 0 4px 16px rgba(42, 31, 26, .08);
       --shadow2: 0 12px 40px rgba(42, 31, 26, .14);
-    }
+    } */
+     :root{
+  --bg:#f5f5f5;           /* Light grey background */
+  --bg2:#efefef;          /* Slightly darker grey */
+  --bg3:#ffffff;          /* White */
+  
+  --ink:#333333;          /* Dark grey text */
+  --ink2:#666666;         /* Medium grey text */
+  --ink3:#999999;         /* Light grey text */
+  
+  --accent:#555555;       /* Dark grey (accent) */
+  --accent2:#777777;      /* Medium grey */
+  --accent3:#999999;      /* Light grey */
+  
+  --border:#ddd;          /* Light grey border */
+  --border2:#e8e8e8;      /* Slightly darker border */
+}
 
     * {
       margin: 0;
@@ -52,16 +68,30 @@
       height: 68px;
     }
 
-    .nav-logo {
-      font-family: 'Playfair Display', serif;
-      font-weight: 900;
-      font-size: 1.5rem;
-      color: var(--ink);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-    }
+    .nav-logo{
+  font-family:'Outfit',sans-serif;
+  font-weight:900;
+  font-size:1.6rem;
+  color:var(--ink);
+  letter-spacing:-1px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  text-decoration:none;
+  transition:.3s;
+}
+
+.nav-logo img{
+  width:42px;
+  height:42px;
+  object-fit:contain;
+  border-radius:50%;
+}
+
+.nav-logo:hover{
+  color:var(--accent);
+  transform:scale(1.05);
+}
 
     .nav-logo .dot {
       width: 8px;
@@ -851,7 +881,10 @@
 <body>
 
   <nav>
-    <a class="nav-logo" href="index.html">Scentonish <span class="dot"></span></a>
+<a class="nav-logo" href="index.html">
+  <img src="https://i.ibb.co/YF8hjb6F/image.png" alt="Scentonish Logo">
+  <span>Scentonish</span>
+</a>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
       <li><a href="shop.html" class="active">Shop</a></li>

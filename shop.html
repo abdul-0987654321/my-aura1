@@ -10,35 +10,22 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
     rel="stylesheet" />
   <style>
-    /* :root {
-      --bg: #faf8f5;
-      --bg2: #f0ebe5;
-      --bg3: #ffffff;
-      --ink: #2a1f1a;
-      --ink2: #5a4a42;
-      --ink3: #8b7b72;
-      --accent: #a8413a;
-      --border: #e8ddd5;
-      --border2: #f0ebe5;
-      --radius: 12px;
-      --shadow: 0 4px 16px rgba(42, 31, 26, .08);
-      --shadow2: 0 12px 40px rgba(42, 31, 26, .14);
-    } */
-     :root{
-  --bg:#f5f5f5;           /* Light grey background */
-  --bg2:#efefef;          /* Slightly darker grey */
-  --bg3:#ffffff;          /* White */
-  
-  --ink:#333333;          /* Dark grey text */
-  --ink2:#666666;         /* Medium grey text */
-  --ink3:#999999;         /* Light grey text */
-  
-  --accent:#555555;       /* Dark grey (accent) */
-  --accent2:#777777;      /* Medium grey */
-  --accent3:#999999;      /* Light grey */
-  
-  --border:#ddd;          /* Light grey border */
-  --border2:#e8e8e8;      /* Slightly darker border */
+:root {
+  --bg:#f7f5f2;
+  --bg2:#efefec;
+  --bg3:#ffffff;
+  --ink:#1a1a1a;
+  --ink2:#555555;
+  --ink3:#999999;
+  --accent:#b8860b;
+  --accent2:#d4a017;
+  --accent3:#e8c96a;
+  --border:#e0dbd4;
+  --border2:#eeebe6;
+  --shadow:0 4px 16px rgba(26,26,26,.08);
+  --shadow2:0 12px 40px rgba(26,26,26,.12);
+  --shadow3:0 2px 8px rgba(26,26,26,.05);
+  --radius:16px;
 }
 
     * {
@@ -806,16 +793,26 @@
     }
 
     /* WhatsApp small button */
-    .wa-small {
-      padding: 6px 10px;
-      font-size: 14px;
-      border-radius: 8px;
-      min-width: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+   .wa-small {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #25D366;
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  flex-shrink: 0;
+   line-height: 1; 
+  transition: background .2s, transform .15s;
+}
 
+.wa-small:hover {
+  background: #1ebe5c;
+  transform: scale(1.07);
+}
     /* MOBILE FIX */
     @media(max-width:540px) {
 
@@ -1204,8 +1201,11 @@ function applyFilters() {
         <div class="product-footer">
           <span class="price">${IH.pkr(p.price)}</span>
           <div class="action-btns">
-            <button class="wa-btn" onclick="event.stopPropagation();addToCart('${p.id}')">🛒 Add</button>
-            <a class="wa-btn wa-small" href="https://wa.me/923457566768?text=${IH.waMsg(p.name, p.price)}" onclick="event.stopPropagation()" target="_blank">💬</a>
+
+            <a class="wa-btn wa-small" href="https://wa.me/923457566768?text=${IH.waMsg(p.name, p.price)}" onclick="event.stopPropagation()" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.554 4.124 1.528 5.857L.057 23.786a.5.5 0 0 0 .61.637l6.123-1.605A11.942 11.942 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.882a9.87 9.87 0 0 1-5.034-1.378l-.361-.214-3.741.981.998-3.648-.235-.375A9.865 9.865 0 0 1 2.118 12C2.118 6.536 6.536 2.118 12 2.118c5.463 0 9.882 4.418 9.882 9.882 0 5.463-4.419 9.882-9.882 9.882z"/>
+  </svg></a>
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@
 // https://docs.google.com/spreadsheets/d/1xj7YjE8lV8lzVkooKfwMCQdm5QWE10t2_KHVdjYGEHc/edit?gid=1486542084#gid=1486542084
 const IH = (() => {
 
-  const API = 'https://script.google.com/macros/s/AKfycbxeL48jO6OxS3PMfks-oA2tSUXarjcyQfoPJvvX6Aw-ezVCGyrRQsgIxAusJwM4U5uF/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbxFwdt3qcznO-esey1TtHdRBt9sOtYO5MhGoWOZQGZRQ3D11_9nDrLimQyE5JTxxiUu/exec';
   const IMGBB_KEY = '31e9918c8fad5274d676dfeccd8647d2';
   const CACHE_KEY_P = 'ih_products_cache';
   const CACHE_KEY_S = 'ih_sales_cache';
@@ -110,20 +110,32 @@ volumes: (() => {
   // API CALL HELPER
   // ════════════════════════════════════════
   async function apiCall(action, data) {
-    data = data || {};
-    try {
-      await fetch(API, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify({ action, ...data }),
-      });
-      return { success: true };
-    } catch (err) {
-      console.error('API Error:', err);
-      return { error: err.message };
-    }
+  data = data || {};
+  try {
+    // Encode everything as URL params — GET is more reliable with Apps Script
+    const params = new URLSearchParams();
+    params.append('action', action);
+    Object.keys(data).forEach(function(key) {
+      const val = data[key];
+      if (val === null || val === undefined) return;
+      if (typeof val === 'object') {
+        params.append(key, JSON.stringify(val));
+      } else {
+        params.append(key, String(val));
+      }
+    });
+
+    const res = await fetch(API + '?' + params.toString(), {
+      method: 'GET',
+    });
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error('API Error [' + action + ']:', err);
+    return { error: err.message };
   }
+}
 
   // ════════════════════════════════════════
   // CACHE HELPERS
@@ -366,7 +378,17 @@ if (true) {
     saveToCache();
     window.dispatchEvent(new CustomEvent('ih_products_updated'));
   }
+async function getShipping() {
+  try {
+    const res = await fetch(API + '?action=getShipping');
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
+  } catch(e) { return []; }
+}
 
+async function saveShipping(cities) {
+  return await apiCall('saveShipping', { cities });
+}
   return {
     init:             init,
     getProducts:      getProducts,
@@ -382,6 +404,8 @@ if (true) {
     pkr:              pkr,
     waMsg:            waMsg,
     uploadToImgBB:    uploadToImgBB,
+    getShipping:  getShipping,
+saveShipping: saveShipping,
   };
 
 })();

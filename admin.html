@@ -559,6 +559,7 @@ select.form-control{cursor:pointer;}
   <div class="nav-section">Products</div>
   <a class="nav-item" onclick="showPage('products',this)"><span class="icon">📦</span> All Products</a>
   <a class="nav-item" onclick="showPage('add',this)"><span class="icon">➕</span> Add Product</a>
+  <a class="nav-item" onclick="showPage('shipping',this)"><span class="icon">🚚</span> Shipping Rates</a>
   <div class="nav-section">Sales</div>
   <a class="nav-item" onclick="showPage('sales',this)"><span class="icon">💰</span> Record Sale</a>
   <a class="nav-item" onclick="showPage('history',this)"><span class="icon">📜</span> Sale History</a>
@@ -726,6 +727,7 @@ select.form-control{cursor:pointer;}
               <button class="spec-add-btn" onclick="addSpecRow('add')">+ Add Specification</button>
             </div>
           </div>
+
           <!-- VOLUME PRICING SECTION -->
 <div class="specs-section" style="margin-top:12px;">
   <div class="specs-section-title">🧴 Volume Pricing (Optional)</div>
@@ -827,7 +829,17 @@ select.form-control{cursor:pointer;}
         <div class="bar-chart" id="dailyChart"></div>
       </div>
     </div>
-
+<!-- SHIPPING -->
+<div class="page-section" id="page-shipping">
+  <div class="form-wrap" style="max-width:560px;">
+    <div class="form-wrap-header"><h3>🚚 Shipping Rates by City</h3></div>
+    <div class="form-body">
+      <div id="shipping-rows"></div>
+      <button class="spec-add-btn" onclick="addShippingRow()" style="margin-bottom:12px;">+ Add City</button>
+      <button class="btn-save" style="width:100%;padding:12px;" onclick="saveShippingRates()">💾 Save Rates</button>
+    </div>
+  </div>
+</div>
   </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /app-layout -->
@@ -948,7 +960,84 @@ select.form-control{cursor:pointer;}
 
 <script src="data.js"></script>
 <script>
+  // ══════════════════════════════════════════
+// SHIPPING RATES
 // ══════════════════════════════════════════
+let shippingItems = [];
+
+async function loadShippingRates() {
+  shippingItems = [];
+  try {
+    const saved = localStorage.getItem('ih_shipping');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        shippingItems = parsed;
+        renderShippingRows();
+        return;
+      }
+    }
+    const API = 'https://script.google.com/macros/s/AKfycbxeL48jO6OxS3PMfks-oA2tSUXarjcyQfoPJvvX6Aw-ezVCGyrRQsgIxAusJwM4U5uF/exec';
+    const res = await fetch(API + '?action=getShipping');
+    const data = await res.json();
+    if (Array.isArray(data) && data.length) {
+      shippingItems = data;
+    }
+  } catch(e) {
+    console.warn('Shipping load failed:', e);
+  }
+  renderShippingRows();
+}
+function addShippingRow() {
+  shippingItems.push({city:'', charge:0, days:''});
+  renderShippingRows();
+}
+
+function removeShippingRow(i) {
+  shippingItems.splice(i,1);
+  renderShippingRows();
+}
+
+function renderShippingRows() {
+  const container = document.getElementById('shipping-rows');
+  if(!container) return;
+  container.innerHTML = shippingItems.map((item, i) => `
+    <div class="spec-row" style="margin-bottom:8px;gap:6px;">
+      <input type="text" class="form-control" placeholder="City" value="${escHtml(item.city)}"
+        oninput="shippingItems[${i}].city=this.value" style="flex:2;min-width:80px;"/>
+      <input type="number" class="form-control" placeholder="Charge (Rs)" value="${escHtml(String(item.charge))}"
+        oninput="shippingItems[${i}].charge=Number(this.value)" style="flex:1;min-width:70px;"/>
+      <input type="text" class="form-control" placeholder="Days e.g. 2-3" value="${escHtml(item.days)}"
+        oninput="shippingItems[${i}].days=this.value" style="flex:1;min-width:70px;"/>
+      <button class="spec-del-btn" onclick="removeShippingRow(${i})">✕</button>
+    </div>
+  `).join('');
+}
+async function saveShippingRates() {
+  const valid = shippingItems.filter(s => s.city.trim());
+  if (!valid.length) { toast('❌ Koi city nahi', 'error'); return; }
+
+  // localStorage mein foran save
+  localStorage.setItem('ih_shipping', JSON.stringify(valid));
+  toast('⏳ Sheet pe save ho raha hai...', 'success');
+
+  try {
+    const _API = 'https://script.google.com/macros/s/AKfycbxFwdt3qcznO-esey1TtHdRBt9sOtYO5MhGoWOZQGZRQ3D11_9nDrLimQyE5JTxxiUu/exec';
+    const params = new URLSearchParams();
+    params.append('action', 'saveShipping');
+    params.append('cities', JSON.stringify(valid));
+    const res = await fetch(_API + '?' + params.toString());
+    const result = await res.json();
+    if (result.success) {
+      toast('✅ Sheet mein save! ' + result.saved + ' cities');
+    } else {
+      toast('⚠️ Error: ' + (result.error || 'unknown'), 'error');
+    }
+  } catch (err) {
+    console.warn('Sheet save failed:', err);
+    toast('⚠️ localStorage mein save hai, sheet offline', 'error');
+  }
+}
 // LOGIN LOGIC
 // ══════════════════════════════════════════
 const LG_CREDS = { username: 'Junaid', password: 'junaid123' };
@@ -1016,6 +1105,7 @@ function lgUnlockDashboard() {
   renderVolumes('edit');
   onCategoryChange('add');
   initRevealHide();
+  loadShippingRates();
   refresh();
 }
 
@@ -1130,7 +1220,7 @@ function getSpecsObject(mode){const items=mode==='add'?addSpecItems:editSpecItem
 // ══════════════════════════════════════════
 function openSidebar(){document.getElementById('sideNav').classList.add('open');document.getElementById('mobileOverlay').classList.add('open');document.body.style.overflow='hidden';}
 function closeSidebar(){document.getElementById('sideNav').classList.remove('open');document.getElementById('mobileOverlay').classList.remove('open');document.body.style.overflow='';}
-const pageTitles={overview:'Dashboard Overview',products:'All Products',add:'Add New Product',sales:'Record Sale',history:'Sale History',profit:'Profit & Loss'};
+const pageTitles={overview:'Dashboard Overview',products:'All Products',add:'Add New Product',shipping: 'Shipping Rates',sales:'Record Sale',history:'Sale History',profit:'Profit & Loss'};
 function showPage(page,navEl){document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));if(navEl)navEl.classList.add('active');document.getElementById('topBarTitle').textContent=pageTitles[page]||page;closeSidebar();refresh();}
 
 // ══════════════════════════════════════════

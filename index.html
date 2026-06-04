@@ -221,6 +221,7 @@ section{padding:90px 5%;}
 .product-footer{display:flex;align-items:center;justify-content:space-between;}
 .price{font-size:.96rem;font-weight:800;color:var(--accent);}
 .view-btn{
+margin: 0px 7px ;
   background:var(--accent);color:#fff;padding:6px 14px;
   border-radius:8px;font-size:.78rem;font-weight:700;border:none;cursor:pointer;transition:.3s;
 }
@@ -310,6 +311,23 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   .hamburger{display:block;}
   .reviews-grid{grid-template-columns:1fr !important;}
 }
+@media(max-width:768px){
+  .products-grid{
+    display:flex !important;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    gap:14px;
+    padding-bottom:8px;
+  }
+  .products-grid::-webkit-scrollbar{display:none;}
+  .product-card{
+    min-width:155px;
+    flex-shrink:0;
+    scroll-snap-align:start;
+  }
+}
 @media(max-width:540px){
   .wa-btn-nav{padding:8px 12px;font-size:.78rem;}
   .nav-logo{font-size:1.2rem;}
@@ -327,7 +345,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 <nav class="glass-nav">
   <a class="nav-logo" href="index.html">
     <img src="https://i.ibb.co/YF8hjb6F/image.png" alt="Scentonish Logo">
-    <span>Scentonish</span>
+    <span>SCENTONISH</span>
   </a>
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
@@ -371,7 +389,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 </a>
 
 <!-- MARQUEE -->
-<div class="marquee-strip">
+<!-- <div class="marquee-strip">
   <div class="marquee-inner">
     <span>🌹 Oud Fragrances</span><span class="dot-sep">◆</span>
     <span>🌸 Floral Perfumes</span><span class="dot-sep">◆</span>
@@ -386,26 +404,43 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <span>💜 Women's Scents</span><span class="dot-sep">◆</span>
     <span>👔 Men's Fragrances</span><span class="dot-sep">◆</span>
   </div>
-</div>
+</div> -->
 
 
 
 <!-- PRODUCTS -->
+<!-- PRODUCTS -->
+<!-- PRODUCTS -->
 <section class="products-sect">
   <div class="sec-max">
-    <div class="sec-header">
-      <span class="sec-tag">Luxury Collection</span>
-      <h2>Discover Signature Fragrances</h2>
-      <p>Premium perfumes crafted for lasting impressions — bold, elegant, and unforgettable.</p>
+
+    <!-- MEN'S -->
+    <div style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <span style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.5px;color:var(--ink);">MEN'S FRAGRANCES</span>
+        <a href="shop.html?cat=men" style="font-size:.85rem;font-weight:700;color:var(--ink);text-decoration:underline;">View all</a>
+      </div>
+      <div class="products-grid" id="grid-men"></div>
     </div>
-    <div class="product-tabs">
-      <button class="tab-btn active" onclick="switchTab('men',this)">👨 Men's Fragrances</button>
-      <button class="tab-btn" onclick="switchTab('women',this)">👗 Women's Fragrances</button>
-      <button class="tab-btn" onclick="switchTab('unisex',this)">✨ Unisex Scents</button>
+
+    <!-- WOMEN'S -->
+    <div style="margin-bottom:52px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <span style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.5px;color:var(--ink);">WOMEN'S FRAGRANCES</span>
+        <a href="shop.html?cat=women" style="font-size:.85rem;font-weight:700;color:var(--ink);text-decoration:underline;">View all</a>
+      </div>
+      <div class="products-grid" id="grid-women"></div>
     </div>
-    <div class="products-grid" id="productsGrid">
-      <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">Loading…</div>
+
+    <!-- UNISEX -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <span style="font-family:'Outfit',sans-serif;font-size:1.15rem;font-weight:900;letter-spacing:.5px;color:var(--ink);">UNISEX SCENTS</span>
+        <a href="shop.html?cat=unisex" style="font-size:.85rem;font-weight:700;color:var(--ink);text-decoration:underline;">View all</a>
+      </div>
+      <div class="products-grid" id="grid-unisex"></div>
     </div>
+
   </div>
 </section>
 <!-- CATEGORIES -->
@@ -533,17 +568,16 @@ function goToProduct(id) {
 
 function renderProducts(tab) {
   const all = IH.getProducts().filter(p => p.type === tab).slice(0, 8);
-  const g = document.getElementById('productsGrid');
+  const g = document.getElementById('grid-' + tab);
+  if (!g) return;
   if (!all.length) {
-    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3)">No fragrances in this category yet.</div>';
+    g.innerHTML = '<div style="padding:40px;text-align:center;color:var(--ink3)">No fragrances yet.</div>';
     return;
   }
-  g.innerHTML = all.map((p, i) => {
+  g.innerHTML = all.map(p => {
     const bc = p.badge === 'NEW' ? 'badge-new' : p.badge === 'HOT' ? 'badge-hot' : 'badge-best';
-   const imgEl = p.img
-  ? `<img src="${p.img}" alt="${p.name}">`
-  : `<span>${p.emoji || '🌹'}</span>`;
-    return `<div class="product-card" onclick="goToProduct('${p.id}')" style="animation-delay:${i*50}ms">
+    const imgEl = p.img ? `<img src="${p.img}" alt="${p.name}">` : `<span>${p.emoji || '🌹'}</span>`;
+    return `<div class="product-card" onclick="goToProduct('${p.id}')">
       <div class="product-img">
         ${imgEl}
         ${p.badge ? `<span class="product-badge ${bc}">${p.badge}</span>` : ''}
@@ -563,11 +597,22 @@ function switchTab(tab, el) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  renderProducts(tab);
+  document.querySelectorAll('.cat-section').forEach(s => s.style.display = 'none');
+  document.getElementById('cat-' + tab).style.display = 'block';
 }
 
-window.addEventListener('ih_products_updated', () => { renderProducts(currentTab); });
+window.addEventListener('ih_products_updated', () => {
+  ['men','women','unisex'].forEach(t => renderProducts(t));
+});
 
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.getElementById('cartIconContainer');
+  if (container && typeof CART !== 'undefined') container.innerHTML = CART.getCartIconHTML();
+  if (typeof IH !== 'undefined') {
+    IH.init();
+    ['men','women','unisex'].forEach(t => renderProducts(t));
+  }
+});
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.getElementById('cartIconContainer');
   if (container && typeof CART !== 'undefined') container.innerHTML = CART.getCartIconHTML();

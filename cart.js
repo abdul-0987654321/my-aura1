@@ -42,19 +42,19 @@ const CART = (() => {
   function clearCart() { saveItems([]); }
 
   // ── BADGE UPDATE ───────────────────────────────────────────
-function updateAllBadges() {
-  const count = getCount();
-  
-  const container = document.getElementById('cartIconContainer');
-  if(container) {
-    container.innerHTML = getCartIconHTML();
-    const badge = container.querySelector('.cart-badge');
-    if(badge) {
-      badge.textContent = count;
-      badge.style.display = count > 0 ? 'flex' : 'none';
+  function updateAllBadges() {
+    const count = getCount();
+    const container = document.getElementById('cartIconContainer');
+    if(container) {
+      container.innerHTML = getCartIconHTML();
+      const badge = container.querySelector('.cart-badge');
+      if(badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'flex' : 'none';
+      }
     }
   }
-}
+
   // ── TOAST ──────────────────────────────────────────────────
   function showAddedToast(name) {
     let toast = document.getElementById('cart-add-toast');
@@ -68,7 +68,7 @@ function updateAllBadges() {
         border-left:3px solid #a8413a;font-family:'Plus Jakarta Sans',sans-serif;`;
       document.body.appendChild(toast);
     }
-    toast.textContent = '🛒 "' + name + '" cart mein add ho gaya!';
+    toast.textContent = '🛒 "' + name + '" has been added to your cart!';
     toast.style.transform = 'translateY(0)';
     toast.style.opacity = '1';
     clearTimeout(toast._t);
@@ -89,7 +89,7 @@ function updateAllBadges() {
       <!-- Header -->
       <div style="padding:18px 20px;border-bottom:1px solid #e8ddd5;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
         <div>
-          <div style="font-family:'Playfair Display','Outfit',serif;font-size:1.1rem;font-weight:900;color:#2a1f1a;">🛒 Aapka Cart</div>
+          <div style="font-family:'Playfair Display','Outfit',serif;font-size:1.1rem;font-weight:900;color:#2a1f1a;">🛒 Your Cart</div>
           <div style="font-size:.72rem;color:#8b7b72;margin-top:2px;" id="cart-item-count">0 items</div>
         </div>
         <button onclick="CART.closeDrawer()" style="background:#f0ebe5;border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;color:#5a4a42;transition:.2s;" onmouseover="this.style.background='#e8ddd5'" onmouseout="this.style.background='#f0ebe5'">✕</button>
@@ -105,8 +105,8 @@ function updateAllBadges() {
           <span id="cart-subtotal" style="font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:#a8413a;"></span>
         </div>
         <div style="font-size:.72rem;color:#8b7b72;margin-bottom:12px;text-align:center;"><div>
-        <button onclick="CART.openCheckout()" style="width:100%;padding:13px;background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;border:none;border-radius:50px;font-size:.92rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Plus Jakarta Sans','Inter',sans-serif;margin-bottom:8px;" onmouseover="this.style.background='#8a3530'" onmouseout="this.style.background='linear-gradient(135deg,#a8413a,#c85a4a)'">✓ Checkout Karo</button>
-        <button onclick="CART.clearCart();CART.renderDrawer()" style="width:100%;padding:9px;background:transparent;color:#8b7b72;border:1px solid #e8ddd5;border-radius:50px;font-size:.8rem;cursor:pointer;font-family:'Plus Jakarta Sans','Inter',sans-serif;">🗑️ Cart Khali Karo</button>
+        <button onclick="CART.openCheckout()" style="width:100%;padding:13px;background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;border:none;border-radius:50px;font-size:.92rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Plus Jakarta Sans','Inter',sans-serif;margin-bottom:8px;" onmouseover="this.style.background='#8a3530'" onmouseout="this.style.background='linear-gradient(135deg,#a8413a,#c85a4a)'">✓ Proceed to Checkout</button>
+        <button onclick="CART.clearCart();CART.renderDrawer()" style="width:100%;padding:9px;background:transparent;color:#8b7b72;border:1px solid #e8ddd5;border-radius:50px;font-size:.8rem;cursor:pointer;font-family:'Plus Jakarta Sans','Inter',sans-serif;">🗑️ Clear Cart</button>
       </div>
     </div>
 
@@ -117,7 +117,7 @@ function updateAllBadges() {
         <div style="background:linear-gradient(135deg,#2a1f1a,#3d3530);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;">
           <div>
             <div style="font-family:'Playfair Display','Outfit',serif;font-size:1.15rem;font-weight:900;color:#fff;">📦 Order Details</div>
-            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px;">Sab fields fill karo</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:2px;">Please fill in all fields</div>
           </div>
           <button onclick="CART.closeCheckout()" style="background:rgba(255,255,255,.1);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#fff;font-size:.9rem;">✕</button>
         </div>
@@ -157,7 +157,7 @@ function updateAllBadges() {
           <div style="display:flex;flex-direction:column;gap:13px;">
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">👤 Full Name *</label>
-              <input type="text" id="co-name" placeholder="Aapka poora naam" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"/>
+              <input type="text" id="co-name" placeholder="Your full name" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"/>
             </div>
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">📱 Phone Number *</label>
@@ -165,12 +165,12 @@ function updateAllBadges() {
             </div>
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">📧 Email Address *</label>
-              <input type="email" id="co-email" placeholder="aapka@email.com" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"/>
+              <input type="email" id="co-email" placeholder="your@email.com" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"/>
             </div>
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">🏙️ City *</label>
               <select id="co-city" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;cursor:pointer;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'">
-                <option value="">-- City select karo --</option>
+                <option value="">-- Select your city --</option>
                 <option>Lahore</option><option>Karachi</option><option>Islamabad</option>
                 <option>Rawalpindi</option><option>Faisalabad</option><option>Multan</option>
                 <option>Peshawar</option><option>Quetta</option><option>Sialkot</option>
@@ -179,7 +179,7 @@ function updateAllBadges() {
             </div>
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;">🏠 Complete Address *</label>
-              <textarea id="co-address" placeholder="Ghar/mohallah/gali ka poora address" rows="2" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;resize:none;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"></textarea>
+              <textarea id="co-address" placeholder="House/street/area full address" rows="2" style="width:100%;padding:10px 14px;border:1px solid #e8ddd5;border-radius:10px;font-size:.88rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;color:#2a1f1a;outline:none;background:#faf8f5;resize:none;transition:.2s;" onfocus="this.style.borderColor='#a8413a'" onblur="this.style.borderColor='#e8ddd5'"></textarea>
             </div>
             <div>
               <label style="font-size:.7rem;font-weight:700;color:#5a4a42;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;">💳 Payment Method *</label>
@@ -198,7 +198,7 @@ function updateAllBadges() {
           <div id="co-error" style="display:none;margin-top:12px;padding:10px 14px;background:#fee2e2;border:1px solid #fca5a5;border-radius:8px;font-size:.8rem;color:#a8413a;font-weight:600;"></div>
 
           <!-- Place Order Button -->
-          <button onclick="CART.placeOrder()" style="width:100%;margin-top:18px;padding:14px;background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;border:none;border-radius:50px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Plus Jakarta Sans','Inter',sans-serif;" onmouseover="this.style.background='#8a3530'" onmouseout="this.style.background='linear-gradient(135deg,#a8413a,#c85a4a)'">🎉 Order Place Karo</button>
+          <button onclick="CART.placeOrder()" style="width:100%;margin-top:18px;padding:14px;background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;border:none;border-radius:50px;font-size:.95rem;font-weight:700;cursor:pointer;transition:.2s;font-family:'Plus Jakarta Sans','Inter',sans-serif;" onmouseover="this.style.background='#8a3530'" onmouseout="this.style.background='linear-gradient(135deg,#a8413a,#c85a4a)'">🎉 Place Order</button>
         </div>
       </div>
     </div>
@@ -207,12 +207,12 @@ function updateAllBadges() {
     <div id="success-modal" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(42,31,26,.7);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;">
       <div style="background:#fff;border-radius:20px;max-width:460px;width:100%;padding:32px;text-align:center;box-shadow:0 24px 60px rgba(42,31,26,.3);animation:successPop .5s cubic-bezier(.22,1,.36,1);">
         <div style="width:72px;height:72px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 20px;">✅</div>
-        <div style="font-family:'Playfair Display','Outfit',serif;font-size:1.4rem;font-weight:900;color:#2a1f1a;margin-bottom:8px;">Shukriya! 🎉</div>
+        <div style="font-family:'Playfair Display','Outfit',serif;font-size:1.4rem;font-weight:900;color:#2a1f1a;margin-bottom:8px;">Thank You! 🎉</div>
         <div id="success-order-num" style="font-size:.78rem;color:#8b7b72;margin-bottom:16px;"></div>
         <div style="background:#faf8f5;border-radius:12px;padding:14px;margin-bottom:20px;font-size:.85rem;color:#5a4a42;line-height:1.7;" id="success-summary"></div>
         <div style="display:flex;flex-direction:column;gap:10px;">
-          <a id="wa-order-link" href="#" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;transition:.2s;">💬 WhatsApp pe Confirm Karo</a>
-          <div style="font-size:.75rem;color:#8b7b72;padding:8px 12px;background:#f0ebe5;border-radius:8px;">📧 Confirmation email bhi bheja gaya hai <span id="success-email" style="font-weight:700;color:#a8413a;"></span></div>
+          <a id="wa-order-link" href="#" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;background:linear-gradient(135deg,#25D366,#20ba5a);color:#fff;border-radius:50px;font-weight:700;font-size:.9rem;text-decoration:none;transition:.2s;">💬 Confirm on WhatsApp</a>
+          <div style="font-size:.75rem;color:#8b7b72;padding:8px 12px;background:#f0ebe5;border-radius:8px;">📧 A confirmation email has been sent to <span id="success-email" style="font-weight:700;color:#a8413a;"></span></div>
           <button onclick="CART.closeSuccess()" style="padding:10px;background:transparent;border:1px solid #e8ddd5;border-radius:50px;cursor:pointer;color:#5a4a42;font-size:.82rem;font-family:'Plus Jakarta Sans','Inter',sans-serif;">✕ Close</button>
         </div>
       </div>
@@ -229,7 +229,6 @@ function updateAllBadges() {
     wrapper.innerHTML = html;
     document.body.appendChild(wrapper);
 
-    // Initial render
     renderDrawer();
     updateAllBadges();
     highlightPayment();
@@ -249,8 +248,8 @@ function updateAllBadges() {
     if (!items.length) {
       listEl.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#8b7b72;">
         <div style="font-size:3rem;margin-bottom:12px;">🛒</div>
-        <div style="font-size:.9rem;font-weight:600;">Cart khali hai</div>
-        <div style="font-size:.78rem;margin-top:6px;">Koi product add karo</div>
+        <div style="font-size:.9rem;font-weight:600;">Your cart is empty</div>
+        <div style="font-size:.78rem;margin-top:6px;">Add some products to get started</div>
       </div>`;
       if (footerEl) footerEl.style.display = 'none';
       return;
@@ -301,16 +300,16 @@ function updateAllBadges() {
   let _discount = 0;
   let _promoApplied = '';
   const PROMOS = {
-    'SAVE10':   { type:'percent', val:10,  label:'10% discount' },
-    'WELCOME':  { type:'flat',    val:200, label:'Rs. 200 off' },
-    'EID20':    { type:'percent', val:20,  label:'20% discount' },
-    'SCENTONISH': { type:'percent', val:15, label:'15% discount' },
+    'SAVE10':     { type:'percent', val:10,  label:'10% discount' },
+    'WELCOME':    { type:'flat',    val:200, label:'Rs. 200 off' },
+    'EID20':      { type:'percent', val:20,  label:'20% discount' },
+    'SCENTONISH': { type:'percent', val:15,  label:'15% discount' },
   };
 
   function applyPromo() {
     const code = (document.getElementById('promo-input')?.value || '').trim().toUpperCase();
     const msgEl = document.getElementById('promo-msg');
-    if (!code) { if(msgEl) { msgEl.textContent = '⚠️ Code enter karo'; msgEl.style.color = '#a8413a'; } return; }
+    if (!code) { if(msgEl) { msgEl.textContent = '⚠️ Please enter a code'; msgEl.style.color = '#a8413a'; } return; }
     const promo = PROMOS[code];
     if (!promo) {
       _discount = 0; _promoApplied = '';
@@ -319,7 +318,7 @@ function updateAllBadges() {
       const subtotal = getTotal();
       _discount = promo.type === 'percent' ? Math.round(subtotal * promo.val / 100) : Math.min(promo.val, subtotal);
       _promoApplied = code;
-      if(msgEl) { msgEl.textContent = '✅ ' + promo.label + ' apply ho gaya!'; msgEl.style.color = '#16a34a'; }
+      if(msgEl) { msgEl.textContent = '✅ ' + promo.label + ' applied!'; msgEl.style.color = '#16a34a'; }
     }
     updateCheckoutTotals();
   }
@@ -341,10 +340,10 @@ function updateAllBadges() {
     }
   }
 
-function openCheckout() {
-  closeDrawer();
-  window.location.href = 'checkout.html';
-}
+  function openCheckout() {
+    closeDrawer();
+    window.location.href = 'checkout.html';
+  }
   function closeCheckout() {
     const modal = document.getElementById('checkout-modal');
     if (modal) modal.style.display = 'none';
@@ -376,12 +375,12 @@ function openCheckout() {
 
     // Validation
     const errors = [];
-    if (!name)    errors.push('Naam likhna zaroori hai');
-    if (!phone || phone.length < 10) errors.push('Phone number sahi nahi hai');
-    if (!email || !email.includes('@')) errors.push('Email address sahi nahi hai');
-    if (!city)    errors.push('City select karo');
-    if (!address) errors.push('Address likhna zaroori hai');
-    if (!payment) errors.push('Payment method select karo');
+    if (!name)    errors.push('Full name is required');
+    if (!phone || phone.length < 10) errors.push('Please enter a valid phone number');
+    if (!email || !email.includes('@')) errors.push('Please enter a valid email address');
+    if (!city)    errors.push('Please select your city');
+    if (!address) errors.push('Delivery address is required');
+    if (!payment) errors.push('Please select a payment method');
 
     if (errors.length) {
       if (errorEl) { errorEl.textContent = '⚠️ ' + errors[0]; errorEl.style.display = 'block'; }
@@ -399,7 +398,7 @@ function openCheckout() {
     const discountLine = _discount > 0 ? `\n🎁 Discount: −Rs. ${_discount.toLocaleString('en-PK')} (${_promoApplied})` : '';
     const waText = encodeURIComponent(
       `🛍️ *NEW ORDER — ${orderNum}*\n\n` +
-      `👤 Naam: ${name}\n` +
+      `👤 Name: ${name}\n` +
       `📱 Phone: ${phone}\n` +
       `📧 Email: ${email}\n` +
       `🏙️ City: ${city}\n` +
@@ -409,7 +408,7 @@ function openCheckout() {
       `💰 Subtotal: Rs. ${subtotal.toLocaleString('en-PK')}` +
       discountLine +
       `\n✅ *Total: Rs. ${finalTotal.toLocaleString('en-PK')}*\n\n` +
-      `Please confirm kar dein! Shukriya 🙏`
+      `Please confirm this order. Thank you! 🙏`
     );
 
     // Show success modal
@@ -422,7 +421,7 @@ function openCheckout() {
         `📱 ${phone}<br>` +
         `💳 ${payment}<br>` +
         `<strong style="color:#a8413a;">Total: Rs. ${finalTotal.toLocaleString('en-PK')}</strong>` +
-        (_discount > 0 ? ` <span style="color:#16a34a;font-size:.78rem;">(${_discount.toLocaleString('en-PK')} discount mila!)</span>` : '');
+        (_discount > 0 ? ` <span style="color:#16a34a;font-size:.78rem;">(You saved Rs. ${_discount.toLocaleString('en-PK')}!)</span>` : '');
       document.getElementById('wa-order-link').href = `https://wa.me/${WA_NUMBER}?text=${waText}`;
       document.getElementById('success-email').textContent = email;
       successModal.style.display = 'flex';
@@ -468,13 +467,13 @@ function openCheckout() {
 
 document.addEventListener('DOMContentLoaded', () => {
   CART.init();
-  
-  // Har page pe cart icon inject karo
+
+  // Inject cart icon on every page
   const container = document.getElementById('cartIconContainer');
   if(container) {
     container.innerHTML = CART.getCartIconHTML();
   }
-  
-  // Badge turant update karo
+
+  // Update badge immediately
   CART.updateAllBadges();
 });

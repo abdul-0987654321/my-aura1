@@ -35,27 +35,29 @@ body{
 }
 
 /* ══════════════ NAV ══════════════ */
+
+/* ══════════════ NAV ══════════════ */
 nav{
   position:sticky;top:0;z-index:100;
-  background:rgba(250,248,245,.96);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
+  background:#0a0a0a;
+  border-bottom:1px solid rgba(255,255,255,.08);
   padding:0 5%;
   display:flex;align-items:center;justify-content:space-between;
-  height:72px;box-shadow:var(--shadow3);
+  height:68px;
+  box-shadow:0 2px 20px rgba(0,0,0,.4);
 }
 .nav-logo{
-  font-family:'Outfit',sans-serif;font-weight:900;font-size:1.6rem;
-  color:var(--ink);letter-spacing:-1px;
+  font-family:'Outfit',sans-serif;font-weight:900;font-size:1.5rem;
+  color:#fff;letter-spacing:-1px;
   display:flex;align-items:center;gap:10px;
   text-decoration:none;transition:.3s;
 }
-.nav-logo img{width:42px;height:42px;object-fit:contain;border-radius:50%;}
-.nav-logo:hover{color:var(--accent);}
+.nav-logo img{width:38px;height:38px;object-fit:contain;border-radius:50%;}
+.nav-logo:hover{color:var(--accent2);}
 
-.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links{display:flex;gap:32px;list-style:none;}
 .nav-links a{
-  color:var(--ink2);text-decoration:none;font-size:.95rem;font-weight:500;
+  color:rgba(255,255,255,.65);text-decoration:none;font-size:.9rem;font-weight:500;
   transition:.3s;position:relative;
 }
 .nav-links a::after{
@@ -64,33 +66,141 @@ nav{
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   transition:.3s;border-radius:20px;
 }
-.nav-links a:hover{color:var(--accent);}
+.nav-links a:hover{color:#fff;}
 .nav-links a:hover::after,.nav-links a.active::after{width:100%;}
+.nav-links a.active{color:#fff;}
 
-.nav-right{display:flex;align-items:center;gap:14px;}
+.nav-right{display:flex;align-items:center;gap:12px;}
 .wa-btn-nav{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#fff;padding:10px 22px;border-radius:50px;
-  font-size:.88rem;font-weight:700;border:none;
-  display:flex;align-items:center;gap:8px;transition:.3s;
-  text-decoration:none;box-shadow:var(--shadow);
+  color:#fff;padding:9px 20px;border-radius:50px;
+  font-size:.84rem;font-weight:700;border:none;
+  display:flex;align-items:center;gap:7px;transition:.3s;
+  text-decoration:none;
+  box-shadow:0 4px 14px rgba(184,134,11,.35);
 }
-.wa-btn-nav:hover{transform:translateY(-3px);}
-.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:1.4rem;}
+.wa-btn-nav:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(184,134,11,.5);}
+
+.hamburger{
+  display:none;background:none;border:1px solid rgba(255,255,255,.2);
+  cursor:pointer;font-size:1.2rem;color:#fff;
+  width:38px;height:38px;border-radius:8px;
+  align-items:center;justify-content:center;transition:.3s;
+}
+.hamburger:hover{background:rgba(255,255,255,.1);}
+
+/* Desktop Search */
+.nav-search{
+  position:relative;
+  display:flex;align-items:center;
+}
+.nav-search input{
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  padding:8px 16px 8px 38px;
+  border-radius:50px;
+  font-size:.84rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  width:200px;
+  outline:none;
+  transition:.3s;
+}
+.nav-search input::placeholder{color:rgba(255,255,255,.45);}
+.nav-search input:focus{
+  background:rgba(255,255,255,.16);
+  border-color:rgba(184,134,11,.6);
+  width:260px;
+}
+.nav-search .s-icon{
+  position:absolute;left:13px;
+  color:rgba(255,255,255,.45);pointer-events:none;
+  font-size:.9rem;line-height:1;
+}
+
+/* Search Dropdown */
+.search-dropdown{
+  position:absolute;top:calc(100% + 10px);left:0;
+  background:#1a1a1a;border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+  z-index:500;display:none;width:280px;
+}
+.search-dropdown.open{display:block;}
+.sri{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  text-decoration:none;color:#fff;transition:.2s;
+}
+.sri:last-child{border-bottom:none;}
+.sri:hover{background:rgba(255,255,255,.07);}
+.sri img{width:40px;height:40px;object-fit:contain;border-radius:8px;background:#fff;padding:4px;flex-shrink:0;}
+.sri-emoji{font-size:1.6rem;width:40px;text-align:center;flex-shrink:0;}
+.sri-name{font-size:.84rem;font-weight:600;color:#fff;line-height:1.3;}
+.sri-price{font-size:.76rem;color:var(--accent2);margin-top:2px;}
+.search-empty{padding:16px;text-align:center;font-size:.84rem;color:rgba(255,255,255,.4);}
+
+/* Mobile Search Strip */
+.mobile-search-strip{
+  background:#0d0d0d;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:10px 5%;
+  display:none;
+}
+.mobile-search-wrap{position:relative;}
+.mobile-search-wrap input{
+  width:100%;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+  padding:10px 16px 10px 40px;
+  border-radius:50px;
+  font-size:.88rem;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  outline:none;transition:.3s;
+}
+.mobile-search-wrap input::placeholder{color:rgba(255,255,255,.4);}
+.mobile-search-wrap input:focus{border-color:rgba(184,134,11,.6);}
+.mobile-search-wrap .s-icon{
+  position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,.4);pointer-events:none;font-size:.9rem;
+}
+.mobile-search-wrap .search-dropdown{
+  top:calc(100% + 6px);left:0;right:0;width:auto;
+}
+
+/* Mobile Menu */
 .mobile-menu{
-  opacity:0;visibility:hidden;transform:translateY(-10px);
-  transition:.35s ease;display:flex;flex-direction:column;
-  position:fixed;top:72px;left:0;right:0;
-  background:#fff;border-bottom:1px solid var(--border);
-  padding:16px 5%;gap:8px;z-index:99;
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:.3s ease;display:flex;flex-direction:column;
+  position:fixed;top:68px;left:0;right:0;
+  background:#111;border-bottom:1px solid rgba(255,255,255,.08);
+  padding:12px 5% 20px;gap:4px;z-index:99;
 }
 .mobile-menu.open{opacity:1;visibility:visible;transform:translateY(0);}
 .mobile-menu a{
-  color:var(--ink2);text-decoration:none;
-  padding:12px 14px;border-radius:10px;font-weight:500;transition:.2s;
+  color:rgba(255,255,255,.75);text-decoration:none;
+  padding:12px 16px;border-radius:10px;font-weight:500;
+  font-size:.95rem;transition:.2s;
 }
-.mobile-menu a:hover{background:var(--bg2);color:var(--accent);}
+.mobile-menu a:hover{background:rgba(255,255,255,.07);color:#fff;}
 
+/* Responsive */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .nav-search{display:none;}
+  .hamburger{display:flex;}
+  .mobile-search-strip{display:block;}
+}
+@media(max-width:540px){
+  nav{padding:0 4%;height:62px;}
+  .mobile-menu{top:62px;padding:10px 4% 16px;}
+  .mobile-search-strip{padding:8px 4%;}
+  .nav-logo{font-size:1.2rem;}
+  .nav-logo img{width:32px;height:32px;}
+  .wa-btn-nav{padding:8px 14px;font-size:.78rem;}
+}
 /* ══════════════ HERO BANNER ══════════════ */
 .hero-banner{
   width:100%;
@@ -342,17 +452,34 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 <body>
 
 <!-- NAV -->
-<nav class="glass-nav">
+<!-- NAV -->
+<nav>
   <a class="nav-logo" href="index.html">
     <img src="https://i.ibb.co/YF8hjb6F/image.png" alt="Scentonish Logo">
     <span>SCENTONISH</span>
   </a>
+
   <ul class="nav-links">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="shop.html">Shop</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
+
+  <!-- Desktop Search -->
+  <div class="nav-search">
+    <span class="s-icon">🔍</span>
+    <input
+      type="text"
+      id="navSearchInput"
+      placeholder="Search fragrances…"
+      autocomplete="off"
+      oninput="runSearch(this.value,'navDrop')"
+      onblur="setTimeout(()=>closeDrop('navDrop'),200)"
+    >
+    <div class="search-dropdown" id="navDrop"></div>
+  </div>
+
   <div class="nav-right">
     <div id="cartIconContainer"></div>
     <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
@@ -360,6 +487,23 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   </div>
 </nav>
 
+<!-- Mobile Search Strip (nav ke bilkul neeche) -->
+<div class="mobile-search-strip">
+  <div class="mobile-search-wrap">
+    <span class="s-icon">🔍</span>
+    <input
+      type="text"
+      id="mobSearchInput"
+      placeholder="Search fragrances…"
+      autocomplete="off"
+      oninput="runSearch(this.value,'mobDrop')"
+      onblur="setTimeout(()=>closeDrop('mobDrop'),200)"
+    >
+    <div class="search-dropdown" id="mobDrop"></div>
+  </div>
+</div>
+
+<!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html">🏠 Home</a>
   <a href="shop.html">🛍️ Shop</a>
@@ -621,6 +765,33 @@ document.addEventListener('DOMContentLoaded', () => {
     renderProducts('men');
   }
 });
+function runSearch(val, dropId) {
+  const drop = document.getElementById(dropId);
+  if (!drop) return;
+  if (!val.trim()) { drop.classList.remove('open'); return; }
+  const list = (typeof IH !== 'undefined' ? IH.getProducts() : [])
+    .filter(p => p.name.toLowerCase().includes(val.toLowerCase())).slice(0, 6);
+  if (!list.length) {
+    drop.innerHTML = '<div class="search-empty">No fragrances found</div>';
+  } else {
+    drop.innerHTML = list.map(p => `
+      <a class="sri" href="product.html?id=${p.id}">
+        ${p.img
+          ? `<img src="${p.img}" alt="${p.name}">`
+          : `<span class="sri-emoji">${p.emoji || '🌹'}</span>`}
+        <div>
+          <div class="sri-name">${p.name}</div>
+          <div class="sri-price">${typeof IH !== 'undefined' ? IH.pkr(p.price) : 'Rs. ' + p.price}</div>
+        </div>
+      </a>`).join('');
+  }
+  drop.classList.add('open');
+}
+
+function closeDrop(dropId) {
+  const drop = document.getElementById(dropId);
+  if (drop) drop.classList.remove('open');
+}
 </script>
 </body>
 </html>

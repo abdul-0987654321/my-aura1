@@ -115,11 +115,18 @@ nav{
   .hamburger{display:flex;}
 }
 @media(max-width:540px){
-  nav{padding:0 4%;height:62px;}
-  .mobile-menu{top:62px;padding:10px 4% 16px;}
-  .nav-logo{font-size:1.2rem;}
-  .nav-logo img{width:32px;height:32px;}
-  .wa-btn-nav{padding:8px 14px;font-size:.78rem;}
+   .nav-right { gap: 8px; }
+  nav { padding: 0 4%; height: 58px; }
+  .mobile-menu { top: 58px; padding: 10px 4% 16px; }
+  .mobile-search-strip { padding: 8px 4%; }
+  
+  /* Logo text chota karo taake space bache */
+  .nav-logo { font-size: 1.1rem; gap: 7px; }
+  .nav-logo img { width: 28px; height: 28px; }
+  
+  /* WA button mein sirf icon rakhein ya text chota karo */
+  .wa-btn-nav { padding: 7px 10px; font-size: .74rem; gap: 5px; }
+  .wa-btn-nav .wa-text { display: none; } /* optional: text hide karo */
 }
 
     .shop-wrap {
@@ -854,7 +861,9 @@ nav{
     <div class="nav-right">
 
       <div id="shopCartIcon"></div>
-      <a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">💬 WhatsApp</a>
+<a class="wa-btn-nav" href="https://wa.me/923457566768" target="_blank">
+  💬 <span class="wa-text">WhatsApp</span>
+</a>
       <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
     </div>
   </nav>

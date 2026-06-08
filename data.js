@@ -5,7 +5,7 @@
 // https://docs.google.com/spreadsheets/d/1xj7YjE8lV8lzVkooKfwMCQdm5QWE10t2_KHVdjYGEHc/edit?gid=1486542084#gid=1486542084
 const IH = (() => {
 
-  const API = 'https://script.google.com/macros/s/AKfycbxFwdt3qcznO-esey1TtHdRBt9sOtYO5MhGoWOZQGZRQ3D11_9nDrLimQyE5JTxxiUu/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbySfbAdZ6zwxDyg1MwSFpTW-8FdshgPIT-Hqms6ikJWduMwBSnMc7y6PYuFVZy-prAL/exec';
   const IMGBB_KEY = '31e9918c8fad5274d676dfeccd8647d2';
   const CACHE_KEY_P = 'ih_products_cache';
   const CACHE_KEY_S = 'ih_sales_cache';
@@ -47,6 +47,7 @@ const IH = (() => {
       details:      safeParseArray(p.details),
       reviews_list: safeParseArray(p.reviews_list),
       specs:        safeParseObject(p.specs),
+      packaging: safeParseArray(p.packaging),
 volumes: (() => {
   if (Array.isArray(p.volumes) && p.volumes.length > 0) return p.volumes;
   if (typeof p.volumes === 'string' && p.volumes.trim() && p.volumes !== '[]') {
@@ -60,27 +61,28 @@ volumes: (() => {
     };
   }
 
- function serializeProduct(p) {
-    function cleanImg(src) {
-      if (!src) return '';
-      if (String(src).startsWith('data:')) return '';
-      return src;
-    }
-    function cleanGallery(arr) {
-      if (!Array.isArray(arr)) return '[]';
-      return JSON.stringify(arr.filter(src => src && !String(src).startsWith('data:')));
-    }
-    return {
-      ...p,
-      img:          cleanImg(p.img),
-      gallery:      cleanGallery(p.gallery),
-      videos:       JSON.stringify(Array.isArray(p.videos)       ? p.videos       : []),
-      details:      JSON.stringify(Array.isArray(p.details)      ? p.details      : []),
-      reviews_list: JSON.stringify(Array.isArray(p.reviews_list) ? p.reviews_list : []),
-      specs:        JSON.stringify((p.specs && typeof p.specs === 'object') ? p.specs : {}),
-      volumes:      JSON.stringify(Array.isArray(p.volumes)      ? p.volumes      : []),
-    };
+function serializeProduct(p) {
+  function cleanImg(src) {
+    if (!src) return '';
+    if (String(src).startsWith('data:')) return '';
+    return src;
   }
+  function cleanGallery(arr) {
+    if (!Array.isArray(arr)) return '[]';
+    return JSON.stringify(arr.filter(src => src && !String(src).startsWith('data:')));
+  }
+  return {
+    ...p,
+    img:          cleanImg(p.img),
+    gallery:      cleanGallery(p.gallery),
+    videos:       JSON.stringify(Array.isArray(p.videos)       ? p.videos       : []),
+    details:      JSON.stringify(Array.isArray(p.details)      ? p.details      : []),
+    reviews_list: JSON.stringify(Array.isArray(p.reviews_list) ? p.reviews_list : []),
+    specs:        JSON.stringify((p.specs && typeof p.specs === 'object') ? p.specs : {}),
+    volumes:      JSON.stringify(Array.isArray(p.volumes)      ? p.volumes      : []),
+    packaging:    JSON.stringify(Array.isArray(p.packaging)    ? p.packaging    : []),
+  };
+}
 
   // ════════════════════════════════════════
   // IMGBB UPLOAD

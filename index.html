@@ -95,29 +95,35 @@ nav{
   display:flex;align-items:center;
 }
 .nav-search input{
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.18);
-  color:#fff;
+  background:#fff;
+  border:1px solid rgba(255,255,255,.3);
+  color:#1a1a1a;
   padding:8px 16px 8px 38px;
   border-radius:50px;
   font-size:.84rem;
-  font-family:'Plus Jakarta Sans',sans-serif;
+font-family: 'Plus Jakarta Sans', sans-serif;
+-webkit-font-smoothing: antialiased;
   width:200px;
   outline:none;
   transition:.3s;
 }
-.nav-search input::placeholder{color:rgba(255,255,255,.45);}
+.nav-search input::placeholder{color:#999;}
 .nav-search input:focus{
-  background:rgba(255,255,255,.16);
+  background:#fff;
   border-color:rgba(184,134,11,.6);
   width:260px;
+  color:#1a1a1a;
 }
 .nav-search .s-icon{
   position:absolute;left:13px;
-  color:rgba(255,255,255,.45);pointer-events:none;
+  color:#666; pointer-events:none;
   font-size:.9rem;line-height:1;
 }
-
+#cartIconContainer a,
+#cartIconContainer button {
+  color: #fff !important;
+  filter: brightness(0) invert(1);
+}
 /* Search Dropdown */
 .search-dropdown{
   position:absolute;top:calc(100% + 10px);left:0;
@@ -151,20 +157,20 @@ nav{
 .mobile-search-wrap{position:relative;}
 .mobile-search-wrap input{
   width:100%;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.15);
-  color:#fff;
+  background:#fff;
+  border:1px solid rgba(255,255,255,.3);
+  color:#1a1a1a;
   padding:10px 16px 10px 40px;
   border-radius:50px;
   font-size:.88rem;
   font-family:'Plus Jakarta Sans',sans-serif;
   outline:none;transition:.3s;
 }
-.mobile-search-wrap input::placeholder{color:rgba(255,255,255,.4);}
+.mobile-search-wrap input::placeholder{color:#999;}
 .mobile-search-wrap input:focus{border-color:rgba(184,134,11,.6);}
 .mobile-search-wrap .s-icon{
   position:absolute;left:14px;top:50%;transform:translateY(-50%);
-  color:rgba(255,255,255,.4);pointer-events:none;font-size:.9rem;
+  color:#999;pointer-events:none;font-size:.9rem;
 }
 .mobile-search-wrap .search-dropdown{
   top:calc(100% + 6px);left:0;right:0;width:auto;

@@ -1705,12 +1705,18 @@
 
       const sg = document.getElementById('specsGrid');
       const stb = document.getElementById('specsTabBtn');
-      let entries = [];
-      if (p.specs && typeof p.specs === 'object') entries = Object.entries(p.specs);
-      if (entries.length > 0) {
-        sg.innerHTML = entries.map(([k, v]) => '<div class="spec-item"><div class="spec-label">' + k + '</div><div class="spec-val">' + (v || '—') + '</div></div>').join('');
-        stb.textContent = 'Specifications (' + entries.length + ')';
-      }
+     const entries = Array.isArray(p.specs) ? p.specs : [];
+
+if (entries.length > 0) {
+    sg.innerHTML = entries.map(spec => `
+        <div class="spec-item">
+            <div class="spec-label">${spec.key}</div>
+            <div class="spec-val">${spec.val || '—'}</div>
+        </div>
+    `).join('');
+
+    stb.textContent = `Specifications (${entries.length})`;
+}
 
       renderVideos(p.videos);
 

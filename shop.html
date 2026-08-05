@@ -1023,17 +1023,25 @@ nav{
     function buildSpecFilters() {
       const allSpecs = {};
       products.forEach(p => {
-        if (p.specs && typeof p.specs === 'object') {
-          Object.entries(p.specs).forEach(([key, val]) => {
-            let normalizedKey = key.toLowerCase().trim();
-            const normalizedVal = normalizeSpecValue(val);
-            if (!allSpecs[normalizedKey]) allSpecs[normalizedKey] = new Set();
-            if (normalizedVal.includes(',')) {
-              normalizedVal.split(',').forEach(v => { const t = v.trim(); if (t) allSpecs[normalizedKey].add(t); });
-            } else if (normalizedVal) { allSpecs[normalizedKey].add(normalizedVal); }
-          });
-        }
+      if (Array.isArray(p.specs)) {
+  p.specs.forEach(spec => {
+    if (!spec || !spec.key) return;
+
+    const normalizedKey = String(spec.key).toLowerCase().trim();
+    const normalizedVal = normalizeSpecValue(spec.val);
+
+    if (!allSpecs[normalizedKey]) allSpecs[normalizedKey] = new Set();
+
+    if (normalizedVal.includes(',')) {
+      normalizedVal.split(',').forEach(v => {
+        const t = v.trim();
+        if (t) allSpecs[normalizedKey].add(t);
       });
+    } else if (normalizedVal) {
+      allSpecs[normalizedKey].add(normalizedVal);
+    }
+  });
+}});
       const specsForDisplay = {};
       Object.entries(allSpecs).forEach(([key, set]) => { specsForDisplay[key] = Array.from(set).sort(); });
       renderSpecFilters(specsForDisplay);
@@ -1073,28 +1081,37 @@ nav{
       });
     }
 
-   function productMatchesSpecs(p) {
+  function productMatchesSpecs(p) {
   const specCheckboxes = document.querySelectorAll('[data-spec-key]:checked');
+
   if (!specCheckboxes.length) return true;
 
   const selectedSpecs = {};
+
   specCheckboxes.forEach(cb => {
     const key = cb.dataset.specKey.toLowerCase().trim();
-    const val = cb.dataset.specVal;
+    const val = cb.dataset.specVal.toLowerCase();
+
     if (!selectedSpecs[key]) selectedSpecs[key] = [];
-    selectedSpecs[key].push(val.toLowerCase());
+    selectedSpecs[key].push(val);
   });
 
+  if (!Array.isArray(p.specs)) return false;
+
   return Object.entries(selectedSpecs).every(([key, vals]) => {
-    if (!p.specs) return false;
-    // Case-insensitive key match
-    const matchedKey = Object.keys(p.specs).find(k => k.toLowerCase().trim() === key);
-    if (!matchedKey) return false;
-    const pVal = normalizeSpecValue(p.specs[matchedKey]).toLowerCase();
-    return vals.some(v => pVal.includes(v));
+
+    const productValues = p.specs
+      .filter(s => s.key && s.key.toLowerCase().trim() === key)
+      .map(s => normalizeSpecValue(s.val).toLowerCase());
+
+    if (!productValues.length) return false;
+
+    return vals.some(v =>
+      productValues.some(pv => pv.includes(v))
+    );
+
   });
-}
-    function updateSideCounts() {
+}    function updateSideCounts() {
       const all = IH.getProducts();
       document.getElementById('mcnt').textContent = all.filter(p => p.type === 'men').length;
       document.getElementById('wcnt').textContent = all.filter(p => p.type === 'women').length;

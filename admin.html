@@ -3233,11 +3233,62 @@
     function getVideosArray(mode) { const items = mode === 'add' ? addVideoItems : editVideoItems; return items.filter(v => v.trim()); }
 
     // SPECS
-    function addSpecRow(mode) { if (mode === 'add') { addSpecItems.push({ key: '', val: '' }); renderSpecsList('add'); } else { editSpecItems.push({ key: '', val: '' }); renderSpecsList('edit'); } }
-    function removeSpecRow(mode, idx) { if (mode === 'add') { addSpecItems.splice(idx, 1); renderSpecsList('add'); } else { editSpecItems.splice(idx, 1); renderSpecsList('edit'); } }
-    function updateSpec(mode, idx, field, value) { if (mode === 'add') addSpecItems[idx][field] = value; else editSpecItems[idx][field] = value; }
-    function renderSpecsList(mode) { const items = mode === 'add' ? addSpecItems : editSpecItems; const container = document.getElementById(mode + '-specs-list'); if (!container) return; if (!items.length) { container.innerHTML = '<div class="specs-empty">No specs yet.</div>'; return; } container.innerHTML = items.map((item, i) => `<div class="spec-row"><input type="text" placeholder="e.g. Color" value="${escHtml(item.key)}" oninput="updateSpec('${mode}',${i},'key',this.value)"/><span class="spec-sep">→</span><input type="text" placeholder="e.g. Red" value="${escHtml(item.val)}" oninput="updateSpec('${mode}',${i},'val',this.value)"/><button class="spec-del-btn" onclick="removeSpecRow('${mode}',${i})">✕</button></div>`).join(''); }
-    function getSpecsObject(mode) { const items = mode === 'add' ? addSpecItems : editSpecItems; const specs = {}; items.forEach(({ key, val }) => { if (key.trim()) specs[key.trim()] = val.trim(); }); return specs; }
+// SPECS
+function addSpecRow(mode) {
+  if (mode === 'add') {
+    addSpecItems.push({ key: '', val: '' });
+    renderSpecsList('add');
+  } else {
+    editSpecItems.push({ key: '', val: '' });
+    renderSpecsList('edit');
+  }
+}
+
+function removeSpecRow(mode, idx) {
+  if (mode === 'add') {
+    addSpecItems.splice(idx, 1);
+    renderSpecsList('add');
+  } else {
+    editSpecItems.splice(idx, 1);
+    renderSpecsList('edit');
+  }
+}
+
+function updateSpec(mode, idx, field, value) {
+  if (mode === 'add') addSpecItems[idx][field] = value;
+  else editSpecItems[idx][field] = value;
+}
+
+function renderSpecsList(mode) {
+  const items = mode === 'add' ? addSpecItems : editSpecItems;
+  const container = document.getElementById(mode + '-specs-list');
+  if (!container) return;
+  if (!items.length) {
+    container.innerHTML = '<div class="specs-empty">No specs yet.</div>';
+    return;
+  }
+  container.innerHTML = items.map((item, i) => `
+    <div class="spec-row">
+      <input type="text" placeholder="e.g. Color" value="${escHtml(item.key)}"
+        oninput="updateSpec('${mode}',${i},'key',this.value)"/>
+      <span class="spec-sep">→</span>
+      <input type="text" placeholder="e.g. Red" value="${escHtml(item.val)}"
+        oninput="updateSpec('${mode}',${i},'val',this.value)"/>
+      <button class="spec-del-btn" onclick="removeSpecRow('${mode}',${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// NEW: array format — duplicate keys allowed
+function getSpecsArray(mode) {
+  const items = mode === 'add' ? addSpecItems : editSpecItems;
+  return items
+    .filter(item => item.key && item.key.trim())
+    .map(item => ({
+      key: item.key.trim(),
+      val: (item.val || '').trim()
+    }));
+}
 
     // ══════════════════════════════════════════
     // SIDEBAR / NAV
@@ -3469,7 +3520,9 @@
         const bc = p.badge === 'NEW' ? 'badge-new' : p.badge === 'HOT' ? 'badge-hot' : p.badge ? 'badge-best' : 'badge-none';
         const imgCount = (p.img ? 1 : 0) + (Array.isArray(p.gallery) ? p.gallery.filter(Boolean).length : 0);
         const vidCount = Array.isArray(p.videos) ? p.videos.filter(Boolean).length : 0;
-        const specCount = p.specs ? Object.keys(p.specs).length : 0;
+       const specCount = Array.isArray(p.specs)
+  ? p.specs.length
+  : (p.specs ? Object.keys(p.specs).length : 0);
         return `<tr><td style="font-size:1.2rem">${p.emoji || '📦'}</td><td class="td-name">${p.name}</td><td><span class="type-badge type-${p.type}">${p.type}</span></td><td class="td-price">${pkr(p.price)}</td><td class="td-price" style="color:var(--red)">${pkr(p.cost || 0)}</td><td style="color:var(--green);font-weight:600">${margin}%</td><td class="${sc}">${sl}</td><td><span style="font-size:.65rem;color:var(--ink3)">🖼️${imgCount} 🎬${vidCount} 🔧${specCount}</span></td><td><span class="badge ${bc}">${p.badge || '—'}</span></td><td><div class="actions-cell"><button class="btn-sale" onclick="quickSale('${p.id}')">💰</button><button class="btn-edit" onclick="openEdit('${p.id}')">✏️</button><button class="btn-delete" onclick="deleteProduct('${p.id}')">🗑️</button></div></td></tr>`;
       }).join('') : '<tr><td colspan="10" style="text-align:center;color:var(--ink3);padding:24px">No products found.</td></tr>';
     }
@@ -3489,15 +3542,15 @@
       const reviews = Number(document.getElementById('add-reviews').value) || 0;
       const img = document.getElementById('add-img').value.trim();
       const description = document.getElementById('add-description').value.trim();
-      const specs = getSpecsObject('add');
+     const specs = getSpecsArray('add');
       const videos = getVideosArray('add');
       const packaging = getPackagingArray('add');
       const volumes = getVolumesArray('add');
-      if (!name || !price || !emoji || !type) { toast('❌ Fill required fields', 'error'); return; }
+if (!name || !price || !type) { toast('❌ Fill required fields', 'error'); return; }
       IH.addProduct({
-        name, emoji, type, price, cost, stock, badge, rating, reviews, img,
-        gallery: [...addGalleryItems], videos, volumes, packaging, description, specs, details: [], reviews_list: []
-      });
+  name, emoji: emoji || '📦', type, price, cost, stock, badge, rating, reviews, img,
+  gallery: [...addGalleryItems], videos, volumes, packaging, description, specs, details: [], reviews_list: []
+});
       toast('✅ Product added: ' + name);
       ['add-name', 'add-emoji', 'add-price', 'add-cost', 'add-stock', 'add-rating', 'add-reviews', 'add-img', 'add-description'].forEach(id => { document.getElementById(id).value = ''; });
       document.getElementById('add-badge').value = ''; document.getElementById('add-type').value = 'men';
@@ -3533,8 +3586,15 @@
       editVideoItems = Array.isArray(p.videos) ? [...p.videos.filter(Boolean)] : [];
       renderVideos('edit');
 
-      editSpecItems = p.specs ? Object.entries(p.specs).map(([key, val]) => ({ key, val })) : [];
-      renderSpecsList('edit');
+    // Support both old object format and new array format
+if (Array.isArray(p.specs)) {
+  editSpecItems = p.specs.map(s => ({ key: s.key || '', val: s.val || '' }));
+} else if (p.specs && typeof p.specs === 'object') {
+  editSpecItems = Object.entries(p.specs).map(([key, val]) => ({ key, val }));
+} else {
+  editSpecItems = [];
+}
+renderSpecsList('edit');
 
       epInit('edit');
 
@@ -3572,7 +3632,7 @@
         gallery: [...editGalleryItems],
         videos: getVideosArray('edit'),
         description: document.getElementById('edit-description').value.trim(),
-        specs: getSpecsObject('edit'),
+       specs: getSpecsArray('edit'),
         details: Array.isArray(existing.details) ? existing.details : [],
         reviews_list: Array.isArray(existing.reviews_list) ? existing.reviews_list : [],
       });

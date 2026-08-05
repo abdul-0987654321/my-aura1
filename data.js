@@ -1,6 +1,9 @@
 // ============================================================
 //  Scentonish – Perfume Store Data Store v4.0
 //  CACHE-FIRST: pehle localStorage se dikhao, phir sync karo
+//  FIX v4.1: specs ab ARRAY format mein consistent hai
+//            (duplicate keys allowed — pehle object bana ke
+//             overwrite ho jate the, ab fix ho gaya)
 // ============================================================
 // https://docs.google.com/spreadsheets/d/1xj7YjE8lV8lzVkooKfwMCQdm5QWE10t2_KHVdjYGEHc/edit?gid=1486542084#gid=1486542084
 const IH = (() => {
@@ -34,6 +37,19 @@ const IH = (() => {
     catch (e) { return fallback || {}; }
   }
 
+  // FIX: specs old object format ({key:val}) ko bhi array format
+  // ([{key,val}]) mein migrate kar deta hai, taake purana data na tootay
+  function normalizeSpecs(val) {
+    const arr = safeParseArray(val, null);
+    if (arr !== null) return arr; // already array (ya valid JSON array string)
+
+    // purana object format tha — migrate karo
+    const obj = safeParseObject(val, {});
+    return Object.keys(obj).map(function(k) {
+      return { key: k, val: obj[k] };
+    });
+  }
+
   function normalizeProduct(p) {
     return {
       ...p,
@@ -46,7 +62,7 @@ const IH = (() => {
       videos:       safeParseArray(p.videos),
       details:      safeParseArray(p.details),
       reviews_list: safeParseArray(p.reviews_list),
-      specs:        safeParseObject(p.specs),
+      specs:        normalizeSpecs(p.specs), // FIX: array format, duplicate keys allowed
       packaging: safeParseArray(p.packaging),
 volumes: (() => {
   if (Array.isArray(p.volumes) && p.volumes.length > 0) return p.volumes;
@@ -78,7 +94,7 @@ function serializeProduct(p) {
     videos:       JSON.stringify(Array.isArray(p.videos)       ? p.videos       : []),
     details:      JSON.stringify(Array.isArray(p.details)      ? p.details      : []),
     reviews_list: JSON.stringify(Array.isArray(p.reviews_list) ? p.reviews_list : []),
-    specs:        JSON.stringify((p.specs && typeof p.specs === 'object') ? p.specs : {}),
+    specs:        JSON.stringify(Array.isArray(p.specs) ? p.specs : []), // FIX: array, not {}
     volumes:      JSON.stringify(Array.isArray(p.volumes)      ? p.volumes      : []),
     packaging:    JSON.stringify(Array.isArray(p.packaging)    ? p.packaging    : []),
   };
@@ -251,7 +267,7 @@ if (true) {
     p.videos       = Array.isArray(p.videos)       ? p.videos       : [];
     p.description  = p.description  || '';
     p.details      = Array.isArray(p.details)      ? p.details      : [];
-    p.specs        = (p.specs && typeof p.specs === 'object') ? p.specs : {};
+    p.specs        = Array.isArray(p.specs) ? p.specs : []; // FIX: array, not object
     p.reviews_list = Array.isArray(p.reviews_list) ? p.reviews_list : [];
 
     _products.push(p);

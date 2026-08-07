@@ -2979,6 +2979,8 @@
 
   <a class="wa-float-admin" href="https://wa.me/923137666766" target="_blank">💬</a>
   <div class="toast" id="toast"></div>
+  <datalist id="specKeysDatalist"></datalist>
+<datalist id="specValsDatalist"></datalist>
 
   <script src="data.js"></script>
   <script>
@@ -3258,11 +3260,11 @@ function updateSpec(mode, idx, field, value) {
   if (mode === 'add') addSpecItems[idx][field] = value;
   else editSpecItems[idx][field] = value;
 }
-
 function renderSpecsList(mode) {
   const items = mode === 'add' ? addSpecItems : editSpecItems;
   const container = document.getElementById(mode + '-specs-list');
   if (!container) return;
+  refreshSpecKeysDatalist();
   if (!items.length) {
     container.innerHTML = '<div class="specs-empty">No specs yet.</div>';
     return;
@@ -3270,15 +3272,18 @@ function renderSpecsList(mode) {
   container.innerHTML = items.map((item, i) => `
     <div class="spec-row">
       <input type="text" placeholder="e.g. Color" value="${escHtml(item.key)}"
-        oninput="updateSpec('${mode}',${i},'key',this.value)"/>
+        list="specKeysDatalist"
+        oninput="updateSpec('${mode}',${i},'key',this.value); refreshSpecValsDatalist(this.value)"
+        onfocus="refreshSpecValsDatalist(this.value)"/>
       <span class="spec-sep">→</span>
       <input type="text" placeholder="e.g. Red" value="${escHtml(item.val)}"
-        oninput="updateSpec('${mode}',${i},'val',this.value)"/>
+        list="specValsDatalist"
+        oninput="updateSpec('${mode}',${i},'val',this.value)"
+        onfocus="refreshSpecValsDatalist(document.querySelectorAll('#${mode}-specs-list .spec-row')[${i}].querySelector('input').value)"/>
       <button class="spec-del-btn" onclick="removeSpecRow('${mode}',${i})">✕</button>
     </div>
   `).join('');
 }
-
 // NEW: array format — duplicate keys allowed
 function getSpecsArray(mode) {
   const items = mode === 'add' ? addSpecItems : editSpecItems;
@@ -3289,7 +3294,41 @@ function getSpecsArray(mode) {
       val: (item.val || '').trim()
     }));
 }
+// ══════════════════════════════════════════
+// 🔧 SPEC KEY/VALUE SUGGESTIONS (from existing products)
+// ══════════════════════════════════════════
+function getAllSpecPairs() {
+  if (typeof IH === 'undefined') return [];
+  const pairs = [];
+  IH.getProducts().forEach(p => {
+    if (Array.isArray(p.specs)) {
+      p.specs.forEach(s => { if (s.key && s.key.trim()) pairs.push({ key: s.key.trim(), val: (s.val || '').trim() }); });
+    } else if (p.specs && typeof p.specs === 'object') {
+      Object.entries(p.specs).forEach(([k, v]) => { if (k.trim()) pairs.push({ key: k.trim(), val: (v || '').trim() }); });
+    }
+  });
+  return pairs;
+}
 
+function refreshSpecKeysDatalist() {
+  const dl = document.getElementById('specKeysDatalist');
+  if (!dl) return;
+  const keys = [...new Set(getAllSpecPairs().map(p => p.key))].sort();
+  dl.innerHTML = keys.map(k => `<option value="${escHtml(k)}"></option>`).join('');
+}
+
+function refreshSpecValsDatalist(forKey) {
+  const dl = document.getElementById('specValsDatalist');
+  if (!dl) return;
+  const pairs = getAllSpecPairs();
+  let vals;
+  if (forKey && forKey.trim()) {
+    vals = [...new Set(pairs.filter(p => p.key.toLowerCase() === forKey.trim().toLowerCase()).map(p => p.val))].filter(Boolean);
+  } else {
+    vals = [...new Set(pairs.map(p => p.val))].filter(Boolean);
+  }
+  dl.innerHTML = vals.sort().map(v => `<option value="${escHtml(v)}"></option>`).join('');
+}
     // ══════════════════════════════════════════
     // SIDEBAR / NAV
     // ══════════════════════════════════════════

@@ -1020,32 +1020,43 @@ nav{
       return String(value).trim();
     }
 
-    function buildSpecFilters() {
-      const allSpecs = {};
-      products.forEach(p => {
-      if (Array.isArray(p.specs)) {
-  p.specs.forEach(spec => {
-    if (!spec || !spec.key) return;
+  function buildSpecFilters() {
+  const allSpecs = {};
+  products.forEach(p => {
+    if (Array.isArray(p.specs)) {
+      p.specs.forEach(spec => {
+        if (!spec || !spec.key) return;
 
-    const normalizedKey = String(spec.key).toLowerCase().trim();
-    const normalizedVal = normalizeSpecValue(spec.val);
+        const normalizedKey = String(spec.key).toLowerCase().trim();
+        const normalizedVal = normalizeSpecValue(spec.val);
 
-    if (!allSpecs[normalizedKey]) allSpecs[normalizedKey] = new Set();
+        if (!allSpecs[normalizedKey]) allSpecs[normalizedKey] = new Set();
 
-    if (normalizedVal.includes(',')) {
-      normalizedVal.split(',').forEach(v => {
-        const t = v.trim();
-        if (t) allSpecs[normalizedKey].add(t);
+        if (normalizedVal.includes(',')) {
+          normalizedVal.split(',').forEach(v => {
+            const t = v.trim();
+            if (t) allSpecs[normalizedKey].add(t);
+          });
+        } else if (normalizedVal) {
+          allSpecs[normalizedKey].add(normalizedVal);
+        }
       });
-    } else if (normalizedVal) {
-      allSpecs[normalizedKey].add(normalizedVal);
     }
   });
-}});
-      const specsForDisplay = {};
-      Object.entries(allSpecs).forEach(([key, set]) => { specsForDisplay[key] = Array.from(set).sort(); });
-      renderSpecFilters(specsForDisplay);
-    }
+
+  const specsForDisplay = {};
+  Object.entries(allSpecs).forEach(([key, set]) => {
+    specsForDisplay[key] = Array.from(set).sort((a, b) => {
+      const numA = parseFloat(a);
+      const numB = parseFloat(b);
+      // agar dono values numeric hain (jese 100ml, 12ml) to number ke hisaab se sort karo
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      // warna normal alphabetical
+      return a.localeCompare(b);
+    });
+  });
+  renderSpecFilters(specsForDisplay);
+}
 
     function renderSpecFilters(specsObj) {
       const container = document.getElementById('dynamicSpecsContainer');

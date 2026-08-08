@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>emailjs.init("pGSi_2GDvRQ6q35yc");</script>
+<!-- ✅ FIX: data.js include kiya taake IH.recordSale() yahan use ho sake -->
+<script src="data.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:linear-gradient(135deg,#f8f5f2,#efe6df);color:#2a1f1a;min-height:100vh;}
@@ -90,6 +92,10 @@ select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:u
 const API = 'https://script.google.com/macros/s/AKfycbxFwdt3qcznO-esey1TtHdRBt9sOtYO5MhGoWOZQGZRQ3D11_9nDrLimQyE5JTxxiUu/exec';
 let shippingRates = [];
 
+// ✅ FIX: IH ko init karo taake products/sales data load ho aur
+// IH.recordSale() sahi tarah se stock aur sale history update kar sake.
+IH.init();
+
 // ═══════════════════════════════════
 // CART HELPERS
 // ═══════════════════════════════════
@@ -99,35 +105,42 @@ function clearCart(){ localStorage.removeItem('scentonish_cart'); }
 // ═══════════════════════════════════
 // SHIPPING RATES — load karo phir dropdown banao
 // ═══════════════════════════════════
+// ✅ FIX: pehle jo code tha wo localStorage mein KUCH BHI mil jaye to
+// use hi permanent maan leta tha aur kabhi Google Sheet se dobara check
+// nahi karta tha. Isi wajah se admin panel mein nayi/updated city save
+// hone ke bawajood customer ki browser mein purani cached list hi
+// dikhti rehti thi. Ab hum "cache-first, phir hamesha background
+// refresh" strategy use kar rahe hain — bilkul products/data.js ki tarah.
 async function loadShippingRates() {
   document.getElementById('cityLoading').style.display = 'block';
   document.getElementById('city').style.display = 'none';
 
+  // STEP 1: Agar cache mein kuch hai to turant dikha do (fast load)
   try {
-    // Pehle localStorage check karo (admin panel ne save kiya hoga)
     const saved = localStorage.getItem('ih_shipping');
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed) && parsed.length > 0) {
         shippingRates = parsed;
         populateCityDropdown();
-        return;
       }
     }
-    // Agar localStorage mein nahi to Google Sheet se fetch karo
+  } catch(e) {
+    console.warn('Shipping cache read failed:', e);
+  }
+
+  // STEP 2: HAMESHA Google Sheet se fresh data lao aur cache + dropdown
+  // dono update karo — taake admin ki nayi cities turant reflect hon,
+  // chahe purani cache browser mein pehle se hi maujood ho.
+  try {
     const res = await fetch(API + '?action=getShipping');
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
       shippingRates = data;
-      // Cache karo
       localStorage.setItem('ih_shipping', JSON.stringify(data));
-    } else {
-      // Fallback default cities
-     
     }
   } catch(e) {
-    console.warn('Shipping fetch failed, using defaults:', e);
-   
+    console.warn('Shipping fresh-fetch failed, cached data (agar thi) use ho rahi hai:', e);
   }
 
   populateCityDropdown();
@@ -259,6 +272,24 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
   try {
     await emailjs.send('service_r6kzn5u', 'template_53kynsg', order);
     await emailjs.send('service_r6kzn5u', 'template_weax4h7', order);
+
+    // ══════════════════════════════════════════════════════
+    // ✅ FIX: yahan hi asli masla tha — pehle sale kabhi record
+    // hi nahi hoti thi admin dashboard ke system mein. Ab har
+    // cart item ke liye IH.recordSale() call ho raha hai jo:
+    //   - Sale History mein entry add karega
+    //   - Product ka stock kam karega
+    //   - Overview / Profit & Loss stats update karega
+    //   - Google Sheet ko bhi 'addSale' action se sync karega
+    // ══════════════════════════════════════════════════════
+    for (const item of cart) {
+      try {
+        await IH.recordSale(item.id, item.qty || 1);
+      } catch (saleErr) {
+        console.error('Sale record failed for item:', item, saleErr);
+      }
+    }
+
     clearCart();
     localStorage.setItem('lastOrderId', orderId);
     hideLoading();

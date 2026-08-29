@@ -15,109 +15,79 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  min-height:100vh;
   color:#2a1f1a;
+  padding:20px 0;
 }
-:root{
-  --bg:#f5f5f5;           /* Light grey background */
-  --bg2:#efefef;          /* Slightly darker grey */
-  --bg3:#ffffff;          /* White */
-  
-  --ink:#333333;          /* Dark grey text */
-  --ink2:#666666;         /* Medium grey text */
-  --ink3:#999999;         /* Light grey text */
-  
-  --accent:#555555;       /* Dark grey (accent) */
-  --accent2:#777777;      /* Medium grey */
-  --accent3:#999999;      /* Light grey */
-  
-  --border:#ddd;          /* Light grey border */
-  --border2:#e8e8e8;      /* Slightly darker border */
-}
-/* CARD */
 .card{
   background:#fff;
   padding:50px 35px;
   border-radius:24px;
   text-align:center;
-  max-width:420px;
+  max-width:460px;
   width:90%;
   box-shadow:0 15px 50px rgba(0,0,0,.08);
   animation:pop .5s ease;
 }
-
 @keyframes pop{
   from{transform:scale(.8);opacity:0;}
   to{transform:scale(1);opacity:1;}
 }
-
-/* CHECK ICON */
 .check{
-  width:90px;
-  height:90px;
-  margin:0 auto 20px;
-  border-radius:50%;
+  width:90px;height:90px;margin:0 auto 20px;border-radius:50%;
   background:linear-gradient(135deg,#a8413a,#c85a4a);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  color:#fff;
-  font-size:40px;
-  animation:bounce 1.2s infinite;
+  display:flex;justify-content:center;align-items:center;
+  color:#fff;font-size:40px;animation:bounce 1.2s infinite;
 }
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+h1{font-size:1.6rem;margin-bottom:10px;}
+p{font-size:.95rem;color:#666;line-height:1.6;}
+.btn{display:block;margin-top:20px;padding:14px;border-radius:14px;text-decoration:none;font-weight:700;transition:.3s;}
+.primary{background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;}
+.primary:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(168,65,58,.3);}
+.secondary{background:#f3f3f3;color:#2a1f1a;}
+.secondary:hover{background:#e9e9e9;}
+.small{font-size:.8rem;margin-top:12px;color:#999;}
 
-@keyframes bounce{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-6px);}
+/* REVIEW SECTION */
+.reviewSect{
+  margin-top:26px;
+  padding-top:22px;
+  border-top:1px dashed #eee;
+  text-align:left;
 }
-
-/* TEXT */
-h1{
-  font-size:1.6rem;
-  margin-bottom:10px;
-}
-
-p{
-  font-size:.95rem;
-  color:#666;
-  line-height:1.6;
-}
-
-/* BUTTONS */
-.btn{
-  display:block;
-  margin-top:20px;
-  padding:14px;
+.reviewSect > h3{font-size:1rem;margin-bottom:14px;text-align:center;color:#1f1a17;}
+.reviewItem{
+  background:#fafafa;
+  border:1px solid #eee;
   border-radius:14px;
-  text-decoration:none;
-  font-weight:700;
-  transition:.3s;
+  padding:16px;
+  margin-bottom:12px;
 }
-
-.primary{
-  background:linear-gradient(135deg,#a8413a,#c85a4a);
-  color:#fff;
+.reviewItem .pname{font-size:.86rem;font-weight:700;margin-bottom:8px;color:#1f1a17;}
+.stars{
+  display:flex;
+  gap:5px;
+  font-size:26px;
+  margin-bottom:10px;
+  cursor:pointer;
+  user-select:none;
 }
-
-.primary:hover{
-  transform:translateY(-3px);
-  box-shadow:0 10px 25px rgba(168,65,58,.3);
+.stars span{color:#ddd;transition:.15s;}
+.stars span.active{color:#f0a13a;}
+.reviewItem textarea{
+  width:100%;padding:10px 12px;border:1px solid #eee;border-radius:10px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;resize:vertical;
+  min-height:56px;outline:none;background:#fff;box-sizing:border-box;
 }
-
-.secondary{
-  background:#f3f3f3;
-  color:#2a1f1a;
+.reviewItem textarea:focus{border-color:#a8413a;}
+.reviewItem button{
+  width:100%;margin-top:10px;padding:11px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,#a8413a,#c85a4a);color:#fff;font-weight:700;
+  cursor:pointer;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;
 }
-
-.secondary:hover{
-  background:#e9e9e9;
-}
-
-.small{
-  font-size:.8rem;
-  margin-top:12px;
-  color:#999;
-}
+.reviewItem button:disabled{opacity:.6;cursor:not-allowed;}
+.reviewItem .done{display:none;text-align:center;color:#a8413a;font-weight:700;font-size:.85rem;padding:6px 0;}
 </style>
 </head>
 
@@ -126,15 +96,21 @@ p{
 <div class="card">
 
   <div class="check">✓</div>
-<div style="margin-top:15px;font-weight:700;color:#a8413a;font-size:18px;">
-  Order ID: <span id="orderId"></span>
-</div>
+  <div style="margin-top:15px;font-weight:700;color:#a8413a;font-size:18px;">
+    Order ID: <span id="orderId"></span>
+  </div>
   <h1>Thank You! 🎉</h1>
 
   <p>
     Your order has been placed successfully.<br>
-    We’ve received your request and will contact you soon on WhatsApp.
+    We've received your request and will contact you soon on WhatsApp.
   </p>
+
+  <!-- REVIEW SECTION (JS se fill hoga) -->
+  <div class="reviewSect" id="reviewSect" style="display:none;">
+    <h3>Rate what you bought ⭐</h3>
+    <div id="reviewList"></div>
+  </div>
 
   <a href="index.html" class="btn primary">Continue Shopping</a>
   <a href="shop.html" class="btn secondary">Go to Shop</a>
@@ -144,14 +120,110 @@ p{
   </div>
 
 </div>
+
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-  const id = localStorage.getItem("lastOrderId");
+const API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
 
-  console.log("ORDER ID:", id);
+const orderId  = localStorage.getItem("lastOrderId");
+const custName = localStorage.getItem("lastOrderName") || "Customer";
+let items = [];
+try { items = JSON.parse(localStorage.getItem("lastOrderItems") || "[]"); } catch(e) { items = []; }
 
-  document.getElementById("orderId").textContent = id || "SN-ERROR";
-});
+document.getElementById("orderId").textContent = orderId || "SN-ERROR";
+
+function reviewKey(productId) {
+  return "reviewed_" + orderId + "_" + productId;
+}
+
+function buildReviewItem(product) {
+  const alreadyDone = orderId && localStorage.getItem(reviewKey(product.id));
+
+  const wrap = document.createElement('div');
+  wrap.className = 'reviewItem';
+
+  wrap.innerHTML = `
+    <div class="pname">${product.name}</div>
+    <div class="stars" data-rating="0">
+      <span data-v="1">★</span>
+      <span data-v="2">★</span>
+      <span data-v="3">★</span>
+      <span data-v="4">★</span>
+      <span data-v="5">★</span>
+    </div>
+    <textarea placeholder="Write a short review (optional)"></textarea>
+    <button>Submit Review</button>
+    <div class="done">✅ Thanks for your feedback!</div>
+  `;
+
+  const starsEl = wrap.querySelector('.stars');
+  const stars   = wrap.querySelectorAll('.stars span');
+  const textEl  = wrap.querySelector('textarea');
+  const btn     = wrap.querySelector('button');
+  const doneEl  = wrap.querySelector('.done');
+
+  if (alreadyDone) {
+    starsEl.style.pointerEvents = 'none';
+    textEl.disabled = true;
+    btn.style.display = 'none';
+    doneEl.style.display = 'block';
+    return wrap;
+  }
+
+  stars.forEach(function(star){
+    star.addEventListener('click', function(){
+      const v = Number(star.dataset.v);
+      starsEl.dataset.rating = v;
+      stars.forEach(function(s){
+        s.classList.toggle('active', Number(s.dataset.v) <= v);
+      });
+    });
+  });
+
+  btn.addEventListener('click', async function(){
+    const rating = Number(starsEl.dataset.rating);
+    if (!rating) { alert('Please select a star rating first'); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    const review = {
+      action:       "addReview",
+      order_id:     orderId || "N/A",
+      product_id:   product.id,
+      product_name: product.name,
+      name:         custName,
+      rating:       rating,
+      comment:      textEl.value.trim()
+    };
+
+    try {
+      const res = await fetch(API, { method: "POST", body: JSON.stringify(review) });
+      const out = await res.json();
+      if (out.error) throw new Error(out.error);
+
+      if (orderId) localStorage.setItem(reviewKey(product.id), "1");
+      starsEl.style.pointerEvents = 'none';
+      textEl.disabled = true;
+      btn.style.display = 'none';
+      doneEl.style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      alert('Review submit nahi hui, dobara try karein.');
+      btn.disabled = false;
+      btn.textContent = 'Submit Review';
+    }
+  });
+
+  return wrap;
+}
+
+if (items.length > 0) {
+  document.getElementById('reviewSect').style.display = 'block';
+  const list = document.getElementById('reviewList');
+  items.forEach(function(p){
+    list.appendChild(buildReviewItem(p));
+  });
+}
 </script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 // https://docs.google.com/spreadsheets/d/1xj7YjE8lV8lzVkooKfwMCQdm5QWE10t2_KHVdjYGEHc/edit?gid=1486542084#gid=1486542084
 const IH = (() => {
 
-  const API = 'https://script.google.com/macros/s/AKfycbySfbAdZ6zwxDyg1MwSFpTW-8FdshgPIT-Hqms6ikJWduMwBSnMc7y6PYuFVZy-prAL/exec';
+  const API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
   const IMGBB_KEY = '31e9918c8fad5274d676dfeccd8647d2';
   const CACHE_KEY_P = 'ih_products_cache';
   const CACHE_KEY_S = 'ih_sales_cache';

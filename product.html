@@ -1472,6 +1472,18 @@ async function loadProductReviews(productId) {
     function addToCartProduct() {
       const p = window._currentProduct;
       if (!p) return;
+
+      // ✅ FIX: agar product ke volumes (sizes) hain aur customer ne
+      // koi bhi size select nahi ki, to galat "base price" cart mein
+      // jaane se roko — pehle size select karwao.
+      if (p.volumes && p.volumes.length > 0) {
+        const selected = document.querySelector('input[name="vol_select"]:checked');
+        if (!selected) {
+          alert('⚠️ Please select a size/volume before adding to cart.');
+          return;
+        }
+      }
+
       CART.addItem({
         id: p.id,
         name: p.name,

@@ -143,18 +143,9 @@ function serializeProduct(p) {
       }
     });
 
-    // ✅ FIX: 15-second timeout laga diya taake agar Apps Script
-    // slow/hang ho jaye to fetch hamesha ke liye latka na rahe —
-    // pehle koi timeout nahi tha, is wajah se "Processing..." popup
-    // kabhi kabhi permanently atak jata tha.
-    const controller = new AbortController();
-    const timeoutId = setTimeout(function(){ controller.abort(); }, 15000);
-
     const res = await fetch(API + '?' + params.toString(), {
       method: 'GET',
-      signal: controller.signal,
     });
-    clearTimeout(timeoutId);
 
     const result = await res.json();
     return result;
@@ -433,6 +424,9 @@ async function saveShipping(cities) {
     uploadToImgBB:    uploadToImgBB,
     getShipping:  getShipping,
 saveShipping: saveShipping,
+    // ✅ FIX: manual "Refresh" button ke liye — Google Sheet se
+    // foran fresh data (products + sales) khinch ke UI update karega.
+    refreshData:      _backgroundSync,
   };
 
 })();

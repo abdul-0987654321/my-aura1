@@ -2446,7 +2446,7 @@
             <div class="user-pill">
               <div class="u-dot"></div><span class="u-name">Junaid</span> 👤
             </div>
-
+  
             <button class="add-btn" onclick="showPage('add',null)">➕ Add Product</button>
           </div>
         </div>
@@ -3001,7 +3001,7 @@
             return;
           }
         }
-        const API = 'https://script.google.com/macros/s/AKfycbxeL48jO6OxS3PMfks-oA2tSUXarjcyQfoPJvvX6Aw-ezVCGyrRQsgIxAusJwM4U5uF/exec';
+        const API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
         const res = await fetch(API + '?action=getShipping');
         const data = await res.json();
         if (Array.isArray(data) && data.length) {

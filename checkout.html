@@ -270,25 +270,40 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
   };
 
   try {
-    await emailjs.send('service_r6kzn5u', 'template_53kynsg', order);
-    await emailjs.send('service_r6kzn5u', 'template_weax4h7', order);
+    // ✅ FIX: Safety-net timeout — agar poora order-submit process
+    // (emails + sale recording) 25 second se zyada le, to popup
+    // force hide ho jayega aur user ko error dikhega, hamesha ke
+    // liye "Processing..." mein atakne ke bajaye.
+    const timeoutPromise = new Promise(function(_, reject){
+      setTimeout(function(){ reject(new Error('Request timed out. Please check your internet and try again.')); }, 25000);
+    });
 
-    // ══════════════════════════════════════════════════════
-    // ✅ FIX: yahan hi asli masla tha — pehle sale kabhi record
-    // hi nahi hoti thi admin dashboard ke system mein. Ab har
-    // cart item ke liye IH.recordSale() call ho raha hai jo:
-    //   - Sale History mein entry add karega
-    //   - Product ka stock kam karega
-    //   - Overview / Profit & Loss stats update karega
-    //   - Google Sheet ko bhi 'addSale' action se sync karega
-    // ══════════════════════════════════════════════════════
-    for (const item of cart) {
-      try {
-        await IH.recordSale(item.id, item.qty || 1);
-      } catch (saleErr) {
-        console.error('Sale record failed for item:', item, saleErr);
+    const orderPromise = (async function(){
+      await emailjs.send('service_r6kzn5u', 'template_53kynsg', order);
+      await emailjs.send('service_r6kzn5u', 'template_weax4h7', order);
+
+      // ══════════════════════════════════════════════════════
+      // ✅ FIX: yahan hi asli masla tha — pehle sale kabhi record
+      // hi nahi hoti thi admin dashboard ke system mein. Ab har
+      // cart item ke liye IH.recordSale() call ho raha hai jo:
+      //   - Sale History mein entry add karega
+      //   - Product ka stock kam karega
+      //   - Overview / Profit & Loss stats update karega
+      //   - Google Sheet ko bhi 'addSale' action se sync karega
+      // ══════════════════════════════════════════════════════
+      for (const item of cart) {
+        try {
+          // ✅ FIX: item.price pass kiya taake cart mein jo actual price
+          // (selected size/volume ki price) hai wahi Sales sheet mein
+          // save ho — base product price nahi.
+          await IH.recordSale(item.id, item.qty || 1, item.price);
+        } catch (saleErr) {
+          console.error('Sale record failed for item:', item, saleErr);
+        }
       }
-    }
+    })();
+
+    await Promise.race([orderPromise, timeoutPromise]);
 
     clearCart();
 localStorage.setItem('lastOrderId', orderId);
@@ -299,11 +314,11 @@ localStorage.setItem('lastOrderItems', JSON.stringify(cart.map(function(p){
 hideLoading();
     alert('✅ Order Placed Successfully!');
     window.location.href = 'thankyou.html';
-  } catch (error) {
+  } catch (error){
     hideLoading();
     btn.disabled = false;
     console.error(error);
-    alert('❌ Order failed. Try again.');
+    alert('❌ Order failed: ' + (error && error.message ? error.message : 'Please try again.'));
   }
 });
 

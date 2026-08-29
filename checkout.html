@@ -89,7 +89,7 @@ select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:u
 // ═══════════════════════════════════
 // STATE
 // ═══════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbxFwdt3qcznO-esey1TtHdRBt9sOtYO5MhGoWOZQGZRQ3D11_9nDrLimQyE5JTxxiUu/exec';
+const API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
 let shippingRates = [];
 
 // ✅ FIX: IH ko init karo taake products/sales data load ho aur
@@ -291,8 +291,12 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
     }
 
     clearCart();
-    localStorage.setItem('lastOrderId', orderId);
-    hideLoading();
+localStorage.setItem('lastOrderId', orderId);
+localStorage.setItem('lastOrderName', document.getElementById('name').value);
+localStorage.setItem('lastOrderItems', JSON.stringify(cart.map(function(p){
+  return { id: p.id, name: p.name };
+})));
+hideLoading();
     alert('✅ Order Placed Successfully!');
     window.location.href = 'thankyou.html';
   } catch (error) {

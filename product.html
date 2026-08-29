@@ -1368,18 +1368,21 @@
       </div>
 
       <!-- TABS -->
-      <div class="tabs-section">
-        <div class="tabs-hd">
-          <button class="tab-btn active" onclick="switchTab('desc',this)">Description</button>
-          <button class="tab-btn" id="specsTabBtn" onclick="switchTab('specs',this)">Specifications</button>
-        </div>
-        <div class="tab-content active" id="desc">
-          <p class="desc-text" id="descText"></p>
-        </div>
-        <div class="tab-content" id="specs">
-          <div class="specs-grid" id="specsGrid"></div>
-        </div>
-      </div>
+     <div class="tabs-hd">
+  <button class="tab-btn active" onclick="switchTab('desc',this)">Description</button>
+  <button class="tab-btn" id="specsTabBtn" onclick="switchTab('specs',this)">Specifications</button>
+  <button class="tab-btn" id="reviewsTabBtn" onclick="switchTab('reviews',this)">Reviews</button>
+</div>
+<div class="tab-content active" id="desc">
+  <p class="desc-text" id="descText"></p>
+</div>
+<div class="tab-content" id="specs">
+  <div class="specs-grid" id="specsGrid"></div>
+</div>
+<div class="tab-content" id="reviews">
+  <div id="reviewsLoading" style="color:var(--ink3);font-size:.88rem;">Loading reviews…</div>
+  <div id="reviewsList"></div>
+</div>
 
       <!-- VIDEOS -->
       <div class="videos-section" id="videosSection" style="display:none;">
@@ -1421,10 +1424,51 @@
   <script src="data.js"></script>
   <script src="cart.js"></script>
   <script>
+    
     let currentZoomImageSrc = '';
     let currentZoomEmoji = '';
     let zoomRotation = 0;
+const REVIEW_API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
 
+async function loadProductReviews(productId) {
+  const loadingEl = document.getElementById('reviewsLoading');
+  const listEl    = document.getElementById('reviewsList');
+  const tabBtn    = document.getElementById('reviewsTabBtn');
+
+  try {
+    const res = await fetch(REVIEW_API + '?action=getReviews&product_id=' + encodeURIComponent(productId));
+    const reviews = await res.json();
+
+    loadingEl.style.display = 'none';
+
+    if (!Array.isArray(reviews) || reviews.length === 0) {
+      listEl.innerHTML = '<p style="color:var(--ink3);font-size:.88rem;">No reviews yet. Be the first to review this product!</p>';
+      tabBtn.textContent = 'Reviews';
+      return;
+    }
+
+    tabBtn.textContent = 'Reviews (' + reviews.length + ')';
+
+    listEl.innerHTML = reviews.slice().reverse().map(function(r) {
+      const rating = Number(r.rating) || 0;
+      const starsHtml = '★★★★★☆☆☆☆☆'.slice(5 - rating, 10 - rating);
+      const dateStr = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-PK', { day:'numeric', month:'short', year:'numeric' }) : '';
+      return `
+        <div style="background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <strong style="font-size:.88rem;color:var(--ink);">${r.name || 'Customer'}</strong>
+            <span style="font-size:.72rem;color:var(--ink3);">${dateStr}</span>
+          </div>
+          <div style="color:#f0a13a;font-size:.95rem;margin-bottom:6px;">${starsHtml}</div>
+          ${r.comment ? `<p style="font-size:.86rem;color:var(--ink2);line-height:1.6;">${r.comment}</p>` : ''}
+        </div>
+      `;
+    }).join('');
+  } catch (err) {
+    console.error('Reviews load failed:', err);
+    loadingEl.textContent = 'Could not load reviews.';
+  }
+}
     function addToCartProduct() {
       const p = window._currentProduct;
       if (!p) return;
@@ -1719,6 +1763,7 @@ if (entries.length > 0) {
 }
 
       renderVideos(p.videos);
+      loadProductReviews(p.id); 
 
       const related = IH.getProducts().filter(rp => rp.id !== p.id && rp.type === p.type).slice(0, 4);
       if (related.length > 0) {

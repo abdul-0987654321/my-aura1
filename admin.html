@@ -2446,7 +2446,7 @@
             <div class="user-pill">
               <div class="u-dot"></div><span class="u-name">Junaid</span> 👤
             </div>
-  
+            <button class="reset-btn" id="refreshBtn" onclick="refreshFromServer()" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.2);color:#60a5fa;">🔄 Refresh</button>
             <button class="add-btn" onclick="showPage('add',null)">➕ Add Product</button>
           </div>
         </div>
@@ -3791,6 +3791,29 @@ renderSpecsList('edit');
     function refresh() { if (typeof IH === 'undefined') return; renderOverview(); renderProductsTable(); populateSaleDropdown(); renderHistory(); renderProfitLoss(); }
     window.addEventListener('ih_products_updated', refresh);
     window.addEventListener('ih_sales_updated', refresh);
+
+    // ══════════════════════════════════════════
+    // 🔄 MANUAL REFRESH — Google Sheet se fresh data khinchta hai
+    // ══════════════════════════════════════════
+    async function refreshFromServer() {
+      const btn = document.getElementById('refreshBtn');
+      if (!btn || btn.disabled) return;
+      btn.disabled = true;
+      const originalText = btn.textContent;
+      btn.textContent = '🔄 Refreshing…';
+      try {
+        await IH.refreshData();
+        // Shipping rates bhi refresh kar do isi button se
+        if (typeof loadShippingRates === 'function') await loadShippingRates();
+        toast('✅ Data refreshed!');
+      } catch (err) {
+        console.error('Refresh failed:', err);
+        toast('⚠️ Refresh failed, try again', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }
 
     // ══════════════════════════════════════════
     // VOLUME PRICING

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Scentonish – Premium Fragrances Pakistan</title>
 <link rel="shortcut icon" href="https://i.ibb.co/YF8hjb6F/image.png" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -34,6 +35,127 @@ body{
   line-height:1.7;
 }
 
+/* urdu  */
+
+.loc-modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.75);
+  backdrop-filter:blur(6px);
+  z-index:9998;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;
+  transition:.3s ease;
+  padding:20px;
+}
+.loc-modal-overlay.open{opacity:1;visibility:visible;}
+
+.loc-modal{
+  background:linear-gradient(160deg,#141414,#0a0a0a);
+  border:1px solid rgba(184,134,11,.35);
+  border-radius:20px;
+  max-width:460px;
+  width:100%;
+  padding:32px 28px 28px;
+  position:relative;
+  transform:scale(.9) translateY(10px);
+  transition:.35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.loc-modal-overlay.open .loc-modal{
+  transform:scale(1) translateY(0);
+}
+
+.loc-modal-close{
+  position:absolute;top:14px;right:14px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+}
+.loc-modal-close:hover{background:rgba(184,134,11,.3);border-color:#b8860b;}
+
+.loc-modal-logo{
+  text-align:center;
+  font-family:'Outfit',sans-serif;
+  font-weight:900;
+  font-size:1.4rem;
+  letter-spacing:2px;
+  background:linear-gradient(135deg,#d4a017,#e8c96a);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.loc-modal-sub{
+  text-align:center;
+  color:rgba(255,255,255,.4);
+  font-family:'Inter',sans-serif;
+  font-size:.7rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:20px;
+}
+
+.loc-modal-urdu{
+  direction:rtl;
+  font-family:'Noto Nastaliq Urdu', serif;
+  color:#fff;
+  text-align:center;
+  font-size:1.15rem;
+  line-height:2.3;
+  margin-bottom:22px;
+}
+
+.loc-item{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  direction:rtl;
+  text-align:right;
+}
+.loc-item .loc-num{
+  display:inline-block;
+  background:linear-gradient(135deg,#b8860b,#d4a017);
+  color:#000;
+  width:24px;height:24px;
+  border-radius:50%;
+  font-family:'Inter',sans-serif;
+  font-weight:800;
+  font-size:.78rem;
+  text-align:center;
+  line-height:24px;
+  margin-left:8px;
+}
+.loc-item p{
+  font-family:'Noto Nastaliq Urdu', serif;
+  color:rgba(255,255,255,.88);
+  font-size:1rem;
+  line-height:1.9;
+  display:inline;
+}
+
+.loc-modal-btn{
+  width:100%;
+  margin-top:8px;
+  padding:13px;
+  border:none;border-radius:50px;
+  background:linear-gradient(135deg,#b8860b,#d4a017);
+  color:#000;
+  font-weight:800;
+  font-size:.9rem;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:.2s;
+}
+.loc-modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(184,134,11,.4);}
+
+@media(max-width:480px){
+  .loc-modal{padding:26px 20px 22px;}
+  .loc-modal-urdu{font-size:1.02rem;}
+}
 /* ══════════════ NAV ══════════════ */
 
 /* ══════════════ NAV ══════════════ */
@@ -463,7 +585,26 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 </head>
 <body>
 
-<!-- NAV -->
+
+  <div class="loc-modal-overlay" id="locModalOverlay">
+  <div class="loc-modal">
+    <button class="loc-modal-close" onclick="closeLocModal()">✕</button>
+    <div class="loc-modal-logo">SCENTONISH</div>
+    <div class="loc-modal-sub">Available At</div>
+    <div class="loc-modal-urdu">
+      پرفیومز کی مکمل ورائٹی ان مقامات پر دستیاب ہے
+    </div>
+    <div class="loc-item">
+      <span class="loc-num">1</span>
+      <p>علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</p>
+    </div>
+    <div class="loc-item">
+      <span class="loc-num">2</span>
+      <p>سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</p>
+    </div>
+    <button class="loc-modal-btn" onclick="closeLocModal()">Okay</button>
+  </div>
+</div>
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="index.html">
@@ -637,23 +778,23 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
       <h2>What Customers Say</h2>
       <p>Trusted by fragrance lovers across Pakistan.</p>
     </div>
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>"Amazing fragrance quality. Lasting bohat achi hai aur packaging bhi very premium thi."</p>
-        <h4>— Ali, Lahore</h4>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>"Packaging premium thi aur delivery super fast. Definitely order again karunga!"</p>
-        <h4>— Hira, Islamabad</h4>
-      </div>
-      <div class="review-card">
-        <div class="stars">★★★★★</div>
-        <p>"Best online perfume store in Pakistan. WhatsApp support bhi bohat helpful hai."</p>
-        <h4>— Salman, Karachi</h4>
-      </div>
-    </div>
+<div class="reviews-grid" id="dynamicReviewsGrid">
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>"Amazing fragrance quality. Lasting bohat achi hai aur packaging bhi very premium thi."</p>
+    <h4>— Ali, Lahore</h4>
+  </div>
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>"Packaging premium thi aur delivery super fast. Definitely order again karunga!"</p>
+    <h4>— Hira, Islamabad</h4>
+  </div>
+  <div class="review-card">
+    <div class="stars">★★★★★</div>
+    <p>"Best online perfume store in Pakistan. WhatsApp support bhi bohat helpful hai."</p>
+    <h4>— Salman, Karachi</h4>
+  </div>
+</div>
   </div>
 </section>
 
@@ -709,6 +850,73 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 <script src="cart.js"></script>
 <script>
 let currentTab = 'men';
+
+const REVIEW_API = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
+
+async function loadHomeTestimonials() {
+  try {
+    const res = await fetch(REVIEW_API + '?action=getReviews');
+    const reviews = await res.json();
+
+    if (!Array.isArray(reviews) || reviews.length === 0) return; // fallback static hi rehne do
+
+    // sirf 4-5 star reviews with comment, best rating pehle, phir latest pehle
+    const good = reviews
+      .filter(r => Number(r.rating) >= 4 && r.comment && r.comment.trim())
+      .sort((a, b) => {
+        const ratingDiff = Number(b.rating) - Number(a.rating);
+        if (ratingDiff !== 0) return ratingDiff;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+
+    if (good.length === 0) return;
+
+    const grid = document.getElementById('dynamicReviewsGrid');
+
+    function cardHtml(r) {
+      const rating = Number(r.rating) || 5;
+      const starsHtml = '★★★★★☆☆☆☆☆'.slice(5 - rating, 10 - rating);
+      return `
+        <div class="review-card">
+          <div class="stars">${starsHtml}</div>
+          <p>"${r.comment}"</p>
+          <h4>— ${r.name || 'Customer'}</h4>
+        </div>
+      `;
+    }
+
+    const INITIAL_COUNT = 3;
+    const visible = good.slice(0, INITIAL_COUNT);
+    const rest    = good.slice(INITIAL_COUNT);
+
+    grid.innerHTML = visible.map(cardHtml).join('');
+
+    // Agar aur reviews baaki hain to "View More" button dikhao
+    if (rest.length > 0) {
+      const btnWrap = document.createElement('div');
+      btnWrap.style.cssText = 'grid-column:1/-1;text-align:center;margin-top:10px;';
+      btnWrap.innerHTML = `
+        <button id="viewMoreReviewsBtn" style="
+          background:var(--accent);color:#fff;border:none;
+          padding:12px 28px;border-radius:50px;font-weight:700;
+          font-size:.88rem;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+          transition:.3s;
+        ">View More Reviews (${rest.length})</button>
+      `;
+      grid.appendChild(btnWrap);
+
+      document.getElementById('viewMoreReviewsBtn').addEventListener('click', function() {
+        const restHtml = rest.map(cardHtml).join('');
+        btnWrap.remove();
+        grid.insertAdjacentHTML('beforeend', restHtml);
+      });
+    }
+  } catch (err) {
+    console.warn('Testimonials load failed, showing static fallback:', err);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadHomeTestimonials);
 
 function toggleMenu() {
   document.getElementById('mobileMenu').classList.toggle('open');
@@ -806,6 +1014,21 @@ function closeDrop(dropId) {
   const drop = document.getElementById(dropId);
   if (drop) drop.classList.remove('open');
 }
+function closeLocModal() {
+  document.getElementById('locModalOverlay').classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Har page load pe khulega. Agar chahen sirf ek dafa per session khule,
+  // niche wali 3 lines ko uncomment kar dein.
+  
+  // if (sessionStorage.getItem('locModalShown')) return;
+  // sessionStorage.setItem('locModalShown', '1');
+  
+  setTimeout(function() {
+    document.getElementById('locModalOverlay').classList.add('open');
+  }, 600);
+});
 </script>
 </body>
 </html>

@@ -33,6 +33,48 @@ select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:u
 #deliveryInfo{display:none;background:#fff8f2;border:1px solid #f0d5c8;border-radius:14px;padding:12px 16px;margin-bottom:14px;font-size:.88rem;}
 .city-loading{color:#888;font-size:.82rem;padding:8px 0;display:none;}
 @media(max-width:900px){.container{grid-template-columns:1fr;}.summary{position:relative;top:auto;}}
+.loc-marquee{
+  position:sticky;
+  top:68px;
+  z-index:90;
+  background:linear-gradient(90deg,#b8860b,#d4a017,#e8c96a,#d4a017,#b8860b);
+  background-size:200% 100%;
+  animation:gradientShift 6s ease infinite;
+  overflow:hidden;
+  padding:10px 0;
+  box-shadow:0 3px 12px rgba(184,134,11,.3);
+}
+.loc-marquee-inner{
+  display:flex;
+  gap:40px;
+  white-space:nowrap;
+  animation:locScroll 28s linear infinite;
+  width:max-content;
+}
+.loc-marquee-inner span{
+  direction:rtl;
+  font-family:'Noto Nastaliq Urdu', serif;
+  font-size:1rem;
+  color:#1a1a1a;
+  font-weight:700;
+}
+.loc-marquee-inner .loc-dot{
+  color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+@keyframes locScroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+
+@media(max-width:900px){
+  .loc-marquee{top:58px;}
+  .loc-marquee-inner span{font-size:.85rem;}
+}
 </style>
 </head>
 <body>
@@ -41,7 +83,19 @@ select{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:u
   <a href="index.html">← Back</a>
   <strong>Checkout</strong>
 </nav>
-
+<!-- LOCATION MARQUEE -->
+<div class="loc-marquee">
+  <div class="loc-marquee-inner">
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+  </div>
+</div>
 <div class="container">
 <form id="checkoutForm">
   <h2>Shipping Details</h2>
@@ -281,7 +335,24 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
     const orderPromise = (async function(){
       await emailjs.send('service_r6kzn5u', 'template_53kynsg', order);
       await emailjs.send('service_r6kzn5u', 'template_weax4h7', order);
-
+// Customer/order data ko Google Sheet mein save karo
+try {
+  const params = new URLSearchParams();
+  params.append('action', 'addOrder');
+  params.append('order_id', order.order_id);
+  params.append('name', order.name);
+  params.append('phone', order.phone);
+  params.append('email', order.email);
+  params.append('address', order.address);
+  params.append('city', order.city);
+  params.append('notes', order.notes);
+  params.append('items', order.items);
+  params.append('total', order.total);
+  params.append('payment', 'COD');
+  await fetch(API + '?' + params.toString());
+} catch (orderSaveErr) {
+  console.error('Order save to sheet failed:', orderSaveErr);
+}
       // ══════════════════════════════════════════════════════
       // ✅ FIX: yahan hi asli masla tha — pehle sale kabhi record
       // hi nahi hoti thi admin dashboard ke system mein. Ab har
@@ -296,7 +367,8 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
           // ✅ FIX: item.price pass kiya taake cart mein jo actual price
           // (selected size/volume ki price) hai wahi Sales sheet mein
           // save ho — base product price nahi.
-          await IH.recordSale(item.id, item.qty || 1, item.price);
+const pid = item.productId || item.id.split('_').slice(0, 2).join('_');
+await IH.recordSale(pid, item.qty || 1, item.price);
         } catch (saleErr) {
           console.error('Sale record failed for item:', item, saleErr);
         }

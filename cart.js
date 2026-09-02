@@ -22,14 +22,14 @@ const CART = (() => {
   function getTotal() { return getItems().reduce((s,i) => s + i.price * i.qty, 0); }
 
   // ── ACTIONS ────────────────────────────────────────────────
-  function addItem(product) {
-    const items = getItems();
-    const existing = items.find(i => i.id === product.id);
-    if (existing) { existing.qty += 1; }
-    else { items.push({ ...product, qty: 1 }); }
-    saveItems(items);
-    showAddedToast(product.name);
-  }
+ function addItem(product) {
+  const items = getItems();
+  const existing = items.find(i => i.id === product.id);
+  if (existing) { existing.qty += 1; }   // ← yahan bug hai
+  else { items.push({ ...product, qty: 1 }); }
+  saveItems(items);
+  showAddedToast(product.name);
+}
   function removeItem(id) {
     saveItems(getItems().filter(i => i.id !== id));
   }

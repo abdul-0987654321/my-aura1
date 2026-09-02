@@ -353,29 +353,52 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
 #cartIconContainer button {
   color: #fff !important;
   filter: brightness(0) invert(1);
+}.loc-marquee{
+  position:sticky;
+  top:68px;
+  z-index:90;
+  background:linear-gradient(90deg,#b8860b,#d4a017,#e8c96a,#d4a017,#b8860b);
+  background-size:200% 100%;
+  animation:gradientShift 6s ease infinite;
+  overflow:hidden;
+  padding:10px 0;
+  box-shadow:0 3px 12px rgba(184,134,11,.3);
+}
+.loc-marquee-inner{
+  display:flex;
+  gap:40px;
+  white-space:nowrap;
+  animation:locScroll 28s linear infinite;
+  width:max-content;
+}
+.loc-marquee-inner span{
+  direction:rtl;
+  font-family:'Noto Nastaliq Urdu', serif;
+  font-size:1rem;
+  color:#1a1a1a;
+  font-weight:700;
+}
+.loc-marquee-inner .loc-dot{
+  color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+@keyframes locScroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+
+@media(max-width:900px){
+  .loc-marquee{top:58px;}
+  .loc-marquee-inner span{font-size:.85rem;}
 }
 </style>
 </head>
 <body>
-<div class="loc-modal-overlay" id="locModalOverlay">
-  <div class="loc-modal">
-    <button class="loc-modal-close" onclick="closeLocModal()">✕</button>
-    <div class="loc-modal-logo">SCENTONISH</div>
-    <div class="loc-modal-sub">Available At</div>
-    <div class="loc-modal-urdu">
-      پرفیومز کی مکمل ورائٹی ان مقامات پر دستیاب ہے
-    </div>
-    <div class="loc-item">
-      <span class="loc-num">1</span>
-      <p>علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</p>
-    </div>
-    <div class="loc-item">
-      <span class="loc-num">2</span>
-      <p>سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</p>
-    </div>
-    <button class="loc-modal-btn" onclick="closeLocModal()">Okay</button>
-  </div>
-</div>
+
 <nav>
 <a class="nav-logo" href="index.html">
   <img src="https://i.ibb.co/YF8hjb6F/image.png" alt="Scentonish Logo">
@@ -395,7 +418,19 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <button class="hamburger" onclick="document.getElementById('mobileMenu').classList.toggle('open')">☰</button>
   </div>
 </nav>
-
+<!-- LOCATION MARQUEE -->
+<div class="loc-marquee">
+  <div class="loc-marquee-inner">
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+  </div>
+</div>
 <div class="mobile-menu" id="mobileMenu">
   <a href="index.html">🏠 Home</a>
   <a href="shop.html">🛍️ Shop</a>
@@ -440,7 +475,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
       <div class="cc-icon">📍</div>
       <div class="cc-title">Location</div>
       <div class="cc-sub">Based in Rawalpindi, Pakistan. Shipping nationwide with COD available.</div>
-      <span class="cc-link" style="cursor:default;">Chaklala Cantt., Rawalpindi 🇵🇰</span>
+      <span class="cc-link" style="cursor:default;">Saddar, Rawalpindi 🇵🇰</span>
     </div>
   </div>
 </div>
@@ -463,7 +498,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
           <span class="info-row-icon">📍</span>
           <div class="info-row-text">
             <h4>Address</h4>
-            <p>Chaklala Cantt., Rawalpindi, Pakistan<br>Shipping available across all cities</p>
+            <p>Saddar, Rawalpindi, Pakistan<br>Shipping available across all cities</p>
           </div>
         </div>
         <div class="info-row">
@@ -542,7 +577,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <div class="footer-col"><h4>Support</h4><ul><li><a href="https://wa.me/923457566768" target="_blank">WhatsApp Us</a></li><li><a href="contact.html">Shipping Info</a></li><li><a href="contact.html">Returns & Refunds</a></li></ul></div>
   </div>
   <div class="footer-bottom">
-    © 2026 Scentonish. All rights reserved. | Chaklala Cantt., Rawalpindi | +92 345 7566768 | scentonish@gmail.com
+    © 2026 Scentonish. All rights reserved. | Saddar, Rawalpindi | +92 345 7566768 | scentonish@gmail.com
   </div>
 </footer>
 
@@ -559,21 +594,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const c = document.getElementById('cartIconContainer');
   if(c) c.innerHTML = CART.getCartIconHTML();
 });
-function closeLocModal() {
-  document.getElementById('locModalOverlay').classList.remove('open');
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Har page load pe khulega. Agar chahen sirf ek dafa per session khule,
-  // niche wali 3 lines ko uncomment kar dein.
-  
-  // if (sessionStorage.getItem('locModalShown')) return;
-  // sessionStorage.setItem('locModalShown', '1');
-  
-  setTimeout(function() {
-    document.getElementById('locModalOverlay').classList.add('open');
-  }, 600);
-});
 </script>
 </body>
 </html>

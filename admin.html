@@ -2432,6 +2432,7 @@
         <div class="nav-section">Sales</div>
         <a class="nav-item" onclick="showPage('sales',this)"><span class="icon">💰</span> Record Sale</a>
         <a class="nav-item" onclick="showPage('history',this)"><span class="icon">📜</span> Sale History</a>
+        <a class="nav-item" onclick="showPage('orders',this)"><span class="icon">🧾</span> Customer Orders</a>
         <a class="nav-item" onclick="showPage('profit',this)"><span class="icon">📈</span> Profit & Loss</a>
         <div class="side-bottom">
           <a class="site-link" href="index.html" target="_blank">🌐 View Website →</a>
@@ -2774,7 +2775,26 @@
               </div>
             </div>
           </div>
-
+<!-- ORDERS -->
+<div class="page-section" id="page-orders">
+  <div class="table-card">
+    <div class="table-header">
+      <h3>🧾 Customer Orders</h3>
+      <input type="text" class="table-search" id="orderSearch" placeholder="Search…" oninput="renderOrders()" />
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th><th>Name</th><th>Phone</th><th>Email</th>
+            <th>City</th><th>Address</th><th>Total</th><th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="ordersBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
           <!-- PROFIT & LOSS -->
           <div class="page-section" id="page-profit">
             <div class="stat-grid">
@@ -2988,6 +3008,7 @@
     // SHIPPING RATES
     // ══════════════════════════════════════════
     let shippingItems = [];
+    const API_BASE = 'https://script.google.com/macros/s/AKfycbxEPdfTeq3cZaFqwQs-Zwrsh2ZZVvgy-BHdANNYh0ygO1KrkYzmnuu0b7mjeKj3tdee/exec';
 
     async function loadShippingRates() {
       shippingItems = [];
@@ -3130,6 +3151,7 @@
       onCategoryChange('add');
       initRevealHide();
       loadShippingRates();
+      loadOrders();
       renderPackaging('add');
       renderPackaging('edit');
       refresh();
@@ -3334,7 +3356,7 @@ function refreshSpecValsDatalist(forKey) {
     // ══════════════════════════════════════════
     function openSidebar() { document.getElementById('sideNav').classList.add('open'); document.getElementById('mobileOverlay').classList.add('open'); document.body.style.overflow = 'hidden'; }
     function closeSidebar() { document.getElementById('sideNav').classList.remove('open'); document.getElementById('mobileOverlay').classList.remove('open'); document.body.style.overflow = ''; }
-    const pageTitles = { overview: 'Dashboard Overview', products: 'All Products', add: 'Add New Product', shipping: 'Shipping Rates', sales: 'Record Sale', history: 'Sale History', profit: 'Profit & Loss' };
+   const pageTitles = { overview: 'Dashboard Overview', products: 'All Products', add: 'Add New Product', shipping: 'Shipping Rates', sales: 'Record Sale', history: 'Sale History', profit: 'Profit & Loss', orders: 'Customer Orders' };
     function showPage(page, navEl) { document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); if (navEl) navEl.classList.add('active'); document.getElementById('topBarTitle').textContent = pageTitles[page] || page; closeSidebar(); refresh(); }
 
     // ══════════════════════════════════════════
@@ -3919,6 +3941,43 @@ renderSpecsList('edit');
         price: Number(v.price)
       }));
     }
+
+    // ══════════════════════════════════════════
+// CUSTOMER ORDERS
+// ══════════════════════════════════════════
+let _allOrders = [];
+
+async function loadOrders() {
+  try {
+    const res = await fetch(API_BASE + '?action=getOrders');
+    const data = await res.json();
+    _allOrders = Array.isArray(data) ? data.reverse() : [];
+    renderOrders();
+  } catch (e) {
+    console.error('Orders load failed:', e);
+  }
+}
+
+function renderOrders() {
+  const q = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+  const body = document.getElementById('ordersBody');
+  if (!body) return;
+  const filtered = _allOrders.filter(o =>
+    !q || (o.name || '').toLowerCase().includes(q) || (o.phone || '').includes(q)
+  );
+  body.innerHTML = filtered.length ? filtered.map(o => `
+    <tr>
+      <td>${escHtml(o.order_id)}</td>
+      <td class="td-name">${escHtml(o.name)}</td>
+      <td>${escHtml(o.phone)}</td>
+      <td>${escHtml(o.email)}</td>
+      <td>${escHtml(o.city)}</td>
+      <td style="max-width:180px;white-space:normal;">${escHtml(o.address)}</td>
+      <td class="td-price">${escHtml(String(o.total))}</td>
+      <td class="date-badge">${o.date ? formatDate(o.date) : ''}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="8" style="text-align:center;color:var(--ink3);padding:24px">No orders yet.</td></tr>';
+}
   </script>
 
 </body>

@@ -581,30 +581,56 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
   .footer-grid{grid-template-columns:1fr;}
   .footer-divider{flex-direction:column;gap:12px;}
 }
+.loc-marquee{
+  position:sticky;
+  top:68px;
+  z-index:90;
+  background:linear-gradient(90deg,#b8860b,#d4a017,#e8c96a,#d4a017,#b8860b);
+  background-size:200% 100%;
+  animation:gradientShift 6s ease infinite;
+  overflow:hidden;
+  padding:10px 0;
+  box-shadow:0 3px 12px rgba(184,134,11,.3);
+}
+.loc-marquee-inner{
+  display:flex;
+  gap:40px;
+  white-space:nowrap;
+  animation:locScroll 28s linear infinite;
+  width:max-content;
+}
+.loc-marquee-inner span{
+  direction:rtl;
+  font-family:'Noto Nastaliq Urdu', serif;
+  font-size:1rem;
+  color:#1a1a1a;
+  font-weight:700;
+}
+.loc-marquee-inner .loc-dot{
+  color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+@keyframes locScroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+@keyframes gradientShift{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+
+@media(max-width:900px){
+  .loc-marquee{top:58px;}
+  .loc-marquee-inner span{font-size:.85rem;}
+}
 </style>
 </head>
 <body>
 
 
-  <div class="loc-modal-overlay" id="locModalOverlay">
-  <div class="loc-modal">
-    <button class="loc-modal-close" onclick="closeLocModal()">✕</button>
-    <div class="loc-modal-logo">SCENTONISH</div>
-    <div class="loc-modal-sub">Available At</div>
-    <div class="loc-modal-urdu">
-      پرفیومز کی مکمل ورائٹی ان مقامات پر دستیاب ہے
-    </div>
-    <div class="loc-item">
-      <span class="loc-num">1</span>
-      <p>علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</p>
-    </div>
-    <div class="loc-item">
-      <span class="loc-num">2</span>
-      <p>سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</p>
-    </div>
-    <button class="loc-modal-btn" onclick="closeLocModal()">Okay</button>
-  </div>
-</div>
+
+
+
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="index.html">
@@ -641,6 +667,20 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     <button class="hamburger" onclick="toggleMenu()">☰</button>
   </div>
 </nav>
+
+<!-- LOCATION MARQUEE -->
+<div class="loc-marquee">
+  <div class="loc-marquee-inner">
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 علوی کلیکشن — دکان نمبر UG-58، گراؤنڈ فلور، رانیا مال، بینک روڈ صدر، راولپنڈی</span>
+    <span class="loc-dot">◆</span>
+    <span>📍 سواتی فارمیسی — بالمقابل میزان بینک، ٹینچ روڈ، ٹینچ بھاٹہ، راولپنڈی کینٹ</span>
+    <span class="loc-dot">◆</span>
+  </div>
+</div>
 
 <!-- Mobile Search Strip (nav ke bilkul neeche) -->
 <div class="mobile-search-strip">
@@ -778,7 +818,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
       <h2>What Customers Say</h2>
       <p>Trusted by fragrance lovers across Pakistan.</p>
     </div>
-<div class="reviews-grid" id="dynamicReviewsGrid">
+<div class="reviews-grid" >
   <div class="review-card">
     <div class="stars">★★★★★</div>
     <p>"Amazing fragrance quality. Lasting bohat achi hai aur packaging bhi very premium thi."</p>
@@ -835,7 +875,7 @@ footer{background:linear-gradient(135deg,var(--ink),#3d3530);color:rgba(255,255,
     </div>
   </div>
   <div class="footer-divider">
-    <div class="footer-info-item">📍 Chaklala Cantt., Rawalpindi, Pakistan</div>
+    <div class="footer-info-item">📍 Saddar, Rawalpindi, Pakistan</div>
     <div class="footer-info-item">📧 <a href="mailto:scentonish@gmail.com">scentonish@gmail.com</a></div>
     <div class="footer-info-item">📞 <a href="tel:+923457566768">+92 345 7566768</a></div>
   </div>
@@ -1014,21 +1054,7 @@ function closeDrop(dropId) {
   const drop = document.getElementById(dropId);
   if (drop) drop.classList.remove('open');
 }
-function closeLocModal() {
-  document.getElementById('locModalOverlay').classList.remove('open');
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Har page load pe khulega. Agar chahen sirf ek dafa per session khule,
-  // niche wali 3 lines ko uncomment kar dein.
-  
-  // if (sessionStorage.getItem('locModalShown')) return;
-  // sessionStorage.setItem('locModalShown', '1');
-  
-  setTimeout(function() {
-    document.getElementById('locModalOverlay').classList.add('open');
-  }, 600);
-});
 </script>
 </body>
 </html>

@@ -2486,9 +2486,9 @@
       width: 8%;
     }
 
-    .inv-table th:nth-child(2),
+        .inv-table th:nth-child(2),
     .inv-table td:nth-child(2) {
-      width: 30%;
+      width: 28%;
     }
 
     .inv-table th:nth-child(3),
@@ -2537,10 +2537,19 @@
       font-family: Arial, sans-serif;
     }
 
-    .inv-total span {
+        .inv-total span {
       color: #C9A227;
       font-size: 1.2rem;
       font-weight: 700;
+    }
+
+    .item-label {
+      font-size: .62rem;
+      font-weight: 700;
+      color: var(--ink3);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 4px;
     }
 
     @media print {
@@ -4622,24 +4631,45 @@
       if (!invoiceItems.length) { c.innerHTML = '<div class="specs-empty">No items yet.</div>'; return; }
       c.innerHTML = invoiceItems.map((it, i) => `
     <div class="spec-row" style="flex-direction:column;align-items:stretch;gap:6px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px dashed var(--border2);">
-      <div style="display:flex;gap:6px;">
-        <input type="text" placeholder="Product" value="${escHtml(it.product)}" list="invProductsDatalist"
-          oninput="updateInvoiceItem(${i},'product',this.value)"
-          onchange="autofillInvoiceItem(${i},this.value)" style="flex:2;min-width:0;"/>
-        <input type="text" placeholder="Size" value="${escHtml(it.size)}" list="invSizesDatalist"
-          onfocus="refreshInvSizesDatalist(${i})"
-          oninput="updateInvoiceItem(${i},'size',this.value)"
-          onchange="autofillInvoiceSize(${i},this.value)" style="flex:1;min-width:0;"/>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <div style="flex:2;min-width:140px;">
+          <div class="item-label">Product</div>
+          <input type="text" placeholder="Product" value="${escHtml(it.product)}" list="invProductsDatalist"
+            oninput="updateInvoiceItem(${i},'product',this.value)"
+            onchange="autofillInvoiceItem(${i},this.value)" style="width:100%;"/>
+        </div>
+        <div style="flex:1;min-width:90px;">
+          <div class="item-label">Size</div>
+          <input type="text" placeholder="Size" value="${escHtml(it.size)}" list="invSizesDatalist"
+            onfocus="refreshInvSizesDatalist(${i})"
+            oninput="updateInvoiceItem(${i},'size',this.value)"
+            onchange="autofillInvoiceSize(${i},this.value)" style="width:100%;"/>
+        </div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <input type="number" placeholder="Qty" value="${it.qty}" oninput="updateInvoiceItem(${i},'qty',this.value)" style="flex:1;min-width:0;"/>
-        <input type="number" placeholder="Price" value="${it.price}" oninput="updateInvoiceItem(${i},'price',this.value)" style="flex:1;min-width:0;"/>
-        <input type="number" placeholder="Disc." value="${it.discount}" oninput="updateInvoiceItem(${i},'discount',this.value)" style="flex:1;min-width:0;"/>
-        <button class="spec-del-btn" onclick="removeInvoiceItem(${i})" style="flex-shrink:0;">✕</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end;">
+        <div style="flex:1;min-width:60px;">
+          <div class="item-label">Qty</div>
+          <input type="number" placeholder="Qty" value="${it.qty}" oninput="updateInvoiceItem(${i},'qty',this.value)" style="width:100%;"/>
+        </div>
+        <div style="flex:1;min-width:70px;">
+          <div class="item-label">Price</div>
+          <input type="number" placeholder="Price" value="${it.price}" oninput="updateInvoiceItem(${i},'price',this.value)" style="width:100%;"/>
+        </div>
+        <div style="flex:1;min-width:70px;">
+          <div class="item-label">Disc.</div>
+          <input type="number" placeholder="Disc." value="${it.discount}" oninput="updateInvoiceItem(${i},'discount',this.value)" style="width:100%;"/>
+        </div>
+        <div style="flex-shrink:0;">
+          <div class="item-label" style="visibility:hidden;">Del</div>
+          <button class="spec-del-btn" onclick="removeInvoiceItem(${i})">✕</button>
+        </div>
       </div>
-      <input type="text" placeholder="Packaging (optional)" value="${escHtml(it.packaging || '')}" list="invPackagingDatalist"
-        onfocus="refreshInvPackagingDatalist(${i})"
-        onchange="autofillInvoicePackaging(${i},this.value)" style="width:100%;"/>
+      <div>
+        <div class="item-label">Packaging (optional)</div>
+        <input type="text" placeholder="e.g. With Box" value="${escHtml(it.packaging || '')}" list="invPackagingDatalist"
+          onfocus="refreshInvPackagingDatalist(${i})"
+          onchange="autofillInvoicePackaging(${i},this.value)" style="width:100%;"/>
+      </div>
     </div>
   `).join('');
     }
@@ -4664,7 +4694,7 @@
       const invoiceHtml = `
     <div class="inv-preview" id="${invId}" style="position:relative;">
       <button onclick="removeOneInvoice('${invId}')" style="position:absolute;top:-10px;right:-10px;background:#ef4444;border:2px solid #fff;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.7rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:5;" class="no-print">✕</button>
-      <div class="inv-header-box"><div class="inv-brand">SCENTONISH</div><div class="inv-sub">(AURA PERFUMES)</div></div>
+      <div class="inv-header-box"><div class="inv-brand"><img src="https://i.ibb.co/YF8hjb6F/image.png" alt="SCENTONISH" style="width:100px;height:auto;radius:30px;"></div><div class="inv-sub">(ELEVAT YOUR PRESENCE)</div></div>
       <div style="text-align:center;font-size:.68rem;color:#777;margin-top:8px;font-family:Arial,sans-serif;">Shop # UG 58, Alvi Collection, Rania Mall Ground Floor, Saddar, Rawalpindi Cantt, PK</div>
       <div style="display:flex;justify-content:space-between;font-family:Arial,sans-serif;font-size:.8rem;margin-top:14px;"><b>INVOICE #${escHtml(num)}</b><span>${escHtml(date)}</span></div>
       <div style="font-size:.75rem;margin-top:10px;font-family:Arial,sans-serif;">

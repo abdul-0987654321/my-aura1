@@ -4694,7 +4694,13 @@
       const invoiceHtml = `
     <div class="inv-preview" id="${invId}" style="position:relative;">
       <button onclick="removeOneInvoice('${invId}')" style="position:absolute;top:-10px;right:-10px;background:#ef4444;border:2px solid #fff;color:#fff;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.7rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:5;" class="no-print">✕</button>
-      <div class="inv-header-box"><div class="inv-brand"><img src="https://i.ibb.co/YF8hjb6F/image.png" alt="SCENTONISH" style="width:100px;height:auto;radius:30px;"></div><div class="inv-sub">(ELEVAT YOUR PRESENCE)</div></div>
+      <div class="inv-header-box" style="position:relative;display:flex;align-items:center;justify-content:center;">
+  <img src="https://i.ibb.co/YF8hjb6F/image.png" alt="SCENTONISH" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);width:55px;height:auto;">
+  <div style="text-align:center;">
+    <div class="inv-brand">SCENTONISH</div>
+    <div class="inv-sub">(ELEVATE YOUR PRESENCE)</div>
+  </div>
+</div>
       <div style="text-align:center;font-size:.68rem;color:#777;margin-top:8px;font-family:Arial,sans-serif;">Shop # UG 58, Alvi Collection, Rania Mall Ground Floor, Saddar, Rawalpindi Cantt, PK</div>
       <div style="display:flex;justify-content:space-between;font-family:Arial,sans-serif;font-size:.8rem;margin-top:14px;"><b>INVOICE #${escHtml(num)}</b><span>${escHtml(date)}</span></div>
       <div style="font-size:.75rem;margin-top:10px;font-family:Arial,sans-serif;">
